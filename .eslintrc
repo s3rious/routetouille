@@ -1,0 +1,29 @@
+{
+  "extends": ["standard-with-typescript", "prettier"],
+  "parserOptions": {
+    "project": "./tsconfig.eslint.json"
+  },
+  "rules": {
+    "no-void": ["off"],
+    "no-extra-boolean-cast": ["off"],
+    "comma-dangle": ["error", "always-multiline"],
+
+    "@typescript-eslint/consistent-type-assertions": ["off"],
+    "@typescript-eslint/no-explicit-any": ["error"],
+    "@typescript-eslint/consistent-type-definitions": ["error", "type"],
+    "@typescript-eslint/member-delimiter-style": [
+      "error",
+      {
+        "multiline": {
+          "delimiter": "none",
+          "requireLast": true
+        },
+        "singleline": {
+          "delimiter": "comma",
+          "requireLast": false
+        },
+        "multilineDetection": "brackets"
+      }
+    ]
+  }
+}
