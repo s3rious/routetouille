@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "lib": ["ESNext", "DOM"],
+    "strict": true,
+
+    "baseUrl": "./src",
+
+    "outDir": "./lib",
+    "module": "CommonJS",
+    "declaration": true,
+    "target": "ES2019" // node 12 → https://github.com/microsoft/TypeScript/wiki/Node-Target-Mapping
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "src/**/*.test.ts", "src/Route/_tests-shared/index.ts"]
+}

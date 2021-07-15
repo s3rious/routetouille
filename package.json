@@ -1,0 +1,40 @@
+{
+  "name": "routetouille",
+  "version": "0.0.1",
+  "description": "A new breed of router: Hackable, extendable, rewritable, isomorphic, framework-agnostic",
+  "author": "s3rious a.k.a Leonid Semenov <canismajor@kaschenka.ru>",
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint src/",
+    "test": "jest",
+    "test:coverage": "jest --collect-coverage",
+    "prebuild": "yarn lint && yarn test",
+    "build": "tsc",
+    "prepublish": "yarn build"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.24",
+    "@typescript-eslint/eslint-plugin": "^4.28.3",
+    "eslint": "^7.30.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-standard-with-typescript": "^20.0.0",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.1.0",
+    "jest": "^27.0.6",
+    "prettier": "^2.3.2",
+    "ts-jest": "^27.0.3",
+    "typescript": "^4.3.5",
+    "yarn": "^1.22.10"
+  },
+  "dependencies": {
+    "nanoevents": "5.1.13"
+  },
+  "main": "lib/index.js",
+  "files": [
+    "lib"
+  ],
+  "directories": {
+    "lib": "lib"
+  }
+}
