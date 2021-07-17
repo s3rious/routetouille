@@ -12,6 +12,23 @@ type WithParamsInterface = WithParamsOptions & {
   activate: (activator: Activator, params: Params, optimistic?: boolean) => Promise<void>
 }
 
+function fillPathnameWithParams(pathname: string, params: Params): string {
+  let newPathname = pathname
+
+  if (params.length > 0) {
+    params.forEach((param) => {
+      const [key, value] = Object.entries(param)[0]
+      const nextPathname = newPathname.replace(new RegExp(`:${key}`), value)
+
+      if (nextPathname !== '') {
+        newPathname = nextPathname
+      }
+    })
+  }
+
+  return newPathname
+}
+
 function WithParams<ComposedOptions extends RouterComposedOptions, ComposedInterface extends RouterComposedInterface>(
   createRouter?: (options: ComposedOptions) => ComposedInterface,
 ) {
@@ -30,18 +47,7 @@ function WithParams<ComposedOptions extends RouterComposedOptions, ComposedInter
       this.params = params
 
       if (typeof this.pathname === 'string') {
-        let pathname = this.pathname
-
-        params.forEach((param) => {
-          const [key, value] = Object.entries(param)[0]
-          const nextPathname = pathname.replace(new RegExp(`:${key}`), value)
-
-          if (nextPathname !== '') {
-            pathname = nextPathname
-          }
-        })
-
-        this.pathname = pathname
+        this.pathname = fillPathnameWithParams(this.pathname, this.params)
       }
     }
 
@@ -49,4 +55,4 @@ function WithParams<ComposedOptions extends RouterComposedOptions, ComposedInter
   }
 }
 
-export { WithParams, WithParamsOptions, WithParamsInterface, Params }
+export { WithParams, WithParamsOptions, WithParamsInterface, Params, fillPathnameWithParams }
