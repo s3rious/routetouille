@@ -16,13 +16,14 @@ type AbstractRoute = WithNameInterface &
 type WithMapOptions = {}
 
 type RouteMapKey = string
-type RouteMapElement = {
+
+type RouteMapRoute = {
   route: AbstractRoute
   parent?: RouteMapKey
   children?: RouteMapKey[]
   fallback?: RouteMapKey
 }
-type RouteMap = Map<RouteMapKey, RouteMapElement>
+type RouteMap = Map<RouteMapKey, RouteMapRoute>
 
 type WithMapInterface = WithMapOptions & {
   getMap: () => RouteMap
@@ -33,7 +34,7 @@ function extractMapFromRoot(root?: AbstractRoute): RouteMap {
 
   const recurse = (route: AbstractRoute, parent?: RouteMapKey, fallback?: RouteMapKey): void => {
     const key: RouteMapKey = (parent != null ? [parent, route.name] : [route.name]).join('.')
-    const value: RouteMapElement = {
+    const value: RouteMapRoute = {
       route,
     }
 
@@ -96,4 +97,4 @@ function WithMap<ComposedOptions extends WithRootOptions, ComposedInterface exte
   }
 }
 
-export { WithMap, WithMapOptions, WithMapInterface, AbstractRoute, RouteMap, RouteMapElement, RouteMapKey }
+export { WithMap, WithMapOptions, WithMapInterface, AbstractRoute, RouteMap, RouteMapRoute, RouteMapKey }
