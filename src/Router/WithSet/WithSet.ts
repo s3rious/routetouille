@@ -1,7 +1,7 @@
 import { WithParamsInterface, WithParamsOptions } from '../WithParams'
 import { WithPathnameInterface, WithPathnameOptions } from '../WithPathname'
 import { WithActiveInterface, WithActiveOptions } from '../WithActive'
-import { WithMapInterface, WithMapOptions, RouteMapElement, RouteMapKey, AbstractRoute } from '../WithMap'
+import { WithMapInterface, WithMapOptions, RouteMapRoute, RouteMapKey, AbstractRoute } from '../WithMap'
 
 type RouterComposedOptions = WithParamsOptions & WithPathnameOptions & WithActiveOptions & WithMapOptions
 type RouterComposedInterface = WithParamsInterface & WithPathnameInterface & WithActiveInterface & WithMapInterface
@@ -48,12 +48,12 @@ function WithSet<ComposedOptions extends RouterComposedOptions, ComposedInterfac
       const pathParts = getPathParts(path)
       const map = this.getMap()
       const rootKey: RouteMapKey = map.entries().next().value[0]
-      const rootElement: RouteMapElement | undefined = map.get(rootKey)
+      const rootRoute: RouteMapRoute | undefined = map.get(rootKey)
       const routesToActive: AbstractRoute[] = []
       const paramsToActive: Array<{ [key: string]: string }> = []
       let pathPartIndex = 0
 
-      if (rootElement?.route != null) {
+      if (rootRoute?.route != null) {
         const recurse = (route: AbstractRoute): void => {
           if (pathPartIndex > pathParts.length - 1) {
             return
@@ -89,7 +89,7 @@ function WithSet<ComposedOptions extends RouterComposedOptions, ComposedInterfac
           }
         }
 
-        recurse(rootElement.route)
+        recurse(rootRoute.route)
       }
 
       const routesToActiveRegex = new RegExp(
