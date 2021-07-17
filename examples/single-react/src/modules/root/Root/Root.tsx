@@ -2,8 +2,9 @@ import * as React from 'react'
 import { useEffect, useMemo, useState } from 'react'
 import { RouterInterface } from 'routetouille'
 
-import { AnyRouteInterface } from '../../../routes'
-import { isWithReactComponent } from '../../../routes/WithReactComponent'
+import { AnyRouteInterface, isWithReactComponent } from '../../../routes'
+
+const RootContext: React.Context<{ router: RouterInterface | undefined }> = React.createContext({ router: undefined })
 
 type RootProps = {
   router: RouterInterface
@@ -25,11 +26,15 @@ function Root({ router }: RootProps): React.ReactElement | null {
 
   if (isWithReactComponent(Route)) {
     if (Boolean(Route.Component)) {
-      return <Route.Component router={router} route={Route} />
+      return (
+        <RootContext.Provider value={{ router }}>
+          <Route.Component router={router} route={Route} />
+        </RootContext.Provider>
+      )
     }
   }
 
   return null
 }
 
-export { Root }
+export { Root, RootContext }

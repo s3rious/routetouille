@@ -1,12 +1,14 @@
 import * as React from 'react'
 
-import { WithReactComponentProps } from '../../../../routes/WithReactComponent'
+import { WithReactComponentProps } from '../../../../routes'
+
+import { Link } from '../../../../components/atoms/Link/'
 
 function Login({ router }: WithReactComponentProps): React.ReactElement {
   return (
     <>
       <div>Login</div>
-      <a onClick={async () => await router.goTo('main.sign-up')}>Sign up</a>
+      <Link to="main.sign-up">Sign up</Link>
     </>
   )
 }
