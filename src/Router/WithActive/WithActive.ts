@@ -210,4 +210,4 @@ function WithActive<ComposedOptions extends RouterComposedOptions, ComposedInter
   }
 }
 
-export { WithActive, WithActiveOptions, WithActiveInterface, Activator }
+export { WithActive, WithActiveOptions, WithActiveInterface, Activator, getRoutesTrackByActivator }
