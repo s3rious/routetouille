@@ -11,14 +11,14 @@ import {
 type ComposedRouteOptions = WithAfterMountOptions & WithAfterUnmountOptions
 type ComposedRouteInterface = WithAfterMountInterface & WithAfterUnmountInterface
 
-type ComponentProps = {
+type WithReactRootComponentProps = {
   router: RouterInterface
 }
 
 type WithReactRootOptions = {
   id: string
   router: RouterInterface
-  Component: React.FunctionComponent<ComponentProps>
+  Component: React.FunctionComponent<WithReactRootComponentProps>
 }
 
 type WithReactRootInterface = {}
@@ -65,4 +65,4 @@ function WithReactRoot<ComposedOptions extends ComposedRouteOptions, ComposedInt
   }
 }
 
-export { WithReactRoot, WithReactRootOptions, WithReactRootInterface, ComponentProps }
+export { WithReactRoot, WithReactRootOptions, WithReactRootInterface, WithReactRootComponentProps }

@@ -1,8 +1,9 @@
 import * as React from 'react'
 import { useEffect, useMemo, useState } from 'react'
-import { AbstractRoute, RouterInterface } from 'routetouille'
+import { RouterInterface } from 'routetouille'
 
-import { WithReactComponentInterface } from '../../../routes/WithReactComponent'
+import { AnyRouteInterface } from '../../../routes'
+import { isWithReactComponent } from '../../../routes/WithReactComponent'
 
 type RootProps = {
   router: RouterInterface
@@ -20,10 +21,12 @@ function Root({ router }: RootProps): React.ReactElement | null {
     return null
   }
 
-  const Route = router.active[router.active.length - 1] as AbstractRoute & WithReactComponentInterface
+  const Route = router.active[router.active.length - 1] as AnyRouteInterface
 
-  if (Route.Component) {
-    return <Route.Component router={router} route={Route} />
+  if (isWithReactComponent(Route)) {
+    if (Boolean(Route.Component)) {
+      return <Route.Component router={router} route={Route} />
+    }
   }
 
   return null
