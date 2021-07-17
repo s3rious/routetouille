@@ -4,6 +4,7 @@ import { WithActive, WithActiveOptions, WithActiveInterface } from './WithActive
 import { WithPathname, WithPathnameOptions, WithPathnameInterface } from './WithPathname'
 import { WithParams, WithParamsOptions, WithParamsInterface } from './WithParams'
 import { WithSet, WithSetOptions, WithSetInterface } from './WithSet'
+import { WithUrlTo, WithUrlToOptions, WithUrlToInterface } from './WithUrlTo'
 import { WithGoTo, WithGoToOptions, WithGoToInterface } from './WithGoTo'
 import { WithHistory, WithHistoryOptions, WithHistoryInterface } from './WithHistory'
 import { Subscribable, SubscribableOptions, SubscribableInterface } from './Subscribable'
@@ -14,6 +15,7 @@ type RouterOptions = WithRootOptions &
   WithPathnameOptions &
   WithParamsOptions &
   WithSetOptions &
+  WithUrlToOptions &
   WithGoToOptions &
   WithHistoryOptions &
   SubscribableOptions
@@ -23,6 +25,7 @@ type RouterInterface = WithRootInterface &
   WithPathnameInterface &
   WithParamsInterface &
   WithSetInterface &
+  WithUrlToInterface &
   WithGoToInterface &
   WithHistoryInterface &
   SubscribableInterface
@@ -30,7 +33,7 @@ type RouterInterface = WithRootInterface &
 type CreateRouter = (options: RouterOptions) => RouterInterface
 
 const Router: CreateRouter = Subscribable(
-  WithHistory(WithGoTo(WithSet(WithParams(WithPathname(WithActive(WithMap(WithRoot()))))))),
+  WithHistory(WithGoTo(WithUrlTo(WithSet(WithParams(WithPathname(WithActive(WithMap(WithRoot())))))))),
 )
 
 export { Router, RouterOptions, RouterInterface }
