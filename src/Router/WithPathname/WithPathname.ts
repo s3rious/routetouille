@@ -1,10 +1,18 @@
 import { Activator, WithActiveInterface, WithActiveOptions } from '../WithActive'
+import { AbstractRoute } from '../WithMap'
 
 type WithPathnameOptions = {}
 
 type WithPathnameInterface = WithPathnameOptions & {
   pathname: string | null
   activate: (activator: Activator, optimistic?: boolean) => Promise<void>
+}
+
+function getPathnameFromRoutesTrack(track: AbstractRoute[]): string {
+  return [...track]
+    .map((route) => route.path)
+    .filter(Boolean)
+    .join('')
 }
 
 function WithPathname<ComposedOptions extends WithActiveOptions, ComposedInterface extends WithActiveInterface>(
@@ -21,14 +29,11 @@ function WithPathname<ComposedOptions extends WithActiveOptions, ComposedInterfa
     ): Promise<void> {
       await composed.activate.bind(this)(activator, optimistic)
 
-      this.pathname = [...this.active]
-        .map((route) => route.path)
-        .filter(Boolean)
-        .join('')
+      this.pathname = getPathnameFromRoutesTrack(this.active)
     }
 
     return { ...composed, pathname, activate }
   }
 }
 
-export { WithPathname, WithPathnameOptions, WithPathnameInterface }
+export { WithPathname, WithPathnameOptions, WithPathnameInterface, getPathnameFromRoutesTrack }
