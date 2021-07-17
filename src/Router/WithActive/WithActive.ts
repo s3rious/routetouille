@@ -1,4 +1,4 @@
-import { AbstractRoute, RouteMap, RouteMapElement, RouteMapKey, WithMapInterface, WithMapOptions } from '../WithMap'
+import { AbstractRoute, RouteMap, RouteMapRoute, RouteMapKey, WithMapInterface, WithMapOptions } from '../WithMap'
 import { WithRootInterface, WithRootOptions } from '../WithRoot'
 
 type RouterComposedOptions = WithMapOptions & WithRootOptions
@@ -15,15 +15,15 @@ type WithActiveInterface = WithActiveOptions & {
   activate: (activator: Activator, optimistic?: boolean) => Promise<void>
 }
 
-function getNextActive(map: RouteMap, activator: Activator): AbstractRoute[] | undefined {
-  const endElementToActivate = getEndElementToActivate(map, activator)
+function getRoutesTrackByActivator(map: RouteMap, activator: Activator): AbstractRoute[] | undefined {
+  const finalRoute = getFinalRouteByActivator(map, activator)
 
-  if (endElementToActivate != null) {
-    return getNextActiveFromEndElement(map, endElementToActivate)
+  if (finalRoute != null) {
+    return getRoutesTrackByFinalRoute(map, finalRoute)
   }
 }
 
-function getEndElementToActivate(map: RouteMap, activator: Activator): RouteMapElement | undefined {
+function getFinalRouteByActivator(map: RouteMap, activator: Activator): RouteMapRoute | undefined {
   if (Array.isArray(activator)) {
     activator = activator.map((part) => (part === null ? 'NULL' : part)).join('.')
   }
@@ -33,46 +33,46 @@ function getEndElementToActivate(map: RouteMap, activator: Activator): RouteMapE
   }
 
   if (activator !== '') {
-    const element = map.get(activator)
+    const route = map.get(activator)
 
-    if (element != null) {
-      return element
+    if (route != null) {
+      return route
     }
 
-    const partialActivator = getActivatorFromPartial(map, activator)
+    const partialActivator = getActivatorByPartialPath(map, activator)
 
     if (partialActivator != null) {
-      const element = map.get(partialActivator)
+      const route = map.get(partialActivator)
 
-      if (element != null) {
-        return element
+      if (route != null) {
+        return route
       }
     }
 
-    return getClosestFallback(map, activator)
+    return getClosestFallbackByActivator(map, activator)
   }
 
   return getFirstFallback(map)
 }
 
-function getActivatorFromPartial(map: RouteMap, activator: RouteMapKey): string | undefined {
+function getActivatorByPartialPath(map: RouteMap, activator: RouteMapKey): string | undefined {
   return [...map.keys()].find((key) => key.includes(activator))
 }
 
-function getClosestFallback(map: RouteMap, activator: RouteMapKey): RouteMapElement | undefined {
-  const recurse = (arrayOfKeys: RouteMapKey[]): RouteMapElement | undefined => {
+function getClosestFallbackByActivator(map: RouteMap, activator: RouteMapKey): RouteMapRoute | undefined {
+  const recurse = (arrayOfKeys: RouteMapKey[]): RouteMapRoute | undefined => {
     if (arrayOfKeys.length < 1) {
       return undefined
     }
 
     const key = arrayOfKeys.join('.')
-    const element = map.get(key)
+    const route = map.get(key)
 
-    if (element?.fallback != null) {
-      const fallbackElement = map.get(element.fallback)
+    if (route?.fallback != null) {
+      const fallbackRoute = map.get(route.fallback)
 
-      if (fallbackElement != null) {
-        return fallbackElement
+      if (fallbackRoute != null) {
+        return fallbackRoute
       }
     }
 
@@ -84,20 +84,20 @@ function getClosestFallback(map: RouteMap, activator: RouteMapKey): RouteMapElem
   return recurse(activator.split('.')) ?? getFirstFallback(map)
 }
 
-function getFirstFallback(map: RouteMap): RouteMapElement | undefined {
-  const firstElement: RouteMapElement = map.entries().next().value[1]
+function getFirstFallback(map: RouteMap): RouteMapRoute | undefined {
+  const root: RouteMapRoute = map.entries().next().value[1]
 
-  const recurse = (element: RouteMapElement): RouteMapElement | undefined => {
-    if (element.fallback != null) {
-      const fallbackElement = map.get(element.fallback)
+  const recurse = (route: RouteMapRoute): RouteMapRoute | undefined => {
+    if (route.fallback != null) {
+      const fallbackRoute = map.get(route.fallback)
 
-      if (fallbackElement != null) {
-        return fallbackElement
+      if (fallbackRoute != null) {
+        return fallbackRoute
       }
     }
 
-    if (element.children != null) {
-      const childElements = element.children.map((key) => {
+    if (route.children != null) {
+      const childRoutes = route.children.map((key) => {
         if (key != null) {
           return map.get(key)
         }
@@ -105,9 +105,9 @@ function getFirstFallback(map: RouteMap): RouteMapElement | undefined {
         return undefined
       })
 
-      return childElements.map((element) => {
-        if (element != null) {
-          return recurse(element)
+      return childRoutes.map((route) => {
+        if (route != null) {
+          return recurse(route)
         }
 
         return undefined
@@ -115,25 +115,25 @@ function getFirstFallback(map: RouteMap): RouteMapElement | undefined {
     }
   }
 
-  return recurse(firstElement)
+  return recurse(root)
 }
 
-function getNextActiveFromEndElement(map: RouteMap, endElement: RouteMapElement): AbstractRoute[] {
+function getRoutesTrackByFinalRoute(map: RouteMap, finalRoute: RouteMapRoute): AbstractRoute[] {
   const active: AbstractRoute[] = []
 
-  const recurse = (element: RouteMapElement): void => {
-    active.push(element.route)
+  const recurse = (route: RouteMapRoute): void => {
+    active.push(route.route)
 
-    if (element.parent != null) {
-      const parentElement = map.get(element.parent)
+    if (route.parent != null) {
+      const parent = map.get(route.parent)
 
-      if (parentElement != null) {
-        recurse(parentElement)
+      if (parent != null) {
+        recurse(parent)
       }
     }
   }
 
-  recurse(endElement)
+  recurse(finalRoute)
 
   return active.reverse()
 }
@@ -184,7 +184,7 @@ function WithActive<ComposedOptions extends RouterComposedOptions, ComposedInter
     ): Promise<void> {
       const isOptimistic: boolean = Boolean(typeof optimistic === 'boolean' ? optimistic : options.optimistic)
       const currentActive = [...this.active]
-      const nextActive = getNextActive(this.getMap(), activator)
+      const nextActive = getRoutesTrackByActivator(this.getMap(), activator)
 
       if (nextActive != null) {
         if (isOptimistic) {
