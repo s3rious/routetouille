@@ -1,16 +1,26 @@
 import * as React from 'react'
 import { RouterInterface } from 'routetouille'
 
-type ComponentProps = {
+type WithReactComponentProps = {
   route: WithReactComponentInterface
   router: RouterInterface
 }
 
 type WithReactComponentOptions = {
-  Component: React.FunctionComponent<ComponentProps>
+  Component: React.FunctionComponent<WithReactComponentProps>
 }
 
 type WithReactComponentInterface = {} & WithReactComponentOptions
+
+function isWithReactComponent(route: unknown): route is WithReactComponentInterface {
+  if (typeof route === 'object') {
+    // TODO: Fix
+    // @ts-expect-error
+    return Boolean(route?.Component)
+  }
+
+  return false
+}
 
 function WithReactComponent<ComposedOptions extends {}, ComposedInterface extends {}>(
   createRoute: (options: ComposedOptions) => ComposedInterface,
@@ -24,4 +34,10 @@ function WithReactComponent<ComposedOptions extends {}, ComposedInterface extend
   }
 }
 
-export { WithReactComponent, WithReactComponentOptions, WithReactComponentInterface, ComponentProps }
+export {
+  WithReactComponent,
+  WithReactComponentOptions,
+  WithReactComponentInterface,
+  WithReactComponentProps,
+  isWithReactComponent,
+}

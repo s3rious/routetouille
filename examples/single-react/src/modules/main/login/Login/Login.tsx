@@ -1,8 +1,8 @@
 import * as React from 'react'
 
-import { ComponentProps } from '../../../../routes/WithReactComponent'
+import { WithReactComponentProps } from '../../../../routes/WithReactComponent'
 
-function Login({ router }: ComponentProps): React.ReactElement {
+function Login({ router }: WithReactComponentProps): React.ReactElement {
   return (
     <>
       <div>Login</div>
