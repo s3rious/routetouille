@@ -6,6 +6,6 @@
     "target": "esnext",
     "moduleResolution": "node",
     "jsx": "preserve",
-    "baseUrl": "./"
+    "baseUrl": "./src/"
   }
 }

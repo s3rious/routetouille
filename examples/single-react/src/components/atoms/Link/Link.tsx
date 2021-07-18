@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Activator, Params, RouterInterface } from 'routetouille'
 
-import { RootContext } from '../../../modules/root/Root'
+import { RootContext } from 'modules/root/Root'
 
 type LinkProps = {
   children: React.ReactNode

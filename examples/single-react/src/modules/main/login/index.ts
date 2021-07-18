@@ -1,6 +1,6 @@
 import { Route, RouteInterface, RouterInterface } from 'routetouille'
 
-import { WithReactComponent, WithReactComponentInterface, AnyRouteInterface } from '../../../routes'
+import { WithReactComponent, WithReactComponentInterface, AnyRouteInterface } from 'router/routes'
 
 import { Login } from './Login'
 
