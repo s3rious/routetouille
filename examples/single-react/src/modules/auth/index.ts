@@ -1,6 +1,6 @@
 import { ModuleRoute, ModuleRouteInterface, RouterInterface } from 'routetouille'
 
-import { AnyRouteInterface } from '../../routes'
+import { AnyRouteInterface } from 'router/routes'
 
 function getRoute(router: RouterInterface, children: AnyRouteInterface[] = []): ModuleRouteInterface {
   return ModuleRoute({

@@ -1,6 +1,6 @@
 import { FallbackRoute, FallbackRouteInterface, RouterInterface } from 'routetouille'
 
-import { WithReactComponent, WithReactComponentInterface } from '../../routes'
+import { WithReactComponent, WithReactComponentInterface } from 'router/routes'
 
 import { Fallback } from './Fallback'
 

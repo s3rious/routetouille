@@ -2,7 +2,7 @@ import * as React from 'react'
 import { useEffect, useMemo, useState } from 'react'
 import { RouterInterface } from 'routetouille'
 
-import { AnyRouteInterface, isWithReactComponent } from '../../../routes'
+import { AnyRouteInterface, isWithReactComponent } from 'router/routes'
 
 const RootContext: React.Context<{ router: RouterInterface | undefined }> = React.createContext({ router: undefined })
 

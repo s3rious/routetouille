@@ -1,6 +1,6 @@
 import { Route, RouteInterface, RouterInterface } from 'routetouille'
 
-import { AnyRouteInterface } from '../../routes'
+import { AnyRouteInterface } from 'router/routes'
 
 import { getRoute as getLoginRoute } from './login'
 import { getRoute as getSignUpRoute } from './signUp'

@@ -11,5 +11,10 @@ module.exports = {
       dest: '/index.html',
     },
   ],
+  alias: {
+    'components/': './src/components',
+    'modules/': './src/modules',
+    'router/': './src/router',
+  },
   plugins: ['@snowpack/plugin-react-refresh', '@snowpack/plugin-typescript'],
 }
