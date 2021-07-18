@@ -1,12 +1,12 @@
-import { AbstractRoute, Route, RouteInterface, RouterInterface } from 'routetouille'
+import { Route, RouteInterface, RouterInterface } from 'routetouille'
 
-import { WithReactComponent, WithReactComponentInterface } from '../../../routes/WithReactComponent'
+import { WithReactComponent, WithReactComponentInterface, AnyRouteInterface } from '../../../routes'
 
 import { SignUp } from './SignUp'
 
 function getRoute(
   _router: RouterInterface,
-  children: AbstractRoute[] = [],
+  children: AnyRouteInterface[] = [],
 ): WithReactComponentInterface & RouteInterface {
   return WithReactComponent(Route)({
     name: 'sign-up',

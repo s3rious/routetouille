@@ -1,6 +1,8 @@
-import { AbstractRoute, ModuleRoute, ModuleRouteInterface, RouterInterface } from 'routetouille'
+import { ModuleRoute, ModuleRouteInterface, RouterInterface } from 'routetouille'
 
-function getRoute(router: RouterInterface, children: AbstractRoute[] = []): ModuleRouteInterface {
+import { AnyRouteInterface } from '../../routes'
+
+function getRoute(router: RouterInterface, children: AnyRouteInterface[] = []): ModuleRouteInterface {
   return ModuleRoute({
     name: 'non-auth',
     redirects: [
@@ -10,7 +12,7 @@ function getRoute(router: RouterInterface, children: AbstractRoute[] = []): Modu
 
           return Boolean(authed)
         },
-        async () => await router.goTo('auth'),
+        async () => router.goTo('auth'),
       ],
     ],
     children,

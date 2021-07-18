@@ -1,12 +1,12 @@
-import { AbstractRoute, ModuleRoute, ModuleRouteInterface, RouterInterface } from 'routetouille'
+import { ModuleRoute, ModuleRouteInterface, RouterInterface } from 'routetouille'
 
-import { WithReactRoot, WithReactRootInterface } from '../../routes/WithReactRoot'
+import { WithReactRoot, WithReactRootInterface, AnyRouteInterface } from '../../routes/'
 
 import { Root } from './Root'
 
 function getRoute(
   router: RouterInterface,
-  children: AbstractRoute[] = [],
+  children: AnyRouteInterface[] = [],
 ): WithReactRootInterface & ModuleRouteInterface {
   return WithReactRoot(ModuleRoute)({
     router,
