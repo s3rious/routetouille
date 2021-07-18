@@ -1,6 +1,7 @@
 import { Route, RouteInterface, RouterInterface } from 'routetouille'
 
 import { AnyRouteInterface } from 'router/routes'
+import { redirect } from 'router/redirect'
 
 import { getRoute as getLoginRoute } from './login'
 import { getRoute as getSignUpRoute } from './signUp'
@@ -11,14 +12,15 @@ function getRoute(router: RouterInterface, children: AnyRouteInterface[] = []): 
     path: '/',
     children: [getLoginRoute(router), getSignUpRoute(router), ...children],
     redirects: [
-      [
+      redirect(
+        router,
         async () => {
           const lastActiveRoute = router.active[router.active.length - 1]
 
           return lastActiveRoute.name === 'main'
         },
-        async () => router.goTo('login'),
-      ],
+        'login',
+      ),
     ],
   })
 }
