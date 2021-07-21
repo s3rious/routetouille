@@ -1,6 +1,7 @@
 import * as React from 'react'
+import { ReactElement } from 'react'
 
-function SignUp(): React.ReactElement {
+function SignUp(): ReactElement {
   return <div>Sign Up</div>
 }
 

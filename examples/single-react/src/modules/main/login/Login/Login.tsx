@@ -1,10 +1,11 @@
 import * as React from 'react'
+import { ReactElement } from 'react'
 
 import { WithReactComponentProps } from 'router/routes'
 
 import { Link } from 'components/atoms/Link'
 
-function Login({ router }: WithReactComponentProps): React.ReactElement {
+function Login({ router }: WithReactComponentProps): ReactElement {
   return (
     <>
       <div>Login</div>

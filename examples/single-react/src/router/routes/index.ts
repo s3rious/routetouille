@@ -5,9 +5,13 @@ import {
   ModuleRouteOptions,
   FallbackRouteInterface,
   FallbackRouteOptions,
-} from 'routetouille'
-import { WithReactRootInterface, WithReactRootOptions } from './WithReactRoot'
-import { WithReactComponentInterface, WithReactComponentOptions } from './WithReactComponent'
+} from 'routetouille/lib/Route'
+import {
+  WithReactRootInterface,
+  WithReactRootOptions,
+  WithReactComponentInterface,
+  WithReactComponentOptions,
+} from 'local_modules/react-routetouille/Route'
 
 type AnyRouteInterface =
   | RouteInterface
@@ -31,6 +35,6 @@ type AnyRouteOptions =
   | (WithReactRootOptions & FallbackRouteOptions)
   | (WithReactComponentOptions & FallbackRouteOptions)
 
-export * from './WithReactRoot'
-export * from './WithReactComponent'
+export * from 'routetouille/lib/Route'
+export * from 'local_modules/react-routetouille/Route'
 export { AnyRouteInterface, AnyRouteOptions }

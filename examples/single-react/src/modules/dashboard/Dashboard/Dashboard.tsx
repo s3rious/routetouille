@@ -1,6 +1,7 @@
 import * as React from 'react'
+import { ReactElement } from 'react'
 
-function Dashboard(): React.ReactElement {
+function Dashboard(): ReactElement {
   return <div>Dashboard</div>
 }
 

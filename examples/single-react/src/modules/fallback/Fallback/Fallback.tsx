@@ -1,6 +1,7 @@
 import * as React from 'react'
+import { ReactElement } from 'react'
 
-function Fallback(): React.ReactElement {
+function Fallback(): ReactElement {
   return <div>Fallback</div>
 }
 

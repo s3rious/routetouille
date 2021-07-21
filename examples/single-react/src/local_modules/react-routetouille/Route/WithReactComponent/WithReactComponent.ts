@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { FunctionComponent } from 'react'
 import { RouterInterface } from 'routetouille'
 
 type WithReactComponentProps = {
@@ -7,16 +7,20 @@ type WithReactComponentProps = {
 }
 
 type WithReactComponentOptions = {
-  Component: React.FunctionComponent<WithReactComponentProps>
+  Component: FunctionComponent<WithReactComponentProps>
 }
 
 type WithReactComponentInterface = {} & WithReactComponentOptions
 
+function inOperator<K extends string, T extends object>(k: K, o: T): o is T & Record<K, unknown> {
+  return k in o
+}
+
 function isWithReactComponent(route: unknown): route is WithReactComponentInterface {
-  if (typeof route === 'object') {
-    // TODO: Fix
-    // @ts-expect-error
-    return Boolean(route?.Component)
+  if (typeof route === 'object' && route) {
+    if (inOperator('Component', route)) {
+      return Boolean(route?.Component)
+    }
   }
 
   return false
