@@ -1,11 +1,16 @@
 {
-  "extends": "../../tsconfig.json",
-  "include": ["src"],
   "compilerOptions": {
-    "module": "esnext",
-    "target": "esnext",
-    "moduleResolution": "node",
+    "strict": true,
+    "lib": ["ESNext", "DOM"],
     "jsx": "preserve",
-    "baseUrl": "./src/"
-  }
+
+    "baseUrl": "./src",
+
+    "module": "ESNext",
+    "moduleResolution": "Node",
+
+    "outDir": "./dist",
+    "target": "ES2019", // node 12 → https://github.com/microsoft/TypeScript/wiki/Node-Target-Mapping
+  },
+  "include": ["src"],
 }

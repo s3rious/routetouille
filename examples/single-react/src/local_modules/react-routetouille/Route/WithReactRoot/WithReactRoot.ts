@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { createElement, FunctionComponent } from 'react'
 import { render, unmountComponentAtNode } from 'react-dom'
 import {
   RouterInterface,
@@ -18,7 +18,7 @@ type WithReactRootComponentProps = {
 type WithReactRootOptions = {
   id: string
   router: RouterInterface
-  Component: React.FunctionComponent<WithReactRootComponentProps>
+  Component: FunctionComponent<WithReactRootComponentProps>
 }
 
 type WithReactRootInterface = {}
@@ -40,7 +40,7 @@ function WithReactRoot<ComposedOptions extends ComposedRouteOptions, ComposedInt
         root = createdRoot
       }
 
-      render(React.createElement(Component, { router: router }), root)
+      render(createElement(Component, { router: router }), root)
 
       await new Promise((resolve) => setTimeout(() => resolve(''), 0))
     }

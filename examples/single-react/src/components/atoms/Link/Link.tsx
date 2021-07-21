@@ -1,19 +1,19 @@
 import * as React from 'react'
+import { useContext, useMemo, useCallback, ReactNode, HTMLProps, ReactElement, MouseEventHandler } from 'react'
+import { Context } from 'local_modules/react-routetouille'
 import { Activator, Params, RouterInterface } from 'routetouille'
 
-import { RootContext } from 'modules/root/Root'
-
 type LinkProps = {
-  children: React.ReactNode
+  children: ReactNode
   to: Activator
   params?: Params
   optimistic?: boolean
-} & React.HTMLProps<HTMLAnchorElement>
+} & HTMLProps<HTMLAnchorElement>
 
-function Link({ children, to, params, optimistic = true, ...rest }: LinkProps): React.ReactElement {
-  const router: RouterInterface | undefined = React.useContext(RootContext).router
+function Link({ children, to, params, optimistic = true, ...rest }: LinkProps): ReactElement {
+  const router: RouterInterface | undefined = useContext(Context).router
 
-  const href: string | undefined = React.useMemo(() => {
+  const href: string | undefined = useMemo(() => {
     if (Boolean(router)) {
       return router.urlTo(to, params) ?? undefined
     }
@@ -21,7 +21,7 @@ function Link({ children, to, params, optimistic = true, ...rest }: LinkProps): 
     return undefined
   }, [to, params, router])
 
-  const handleClick: React.MouseEventHandler<HTMLAnchorElement> = React.useCallback(
+  const handleClick: MouseEventHandler<HTMLAnchorElement> = useCallback(
     async (event) => {
       if (Boolean(router)) {
         event.preventDefault()

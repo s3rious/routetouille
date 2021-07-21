@@ -12,6 +12,7 @@ module.exports = {
     },
   ],
   alias: {
+    'local_modules/': './src/local_modules',
     'components/': './src/components',
     'modules/': './src/modules',
     'router/': './src/router',
