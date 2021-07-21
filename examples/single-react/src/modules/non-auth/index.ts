@@ -1,7 +1,4 @@
-import { ModuleRoute, ModuleRouteInterface, RouterInterface } from 'routetouille'
-
-import { AnyRouteInterface } from 'router/routes'
-import { redirect } from 'router/redirect'
+import { redirect, ModuleRoute, ModuleRouteInterface, AnyRouteInterface, RouterInterface } from 'router/index'
 
 function getRoute(router: RouterInterface, children: AnyRouteInterface[] = []): ModuleRouteInterface {
   return ModuleRoute({

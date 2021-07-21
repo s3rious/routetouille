@@ -1,6 +1,11 @@
-import { ModuleRoute, ModuleRouteInterface, RouterInterface } from 'routetouille'
-
-import { WithReactRoot, WithReactRootInterface, AnyRouteInterface } from 'router/routes'
+import {
+  ModuleRoute,
+  WithReactRoot,
+  ModuleRouteInterface,
+  WithReactRootInterface,
+  AnyRouteInterface,
+  RouterInterface,
+} from 'router/index'
 
 import { Root } from './Root'
 

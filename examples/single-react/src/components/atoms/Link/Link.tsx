@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { useContext, useMemo, useCallback, ReactNode, HTMLProps, ReactElement, MouseEventHandler } from 'react'
-import { Context } from 'local_modules/react-routetouille'
-import { Activator, Params, RouterInterface } from 'routetouille'
+
+import { Context, Activator, Params, RouterInterface } from 'router/index'
 
 type LinkProps = {
   children: ReactNode
@@ -11,7 +11,7 @@ type LinkProps = {
 } & HTMLProps<HTMLAnchorElement>
 
 function Link({ children, to, params, optimistic = true, ...rest }: LinkProps): ReactElement {
-  const router: RouterInterface | undefined = useContext(Context).router
+  const { router } = useContext<{ router: RouterInterface }>(Context)
 
   const href: string | undefined = useMemo(() => {
     if (Boolean(router)) {

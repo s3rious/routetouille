@@ -1,4 +1,4 @@
-import { BrowserHistory, Router } from 'routetouille'
+import { Router, BrowserHistory } from 'router/index'
 
 import { getRoute as getRootRoute } from 'modules/root'
 
