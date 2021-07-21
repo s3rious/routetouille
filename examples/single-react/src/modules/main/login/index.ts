@@ -1,6 +1,11 @@
-import { Route, RouteInterface, RouterInterface } from 'routetouille'
-
-import { WithReactComponent, WithReactComponentInterface, AnyRouteInterface } from 'router/routes'
+import {
+  Route,
+  WithReactComponent,
+  RouteInterface,
+  WithReactComponentInterface,
+  AnyRouteInterface,
+  RouterInterface,
+} from 'router/index'
 
 import { Login } from './Login'
 

@@ -1,7 +1,4 @@
-import { Route, RouteInterface, RouterInterface } from 'routetouille'
-
-import { AnyRouteInterface } from 'router/routes'
-import { redirect } from 'router/redirect'
+import { redirect, Route, RouteInterface, AnyRouteInterface, RouterInterface } from 'router/index'
 
 import { getRoute as getLoginRoute } from './login'
 import { getRoute as getSignUpRoute } from './signUp'

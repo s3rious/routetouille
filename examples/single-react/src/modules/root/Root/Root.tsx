@@ -1,8 +1,6 @@
 import { useMemo, ReactElement } from 'react'
-import { RouterInterface } from 'routetouille'
-import { useRouterRoot, renderLastActive } from 'local_modules/react-routetouille'
 
-import { AnyRouteInterface } from 'router/routes'
+import { useRouterRoot, renderLastActive, RouterInterface, AnyRouteInterface } from 'router/index'
 
 type RootProps = {
   router: RouterInterface
