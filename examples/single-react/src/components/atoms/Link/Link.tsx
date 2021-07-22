@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { useContext, useMemo, useCallback, ReactNode, HTMLProps, ReactElement, MouseEventHandler } from 'react'
+import { useMemo, useCallback, ReactNode, HTMLProps, ReactElement, MouseEventHandler } from 'react'
 
-import { Context, Activator, Params, RouterInterface } from 'router/index'
+import { useRouter, Activator, Params, RouterInterface } from 'router/index'
 
 type LinkProps = {
   children: ReactNode
@@ -11,7 +11,7 @@ type LinkProps = {
 } & HTMLProps<HTMLAnchorElement>
 
 function Link({ children, to, params, optimistic = true, ...rest }: LinkProps): ReactElement {
-  const { router } = useContext<{ router: RouterInterface }>(Context)
+  const router: RouterInterface | undefined = useRouter()
 
   const href: string | undefined = useMemo(() => {
     if (Boolean(router)) {
