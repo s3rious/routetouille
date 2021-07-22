@@ -6,4 +6,4 @@ type ContextValue = { router: RouterInterface | undefined }
 const Context: ReactContext<ContextValue> = createContext<ContextValue>({ router: undefined })
 Context.displayName = 'ReactRoutetouilleContext'
 
-export { Context }
+export { Context, ContextValue }
