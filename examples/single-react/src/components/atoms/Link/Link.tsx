@@ -1,29 +1,33 @@
 import * as React from 'react'
 import { useMemo, useCallback, ReactNode, HTMLProps, ReactElement, MouseEventHandler } from 'react'
+import classNames from 'classnames/dedupe'
 
 import { useRouter, Activator, Params, RouterInterface } from 'router/index'
 
+import styles from './Link.module.css'
+
 type LinkProps = {
   children: ReactNode
-  to: Activator
+  className?: string
+  to?: Activator
   params?: Params
   optimistic?: boolean
 } & HTMLProps<HTMLAnchorElement>
 
-function Link({ children, to, params, optimistic = true, ...rest }: LinkProps): ReactElement {
+function Link({ children, className, to, params, optimistic = true, ...rest }: LinkProps): ReactElement {
   const router: RouterInterface | undefined = useRouter()
 
   const href: string | undefined = useMemo(() => {
-    if (Boolean(router)) {
+    if (Boolean(to) && Boolean(router)) {
       return router.urlTo(to, params) ?? undefined
     }
 
-    return undefined
+    return rest.href
   }, [to, params, router])
 
   const handleClick: MouseEventHandler<HTMLAnchorElement> = useCallback(
     async (event) => {
-      if (Boolean(router)) {
+      if (Boolean(to) && Boolean(router)) {
         event.preventDefault()
 
         await router.goTo(to, { params, optimistic })
@@ -33,10 +37,10 @@ function Link({ children, to, params, optimistic = true, ...rest }: LinkProps): 
   )
 
   return (
-    <a href={href} onClick={handleClick} {...rest}>
+    <a className={classNames(className, styles.Link)} href={href} onClick={handleClick} {...rest}>
       {children}
     </a>
   )
 }
 
-export { Link }
+export { Link, LinkProps }

@@ -1,0 +1,11 @@
+.Link {
+  text-decoration: none;
+  color: var(--color-primary-default);
+  transition: color var(--animation-speed-default) var(--animation-transition-default);
+}
+
+.Link:hover,
+.Link:focus-visible {
+  color: var(--color-hover-default);
+  transition: none;
+}
