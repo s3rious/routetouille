@@ -7,7 +7,7 @@ import {
   RouterInterface,
 } from 'router/index'
 
-import { Root } from './Root'
+import { Root } from './components/Root'
 
 function getRoute(
   router: RouterInterface,

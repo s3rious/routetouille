@@ -6,7 +6,7 @@ import {
   RouterInterface,
 } from 'router/index'
 
-import { Fallback } from './Fallback'
+import { Fallback } from './components/Fallback'
 
 function getRoute(_router: RouterInterface): WithReactComponentInterface & FallbackRouteInterface {
   return WithReactComponent(FallbackRoute)({
