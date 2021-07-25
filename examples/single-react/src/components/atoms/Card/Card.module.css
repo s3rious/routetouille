@@ -1,0 +1,21 @@
+.Card {
+  display: block;
+  background: var(--color-background-default);
+  border-radius: 4px;
+}
+
+.Card_level_1 {
+  box-shadow: var(--shadow-level-1);
+}
+
+.Card_level_2 {
+  box-shadow: var(--shadow-level-2);
+}
+
+.Card_level_3 {
+  box-shadow: var(--shadow-level-3);
+}
+
+.Card_level_4 {
+  box-shadow: var(--shadow-level-4);
+}
