@@ -17,8 +17,10 @@ type WithReactRootComponentProps = {
 
 type WithReactRootOptions = {
   beforeMount?: () => Promise<void>
+  afterMount?: () => Promise<void>
   afterUnmount?: () => Promise<void>
   id: string
+  preloaderId?: string
   router: RouterInterface
   component: FunctionComponent<WithReactRootComponentProps>
 }
@@ -31,8 +33,10 @@ function WithReactRoot<ComposedOptions extends ComposedRouteOptions, ComposedInt
   return function (options: WithReactRootOptions & ComposedOptions): WithReactRootInterface & ComposedInterface {
     const {
       id,
+      preloaderId,
       router,
       beforeMount: composedBeforeMount,
+      afterMount: composedAfterMount,
       afterUnmount: composedAfterUnmount,
       component: Component,
     } = options
@@ -45,9 +49,9 @@ function WithReactRoot<ComposedOptions extends ComposedRouteOptions, ComposedInt
       let root = globalThis.document.getElementById(id)
 
       if (root == null) {
-        const createdRoot = document.createElement('div')
+        const createdRoot = globalThis.document.createElement('div')
         createdRoot.id = id
-        document.body.append(createdRoot)
+        globalThis.document.body.append(createdRoot)
 
         root = createdRoot
       }
@@ -57,8 +61,26 @@ function WithReactRoot<ComposedOptions extends ComposedRouteOptions, ComposedInt
       await new Promise((resolve) => setTimeout(() => resolve(''), 0))
     }
 
+    async function afterMount(this: ComposedInterface & ComposedRouteInterface): Promise<void> {
+      if (preloaderId) {
+        const preloader = globalThis.document.getElementById(preloaderId)
+
+        if (preloader != null) {
+          const parent = preloader.parentNode
+
+          if (parent != null) {
+            parent.removeChild(preloader)
+          }
+        }
+      }
+
+      if (composedAfterMount) {
+        await composedAfterMount()
+      }
+    }
+
     async function afterUnmount(this: ComposedInterface & ComposedRouteInterface): Promise<void> {
-      const root = document.getElementById(id)
+      const root = globalThis.document.getElementById(id)
 
       if (root != null) {
         const parent = root.parentNode
@@ -75,7 +97,7 @@ function WithReactRoot<ComposedOptions extends ComposedRouteOptions, ComposedInt
       }
     }
 
-    const composed: ComposedInterface = createRoute({ ...options, beforeMount, afterUnmount })
+    const composed: ComposedInterface = createRoute({ ...options, beforeMount, afterMount, afterUnmount })
 
     return { ...composed }
   }
