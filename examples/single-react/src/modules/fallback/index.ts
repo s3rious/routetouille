@@ -11,7 +11,7 @@ import { Fallback } from './components/Fallback'
 function getRoute(_router: RouterInterface): WithReactComponentInterface & FallbackRouteInterface {
   return WithReactComponent(FallbackRoute)({
     name: '404',
-    Component: Fallback,
+    component: Fallback,
   })
 }
 

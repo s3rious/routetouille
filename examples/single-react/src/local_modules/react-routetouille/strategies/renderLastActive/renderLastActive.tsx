@@ -14,7 +14,7 @@ function renderLastActive<Route extends {}, Router extends AbstractRouter<Route>
   const route = active[active.length - 1]
 
   if (isWithReactComponent(route)) {
-    const Component = route.Component
+    const Component = route.component
 
     return (
       <Context.Provider value={{ router }}>

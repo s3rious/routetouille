@@ -7,7 +7,7 @@ type WithReactComponentProps = {
 }
 
 type WithReactComponentOptions = {
-  Component: FunctionComponent<WithReactComponentProps>
+  component: FunctionComponent<WithReactComponentProps>
 }
 
 type WithReactComponentInterface = {} & WithReactComponentOptions
@@ -18,8 +18,8 @@ function inOperator<K extends string, T extends object>(k: K, o: T): o is T & Re
 
 function isWithReactComponent(route: unknown): route is WithReactComponentInterface {
   if (typeof route === 'object' && route) {
-    if (inOperator('Component', route)) {
-      return Boolean(route?.Component)
+    if (inOperator('component', route)) {
+      return Boolean(route?.component)
     }
   }
 
@@ -34,7 +34,7 @@ function WithReactComponent<ComposedOptions extends {}, ComposedInterface extend
   ): WithReactComponentInterface & ComposedInterface {
     const composed: ComposedInterface = createRoute(options)
 
-    return { ...composed, Component: options.Component }
+    return { ...composed, component: options.component }
   }
 }
 
