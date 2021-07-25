@@ -1,4 +1,5 @@
 import { redirect, ModuleRoute, ModuleRouteInterface, AnyRouteInterface, RouterInterface } from 'router/index'
+import { store } from 'modules/client'
 
 function getRoute(router: RouterInterface, children: AnyRouteInterface[] = []): ModuleRouteInterface {
   return ModuleRoute({
@@ -7,9 +8,9 @@ function getRoute(router: RouterInterface, children: AnyRouteInterface[] = []): 
       redirect(
         router,
         async () => {
-          const authed = window.localStorage.getItem('authed')
+          const { accessToken } = store.getState()
 
-          return authed === 'true'
+          return Boolean(accessToken)
         },
         'auth',
       ),
