@@ -11,6 +11,7 @@ import { store } from 'modules/client'
 function getRoute(router: RouterInterface, children: AnyRouteInterface[] = []): ModuleRouteInterface {
   return ModuleRoute({
     name: 'non-auth',
+    beforeMount: async () => activateFirstChildOf(router, 'non-auth'),
     redirects: [
       redirect(
         router,
@@ -22,7 +23,6 @@ function getRoute(router: RouterInterface, children: AnyRouteInterface[] = []): 
         'auth',
       ),
     ],
-    afterMount: async () => activateFirstChildOf(router, 'non-auth'),
     children,
   })
 }
