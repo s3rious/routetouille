@@ -21,7 +21,7 @@ type WithSetInterface = WithSetOptions & {
   set: (path: SetActivator, optimistic?: boolean) => Promise<void>
 }
 
-function getPathParts(path: string): string[] {
+function getPathParts(path: string, gotSlashRoute: boolean): string[] {
   return path
     .split(/([/?&#])/)
     .filter((part) => part.length > 0)
@@ -36,6 +36,17 @@ function getPathParts(path: string): string[] {
 
       return array
     }, [])
+    .filter((part, index, array) => {
+      if (gotSlashRoute) {
+        return true
+      }
+
+      if (array.length > 1) {
+        return part !== '/'
+      }
+
+      return true
+    })
 }
 
 function WithSet<ComposedOptions extends RouterComposedOptions, ComposedInterface extends RouterComposedInterface>(
@@ -45,8 +56,9 @@ function WithSet<ComposedOptions extends RouterComposedOptions, ComposedInterfac
     const composed: ComposedInterface = createRouter?.(options) ?? ({} as ComposedInterface)
 
     async function set(this: WithSetInterface & ComposedInterface, path: string, optimistic?: boolean): Promise<void> {
-      const pathParts = getPathParts(path)
       const map = this.getMap()
+      const gotSlashRoute = [...map.values()].findIndex((route) => route.route.path === '/') > -1
+      const pathParts = getPathParts(path, gotSlashRoute)
       const rootKey: RouteMapKey = map.entries().next().value[0]
       const rootRoute: RouteMapRoute | undefined = map.get(rootKey)
       const routesToActive: AbstractRoute[] = []
