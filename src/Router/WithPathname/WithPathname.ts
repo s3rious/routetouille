@@ -13,6 +13,8 @@ function getPathnameFromRoutesTrack(track: AbstractRoute[]): string {
     .map((route) => route.path)
     .filter(Boolean)
     .join('')
+    .replace(/^([\w/])/, '/$1')
+    .replace(/\/\//g, '/')
 }
 
 function WithPathname<ComposedOptions extends WithActiveOptions, ComposedInterface extends WithActiveInterface>(
