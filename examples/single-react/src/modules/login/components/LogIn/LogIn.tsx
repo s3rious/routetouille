@@ -9,6 +9,11 @@ import { Layout } from 'components/atoms/Layout'
 import { Inner } from 'components/atoms/Inner'
 import { Link } from 'components/atoms/Link'
 import { Header } from 'components/molecules/Header/Header'
+import { AllCenter } from 'components/atoms/AllCenter'
+import { Width } from 'components/atoms/Width'
+import { Card } from 'components/atoms/Card/Card'
+
+import { Background } from '../Background'
 
 function LogIn({ router }: WithReactComponentProps): ReactElement {
   const loading = useStore(clientEffects.logInFx.pending)
@@ -30,9 +35,17 @@ function LogIn({ router }: WithReactComponentProps): ReactElement {
     <Layout
       header={<Header right={<Link to="non-auth.sign-up">Sign up</Link>} />}
       content={
-        <Inner>
-          <button onClick={handleLogin}>Login</button>
-        </Inner>
+        <Background>
+          <Inner>
+            <AllCenter>
+              <Width size={448}>
+                <Card>
+                  <button onClick={handleLogin}>Login</button>
+                </Card>
+              </Width>
+            </AllCenter>
+          </Inner>
+        </Background>
       }
     />
   )

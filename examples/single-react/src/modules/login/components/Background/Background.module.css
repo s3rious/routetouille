@@ -1,0 +1,7 @@
+.Background {
+  background:
+    linear-gradient(0deg, var(--color-typography-on-background-65), var(--color-typography-on-background-65)),
+    url(https://placekitten.com/2880/1600) center center
+  ;
+  background-size: cover;
+}
