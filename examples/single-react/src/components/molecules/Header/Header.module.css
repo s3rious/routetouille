@@ -1,0 +1,21 @@
+.Header {
+  box-shadow: var(--shadow-level-1);
+  position: sticky;
+  z-index: calc(var(--z-index-modal) - 1);
+}
+
+.HeaderInner {
+  height: 56px;
+  display: grid;
+  grid-template-columns: 0fr auto 0fr;
+  align-items: center;
+}
+
+.HeaderLeft,
+.HeaderRight {
+  white-space: nowrap;
+}
+
+.HeaderLeft {
+  width: 210px;
+}
