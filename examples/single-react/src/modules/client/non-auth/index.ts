@@ -1,4 +1,11 @@
-import { redirect, ModuleRoute, ModuleRouteInterface, AnyRouteInterface, RouterInterface } from 'router/index'
+import {
+  redirect,
+  activateFirstChildOf,
+  ModuleRoute,
+  ModuleRouteInterface,
+  AnyRouteInterface,
+  RouterInterface,
+} from 'router/index'
 import { store } from 'modules/client'
 
 function getRoute(router: RouterInterface, children: AnyRouteInterface[] = []): ModuleRouteInterface {
@@ -15,6 +22,7 @@ function getRoute(router: RouterInterface, children: AnyRouteInterface[] = []): 
         'auth',
       ),
     ],
+    afterMount: async () => activateFirstChildOf(router, 'non-auth'),
     children,
   })
 }

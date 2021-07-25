@@ -11,7 +11,7 @@ function Dashboard({ router }: WithReactComponentProps): ReactElement {
   const handleLogout = async (): Promise<void> => {
     try {
       await clientEffects.logOutFx()
-      await router.goTo('non-auth.main', { optimistic: true })
+      await router.goTo('non-auth', { optimistic: true })
     } catch (error) {
       console.log(clientEffects.logOutFx.fail)
     }
