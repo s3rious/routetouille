@@ -3,7 +3,7 @@ import { ReactElement } from 'react'
 import { useStore } from 'effector-react'
 
 import { WithReactComponentProps } from 'router/routes'
-import { effects as clientEffects } from 'modules/client/index'
+import { effects as clientEffects } from 'modules/client'
 
 import { Link } from 'components/atoms/Link'
 

@@ -3,12 +3,12 @@ import { Router, BrowserHistory } from 'router/index'
 import { getRoute as getRootRoute } from 'modules/root'
 
 import { getRoute as getClientRoute } from 'modules/client'
-
 import { getRoute as getNonAuthRoute } from 'modules/client/non-auth'
-import { getRoute as getMainRoute } from 'modules/client/non-auth/main'
-
 import { getRoute as getAuthRoute } from 'modules/client/auth'
-import { getRoute as getDashboardRoute } from 'modules/client/auth/dashboard'
+
+import { getRoute as getMainRoute } from 'modules/main'
+
+import { getRoute as getDashboardRoute } from 'modules/dashboard'
 
 import { getRoute as getFallbackRoute } from 'modules/fallback'
 
