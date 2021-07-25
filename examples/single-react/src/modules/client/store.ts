@@ -1,4 +1,5 @@
-import { createStore, createEffect, combine } from 'effector'
+// import { createStore, createEffect, combine } from 'effector'
+import { createStore, createEffect, combine } from 'effector-logger'
 import { persist } from 'effector-storage/local'
 
 type ClientLoginParams = {
@@ -7,7 +8,7 @@ type ClientLoginParams = {
 }
 
 const logOutFx = createEffect({
-  name: 'log in client by email and password',
+  name: 'log out client',
   async handler() {
     return await new Promise((resolve, _reject) => {
       setTimeout(() => {
@@ -28,23 +29,26 @@ const logInFx = createEffect<ClientLoginParams, string>({
   },
 })
 
-const effects = {
-  logInFx,
-  logOutFx,
-}
+const effects = { logInFx, logOutFx }
 
 type ClientStoreState = {
   accessToken: string | null
   email: string | null
 }
 
-const client = createStore<Omit<ClientStoreState, 'accessToken'>>({
-  email: null,
-}).reset(logOutFx)
+const client = createStore<Omit<ClientStoreState, 'accessToken'>>(
+  {
+    email: null,
+  },
+  { name: 'client/client' },
+).reset(logOutFx)
 
-const token = createStore<Pick<ClientStoreState, 'accessToken'>>({
-  accessToken: null,
-})
+const token = createStore<Pick<ClientStoreState, 'accessToken'>>(
+  {
+    accessToken: null,
+  },
+  { name: 'client/token' },
+)
   .reset(logOutFx)
   .on(logInFx.doneData, (state, token) => ({ accessToken: token }))
 

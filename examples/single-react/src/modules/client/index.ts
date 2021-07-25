@@ -1,21 +1,10 @@
-import {
-  ModuleRoute,
-  WithEffectorStore,
-  WithEffectorStoreInterface,
-  ModuleRouteInterface,
-  AnyRouteInterface,
-  RouterInterface,
-} from 'router/index'
+import { ModuleRoute, ModuleRouteInterface, AnyRouteInterface, RouterInterface } from 'router/index'
 
-import { store, effects, ClientStoreState } from './store'
+import { store, effects } from './store'
 
-function getRoute(
-  router: RouterInterface,
-  children: AnyRouteInterface[] = [],
-): WithEffectorStoreInterface<ClientStoreState> & ModuleRouteInterface {
-  return WithEffectorStore(ModuleRoute)({
+function getRoute(router: RouterInterface, children: AnyRouteInterface[] = []): ModuleRouteInterface {
+  return ModuleRoute({
     name: 'client',
-    store,
     children,
   })
 }
