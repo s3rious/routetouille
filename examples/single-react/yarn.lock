@@ -516,10 +516,10 @@
     "@types/scheduler" "*"
     csstype "^3.0.2"
 
-"@types/react@^17.0.14":
-  version "17.0.14"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.14.tgz#f0629761ca02945c4e8fea99b8177f4c5c61fb0f"
-  integrity sha512-0WwKHUbWuQWOce61UexYuWTGuGY/8JvtUe/dtQ6lR4sZ3UiylHotJeWpf3ArP9+DSGUoLY3wbU59VyMrJps5VQ==
+"@types/react@^17.0.15":
+  version "17.0.15"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.15.tgz#c7533dc38025677e312606502df7656a6ea626d0"
+  integrity sha512-uTKHDK9STXFHLaKv6IMnwp52fm0hwU+N89w/p9grdUqcFA6WuqDyPhaWopbNyE1k/VhgzmHl8pu1L4wITtmlLw==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
@@ -1152,6 +1152,16 @@ ecc-jsbn@~0.1.1:
   dependencies:
     jsbn "~0.1.0"
     safer-buffer "^2.1.0"
+
+effector-react@^21.3.3:
+  version "21.3.3"
+  resolved "https://registry.yarnpkg.com/effector-react/-/effector-react-21.3.3.tgz#e17c095ca7b6d63af3528b1b5ebf94c3de0149db"
+  integrity sha512-pk+eZQcoI0q8sMtxAvm/lWsZutHW5t0aQBt0edy1XTvjKIhgimFhpxUqJtdtr0asz+9OCN0iG6FYa+Iqo6qpkw==
+
+effector-storage@^4.3.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/effector-storage/-/effector-storage-4.3.0.tgz#89529c558ac080c643c8b341d4dce766688c260f"
+  integrity sha512-LEGMrTkZCe4E6rGpIU5VjtNmdJjKQIh5aMplZdIeQLjfnkloEEdPIpMFl1OOtcbD5+tEtBNAj3EFRK7jkkLbug==
 
 effector@^21.8.12:
   version "21.8.12"
@@ -2936,10 +2946,10 @@ smart-buffer@^4.1.0:
   resolved "https://registry.yarnpkg.com/smart-buffer/-/smart-buffer-4.1.0.tgz#91605c25d91652f4661ea69ccf45f1b331ca21ba"
   integrity sha512-iVICrxOzCynf/SNaBQCw34eM9jROU/s5rzIhpOvzhzuYHfJR/DhZfDkXiZSgKXfgv26HT3Yni3AV/DGw0cGnnw==
 
-snowpack@^3.8.2:
-  version "3.8.2"
-  resolved "https://registry.yarnpkg.com/snowpack/-/snowpack-3.8.2.tgz#fd1d995508f13725ede981d49b7583bdd0399f2f"
-  integrity sha512-aTPnHGHFmoAeZb4NxHzLbZyl/KeUveA78Xz40h+OX6ynFUO74Kta5Q3xw0CwWS87oBxoFL5jjNuFV8Bq1iaJBg==
+snowpack@^3.8.3:
+  version "3.8.3"
+  resolved "https://registry.yarnpkg.com/snowpack/-/snowpack-3.8.3.tgz#5f136dcbe051189ce20092acd36759d03e6cbf87"
+  integrity sha512-nD699xWIDk9nGH4V9xKjgIVPA8jXWp/crUG46mu3/11rrdEv94v4xV/j373w3EvegGVQ3JdA5mlNpxDU8wk5uw==
   dependencies:
     "@npmcli/arborist" "^2.6.4"
     bufferutil "^4.0.2"
