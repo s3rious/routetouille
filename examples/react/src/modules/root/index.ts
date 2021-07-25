@@ -17,6 +17,7 @@ function getRoute(
     router,
     name: 'root',
     id: 'root',
+    preloaderId: 'preloader',
     component: Root,
     beforeMount: async () => {
       if (router.pathname === '/') {
