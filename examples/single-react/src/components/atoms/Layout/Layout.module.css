@@ -1,0 +1,5 @@
+.Layout {
+  display: grid;
+  min-height: 100vh;
+  grid-template-rows: 0fr auto 0fr;
+}
