@@ -7,7 +7,7 @@ import {
   RouterInterface,
 } from 'router/index'
 
-import { Login } from './Login'
+import { LogIn } from './LogIn'
 
 function getRoute(
   _router: RouterInterface,
@@ -16,7 +16,7 @@ function getRoute(
   return WithReactComponent(Route)({
     name: 'login',
     path: 'login/',
-    Component: Login,
+    Component: LogIn,
     children,
   })
 }

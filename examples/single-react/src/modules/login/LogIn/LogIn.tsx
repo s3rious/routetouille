@@ -5,9 +5,12 @@ import { useStore } from 'effector-react'
 import { WithReactComponentProps } from 'router/routes'
 import { effects as clientEffects } from 'modules/client'
 
+import { Layout } from 'components/atoms/Layout'
+import { Inner } from 'components/atoms/Inner'
 import { Link } from 'components/atoms/Link'
+import { Header } from 'components/molecules/Header/Header'
 
-function Login({ router }: WithReactComponentProps): ReactElement {
+function LogIn({ router }: WithReactComponentProps): ReactElement {
   const loading = useStore(clientEffects.logInFx.pending)
 
   const handleLogin = async (): Promise<void> => {
@@ -24,11 +27,15 @@ function Login({ router }: WithReactComponentProps): ReactElement {
   }
 
   return (
-    <>
-      <button onClick={handleLogin}>Login</button>
-      <Link to="main.sign-up">Sign up</Link>
-    </>
+    <Layout
+      header={<Header right={<Link to="non-auth.sign-up">Sign up</Link>} />}
+      content={
+        <Inner>
+          <button onClick={handleLogin}>Login</button>
+        </Inner>
+      }
+    />
   )
 }
 
-export { Login }
+export { LogIn }

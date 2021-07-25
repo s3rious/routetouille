@@ -16,6 +16,8 @@ type WithReactRootComponentProps = {
 }
 
 type WithReactRootOptions = {
+  beforeMount?: () => Promise<void>
+  afterUnmount?: () => Promise<void>
   id: string
   router: RouterInterface
   Component: FunctionComponent<WithReactRootComponentProps>
@@ -27,9 +29,13 @@ function WithReactRoot<ComposedOptions extends ComposedRouteOptions, ComposedInt
   createRoute: (options: ComposedOptions) => ComposedInterface,
 ) {
   return function (options: WithReactRootOptions & ComposedOptions): WithReactRootInterface & ComposedInterface {
-    const { id, router, Component } = options
+    const { id, router, beforeMount: composedBeforeMount, afterUnmount: composedAfterUnmount, Component } = options
 
     async function beforeMount(this: ComposedInterface & ComposedRouteInterface): Promise<void> {
+      if (composedBeforeMount) {
+        await composedBeforeMount()
+      }
+
       let root = globalThis.document.getElementById(id)
 
       if (root == null) {
@@ -56,6 +62,10 @@ function WithReactRoot<ComposedOptions extends ComposedRouteOptions, ComposedInt
         if (parent != null) {
           parent.removeChild(root)
         }
+      }
+
+      if (composedAfterUnmount) {
+        await composedAfterUnmount()
       }
     }
 
