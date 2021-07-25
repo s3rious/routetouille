@@ -7,7 +7,7 @@ import {
   RouterInterface,
 } from 'router/index'
 
-import { SignUp } from './SignUp'
+import { SignUp } from './components/SignUp'
 
 function getRoute(
   _router: RouterInterface,

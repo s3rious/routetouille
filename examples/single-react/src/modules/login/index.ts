@@ -7,7 +7,7 @@ import {
   RouterInterface,
 } from 'router/index'
 
-import { LogIn } from './LogIn'
+import { LogIn } from './components/LogIn'
 
 function getRoute(
   _router: RouterInterface,

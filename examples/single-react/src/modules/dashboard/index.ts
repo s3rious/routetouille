@@ -7,7 +7,7 @@ import {
   RouterInterface,
 } from 'router/index'
 
-import { Dashboard } from './Dashboard'
+import { Dashboard } from './components/Dashboard'
 
 function getRoute(
   _router: RouterInterface,
