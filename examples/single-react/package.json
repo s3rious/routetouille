@@ -5,12 +5,13 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "palettier:watch": "chokidar \"assets/palette/tokens/**/*\" -c \"yarn palettier\"",
+    "palettier:watch": "chokidar \"src/components/atoms/Palette/tokens/**/*\" -c \"yarn palettier\"",
     "start": "yarn palettier && yarn palettier:watch & snowpack dev",
     "palettier": "palettier --src src/components/atoms/Palette/tokens/index.js --dist src/components/atoms/Palette/ --transform cssVariables:Palette.css",
     "build": "yarn palettier && snowpack build"
   },
   "dependencies": {
+    "classnames": "^2.3.1",
     "effector": "^21.8.12",
     "effector-react": "^21.3.3",
     "effector-storage": "^4.3.0",
