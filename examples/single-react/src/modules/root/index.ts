@@ -17,7 +17,7 @@ function getRoute(
     router,
     name: 'root',
     id: 'root',
-    Component: Root,
+    component: Root,
     beforeMount: async () => {
       if (router.pathname === '/') {
         if (router.active[router.active.length - 1].fallback) {
