@@ -2,6 +2,9 @@ import { useMemo, ReactElement } from 'react'
 
 import { useRouterRoot, renderLastActive, RouterInterface, AnyRouteInterface } from 'router/index'
 
+import './Root.css'
+import 'components/atoms/Palette/Palette.css'
+
 type RootProps = {
   router: RouterInterface
 }
