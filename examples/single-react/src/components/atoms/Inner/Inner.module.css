@@ -1,0 +1,8 @@
+.Inner {
+  max-width: 1024px;
+  margin: 0 auto;
+}
+
+.Inner_fullHeight {
+  height: 100%;
+}
