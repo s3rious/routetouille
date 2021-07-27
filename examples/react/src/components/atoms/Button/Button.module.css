@@ -1,0 +1,79 @@
+.Button {
+  border: initial;
+  font-family: inherit;
+  display: inline-block;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.Button_block {
+  display: block;
+  width: 100%;
+}
+
+.Button_disabled {
+  cursor: default;
+}
+
+.Button_theme_primary,
+.Button_theme_secondary {
+  color: var(--color-typography-on-color-default);
+  transition: background-color var(--animation-speed-default) var(--animation-transition-default);
+}
+
+.Button_theme_primary:hover,
+.Button_theme_primary:focus-visible,
+.Button_theme_secondary:hover,
+.Button_theme_secondary:focus-visible {
+  transition: none;
+}
+
+.Button_theme_primary {
+  background-color: var(--color-primary-default);
+}
+
+.Button_theme_primary:hover,
+.Button_theme_primary:focus-visible,
+:global(.HoverableParentSibling):hover ~ * .Button_theme_primary,
+:global(.HoverableSibling):hover ~ .Button_theme_primary {
+  background-color: var(--color-primary-action);
+}
+
+.Button_theme_primary.Button_disabled {
+  background-color: var(--color-primary-disabled);
+}
+
+.Button_theme_secondary {
+  background-color: var(--color-secondary-default);
+}
+
+.Button_theme_secondary:hover,
+.Button_theme_secondary:focus-visible,
+:global(.HoverableParentSibling):hover ~ * .Button_theme_secondary,
+:global(.HoverableSibling):hover ~ .Button_theme_secondary {
+  background-color: var(--color-secondary-action);
+}
+
+.Button_theme_secondary.Button_disabled {
+  background-color: var(--color-secondary-disabled);
+}
+
+.Button_theme_outline {
+  background-color: transparent;
+  color: var(--color-primary-default);
+  box-shadow: 0 0 0 1px inset var(--color-primary-default);
+  transition: background-color var(--animation-speed-default) var(--animation-transition-default),
+    color var(--animation-speed-default) var(--animation-transition-default),
+    box-shadow var(--animation-speed-default) var(--animation-transition-default);
+}
+
+.Button_theme_outline:hover,
+.Button_theme_outline:focus-visible,
+:global(.HoverableParentSibling):hover ~ * .Button_theme_outline,
+:global(.HoverableSibling):hover ~ .Button_theme_outline {
+  background-color: var(--color-primary-10);
+  color: var(--color-primary-action);
+  box-shadow: 0 0 0 1px inset var(--color-primary-action);
+  transition: none;
+}
