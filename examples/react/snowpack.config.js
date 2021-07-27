@@ -18,7 +18,7 @@ module.exports = {
     'modules/': './src/modules',
     'router/': './src/router',
   },
-  plugins: ['@snowpack/plugin-react-refresh', '@snowpack/plugin-typescript'],
+  plugins: ['@snowpack/plugin-react-refresh', '@snowpack/plugin-typescript', '@snowpack/plugin-sass'],
   devOptions: {
     open: 'none',
   },
