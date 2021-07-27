@@ -1,0 +1,14 @@
+$sizes: 4, 8, 12, 16, 20, 24, 32, 40, 48, 56, 64, 80, 120;
+$sides: top, bottom, left, right;
+
+.Spacing {
+  display: block;
+}
+
+@each $size in $sizes {
+  @each $side in $sides {
+    .Spacing_#{$side}_#{$size} {
+      padding-#{$side}: $size * 1px;
+    }
+  }
+}
