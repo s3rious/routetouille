@@ -1,0 +1,200 @@
+/* colors */
+.Typography_color_default {
+  color: var(--color-typography-on-background-default);
+}
+
+.Typography_color_additional {
+  color: var(--color-typography-on-background-additional);
+}
+
+.Typography_color_minor {
+  color: var(--color-typography-on-background-minor);
+}
+
+.Typography_color_muted {
+  color: var(--color-typography-on-background-muted);
+}
+
+.Typography_color_warning {
+  color: var(--color-status-warning-default);
+}
+
+.Typography_color_error {
+  color: var(--color-status-error-default);
+}
+
+.Typography_color_on-color-default {
+  color: var(--color-typography-on-color-default);
+}
+
+.Typography_color_inherit {
+  color: inherit;
+}
+
+/* sizes */
+.Typography_size_10 {
+  font-size: 10px;
+}
+
+.Typography_size_10.Typography_lineHeight_small {
+  line-height: 12px;
+}
+
+.Typography_size_10.Typography_lineHeight_medium {
+  line-height: 16px;
+}
+
+.Typography_size_12 {
+  font-size: 12px;
+}
+
+.Typography_size_12.Typography_lineHeight_small {
+  line-height: 14px;
+}
+
+.Typography_size_12.Typography_lineHeight_medium {
+  line-height: 18px;
+}
+
+.Typography_size_14 {
+  font-size: 14px;
+}
+
+.Typography_size_14.Typography_lineHeight_small {
+  line-height: 16px;
+}
+
+.Typography_size_14.Typography_lineHeight_medium {
+  line-height: 22px;
+}
+
+.Typography_size_16 {
+  font-size: 16px;
+}
+
+.Typography_size_16.Typography_lineHeight_small {
+  line-height: 20px;
+}
+
+.Typography_size_16.Typography_lineHeight_medium {
+  line-height: 24px;
+}
+
+.Typography_size_18 {
+  font-size: 18px;
+}
+
+.Typography_size_18.Typography_lineHeight_small {
+  line-height: 22px;
+}
+
+.Typography_size_18.Typography_lineHeight_medium {
+  line-height: 28px;
+}
+
+.Typography_size_20 {
+  font-size: 20px;
+}
+
+.Typography_size_20.Typography_lineHeight_small {
+  line-height: 24px;
+}
+
+.Typography_size_20.Typography_lineHeight_medium {
+  line-height: 30px;
+}
+
+.Typography_size_24 {
+  font-size: 24px;
+}
+
+.Typography_size_24.Typography_lineHeight_small {
+  line-height: 28px;
+}
+
+.Typography_size_24.Typography_lineHeight_medium {
+  line-height: 36px;
+}
+
+.Typography_size_32 {
+  font-size: 32px;
+}
+
+.Typography_size_32.Typography_lineHeight_small {
+  line-height: 38px;
+}
+
+.Typography_size_32.Typography_lineHeight_medium {
+  line-height: 48px;
+}
+
+.Typography_size_48 {
+  font-size: 48px;
+}
+
+.Typography_size_48.Typography_lineHeight_small {
+  line-height: 58px;
+}
+
+.Typography_size_48.Typography_lineHeight_medium {
+  line-height: 72px;
+}
+
+.Typography_size_54 {
+  font-size: 54px;
+}
+
+.Typography_size_54.Typography_lineHeight_small {
+  line-height: 64px;
+}
+
+.Typography_size_54.Typography_lineHeight_medium {
+  line-height: 80px;
+}
+
+.Typography_size_64 {
+  font-size: 64px;
+}
+
+.Typography_size_64.Typography_lineHeight_small {
+  line-height: 72px;
+}
+
+.Typography_size_64.Typography_lineHeight_medium {
+  line-height: 96px;
+}
+
+/* weights */
+.Typography_weight_regular {
+  font-weight: 400;
+}
+
+.Typography_weight_semibold {
+  font-weight: 500;
+}
+
+.Typography_weight_bold {
+  font-weight: 600;
+}
+
+.Typography_weight_extra {
+  font-weight: 700;
+}
+
+/* aligns */
+.Typography_align_left {
+  text-align: left;
+}
+
+.Typography_align_center {
+  text-align: center;
+}
+
+.Typography_align_right {
+  text-align: right;
+}
+
+/* numerics */
+.Typography_numeric_tabular {
+  font-variant-numeric: tabular-nums;
+}
