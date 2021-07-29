@@ -1,0 +1,36 @@
+.Stack {
+  display: flex;
+  align-items: center;
+}
+
+.Stack_vertical {
+  flex-direction: column;
+}
+
+.Stack_horizontal {
+  flex-direction: row;
+}
+
+.Stack_align_stretch {
+  align-items: stretch;
+}
+
+.Stack_align_start {
+  align-items: start;
+}
+
+.Stack_align_center {
+  align-items: center;
+}
+
+.Stack_align_end {
+  align-items: end;
+}
+
+.Stack_align_baseline {
+  align-items: baseline;
+}
+
+.Stack_inline {
+  display: inline-flex;
+}
