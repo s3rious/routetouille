@@ -1,0 +1,30 @@
+.Input {
+  background-color: var(--color-background-default);
+  border: 0;
+  border-radius: 4px;
+  box-shadow: 0 0 0 1px inset var(--color-background-border);
+  transition: box-shadow var(--animation-speed-default) var(--animation-transition-default);
+}
+
+.Input:focus {
+  outline: none;
+}
+
+.Input:hover {
+  box-shadow: 0 0 0 1px inset var(--color-typography-on-background-minor);
+  transition: none;
+}
+
+.Input:focus-visible {
+  box-shadow: 0 0 0 1px inset var(--color-primary-default);
+  transition: none;
+}
+
+.Input_block {
+  display: block;
+  width: 100%;
+}
+
+.Input_disabled {
+  background-color: var(--color-background-muted);
+}
