@@ -1,13 +1,15 @@
-import { FunctionComponent } from 'react'
+import { FunctionComponent, ReactChild } from 'react'
 import { RouterInterface } from 'routetouille'
 
 type WithReactComponentProps = {
   route: WithReactComponentInterface
   router: RouterInterface
+  children?: ReactChild
 }
 
 type WithReactComponentOptions = {
   component: FunctionComponent<WithReactComponentProps>
+  exclusive?: boolean
 }
 
 type WithReactComponentInterface = {} & WithReactComponentOptions
@@ -34,7 +36,7 @@ function WithReactComponent<ComposedOptions extends {}, ComposedInterface extend
   ): WithReactComponentInterface & ComposedInterface {
     const composed: ComposedInterface = createRoute(options)
 
-    return { ...composed, component: options.component }
+    return { ...composed, component: options.component, exclusive: options.exclusive }
   }
 }
 
