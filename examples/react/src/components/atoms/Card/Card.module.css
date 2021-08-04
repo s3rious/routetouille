@@ -4,6 +4,10 @@
   border-radius: 4px;
 }
 
+.Card_level_0 {
+  box-shadow: var(--shadow-level-0);
+}
+
 .Card_level_1 {
   box-shadow: var(--shadow-level-1);
 }
@@ -18,4 +22,12 @@
 
 .Card_level_4 {
   box-shadow: var(--shadow-level-4);
+}
+
+.Card_color_primary {
+  background-color: var(--color-primary-default);
+}
+
+.Card_color_secondary {
+  background-color: var(--color-secondary-default);
 }

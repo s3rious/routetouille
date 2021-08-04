@@ -1,6 +1,6 @@
 import { useMemo, ReactElement } from 'react'
 
-import { useRouterRoot, renderLastActive, RouterInterface, AnyRouteInterface } from 'router/index'
+import { useRouterRoot, renderLastExclusiveAndTree, RouterInterface, AnyRouteInterface } from 'router/index'
 
 import './Root.css'
 import 'components/atoms/Palette/Palette.css'
@@ -20,7 +20,7 @@ function Root(props: RootProps): ReactElement | null {
     return null
   }
 
-  return renderLastActive(router, active)
+  return renderLastExclusiveAndTree(router, active)
 }
 
 export { Root }

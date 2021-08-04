@@ -21,7 +21,7 @@ async function main(): Promise<void> {
 
   router.root = getRootRoute(router, [
     getClientRoute(router, [
-      getNonAuthRoute(router, [getLoginRoute(router, []), getSignUpRoute(router, [])]),
+      getNonAuthRoute(router, [getLoginRoute(router), getSignUpRoute(router, [])]),
       getAuthRoute(router, [getDashboardRoute(router)]),
     ]),
     getFallbackRoute(router),

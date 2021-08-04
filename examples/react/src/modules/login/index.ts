@@ -1,23 +1,25 @@
-import {
-  Route,
-  WithReactComponent,
-  RouteInterface,
-  WithReactComponentInterface,
-  AnyRouteInterface,
-  RouterInterface,
-} from 'router/index'
+import { Route, WithReactComponent, RouteInterface, WithReactComponentInterface, RouterInterface } from 'router/index'
 
-import { LogIn } from './components/LogIn'
+import { Page } from './components/Page'
+import { ForgotPassword } from './components/ForgotPassword'
 
-function getRoute(
-  _router: RouterInterface,
-  children: AnyRouteInterface[] = [],
-): WithReactComponentInterface & RouteInterface {
+function getRoute(_router: RouterInterface): WithReactComponentInterface & RouteInterface {
   return WithReactComponent(Route)({
     name: 'login',
     path: 'login/',
-    component: LogIn,
-    children,
+    exclusive: true,
+    component: Page,
+    children: [
+      Route({
+        name: 'reset-success',
+        path: '?resetSuccess',
+      }),
+      WithReactComponent(Route)({
+        name: 'forgot-password',
+        path: 'forgot-password/',
+        component: ForgotPassword,
+      }),
+    ],
   })
 }
 

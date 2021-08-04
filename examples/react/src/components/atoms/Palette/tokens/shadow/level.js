@@ -1,4 +1,7 @@
 const level = {
+  0: `
+    0 0 0 1px rgba(0, 0, 0, 0.1) inset
+  `,
   1: `
     0 0.2px  1.5px rgba(0, 0, 0, 0.024),
     0 0.5px  4.1px rgba(0, 0, 0, 0.035),
