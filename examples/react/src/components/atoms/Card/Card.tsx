@@ -7,12 +7,19 @@ import styles from './Card.module.css'
 type CardProps = {
   children: ReactNode
   className?: string
-  level?: 1 | 2 | 3 | 4
+  level?: 0 | 1 | 2 | 3 | 4
+  color?: 'primary' | 'secondary'
 }
 
-function Card({ children, className, level = 1 }: CardProps): ReactElement {
+function Card({ children, className, level = 1, color }: CardProps): ReactElement {
   return (
-    <div className={classNames(className, styles.Card, { [styles[`Card_level_${level}`]]: level })}>{children}</div>
+    <div
+      className={classNames(className, styles.Card, styles[`Card_level_${level}`], {
+        [styles[`Card_color_${color}`]]: color,
+      })}
+    >
+      {children}
+    </div>
   )
 }
 

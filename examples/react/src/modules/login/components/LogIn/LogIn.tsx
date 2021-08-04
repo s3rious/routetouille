@@ -1,53 +1,103 @@
 import * as React from 'react'
-import { ReactElement } from 'react'
+import { ReactElement, useCallback, useMemo, useState } from 'react'
 import { useStore } from 'effector-react'
 
 import { WithReactComponentProps } from 'router/routes'
 import { effects as clientEffects } from 'modules/client'
 
-import { Layout } from 'components/atoms/Layout'
-import { Inner } from 'components/atoms/Inner'
-import { Link } from 'components/atoms/Link'
-import { Header } from 'components/molecules/Header/Header'
-import { AllCenter } from 'components/atoms/AllCenter'
-import { Width } from 'components/atoms/Width'
 import { Card } from 'components/atoms/Card/Card'
-
-import { Background } from '../Background'
+import { Stack } from 'components/atoms/Stack'
+import { Spacing } from 'components/atoms/Spacing'
+import { Typography } from 'components/atoms/Typography'
+import { Link } from 'components/atoms/Link'
+import { Input } from 'components/atoms/Input'
+import { RegularButton } from 'components/molecules/RegularButton'
 
 function LogIn({ router }: WithReactComponentProps): ReactElement {
+  const lastActiveRouteName: string | null = router.active[router.active.length - 1].name ?? null
   const loading = useStore(clientEffects.logInFx.pending)
 
-  const handleLogin = async (): Promise<void> => {
-    try {
-      await clientEffects.logInFx({ email: 'email', password: 'password' })
-      await router.goTo('auth.dashboard', { optimistic: true })
-    } catch (error) {
-      console.log(clientEffects.logInFx.fail)
-    }
-  }
+  const [email, setEmail] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
+  const disabled = useMemo<boolean>(() => email.length <= 0 || password.length <= 0, [email, password])
 
-  if (loading) {
-    return <div>Loading...</div>
-  }
+  const handleEmail = useCallback(
+    (event: React.FormEvent<HTMLInputElement>): void => {
+      if (event.target instanceof HTMLInputElement) {
+        setEmail(event.target.value)
+      }
+    },
+    [setEmail],
+  )
+
+  const handlePassword = useCallback(
+    (event: React.FormEvent<HTMLInputElement>): void => {
+      if (event.target instanceof HTMLInputElement) {
+        setPassword(event.target.value)
+      }
+    },
+    [setPassword],
+  )
+
+  const handleLogin = useCallback(
+    async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
+      event.preventDefault()
+
+      try {
+        await clientEffects.logInFx({ email: 'email', password: 'password' })
+        await router.goTo('auth.dashboard', { optimistic: true })
+      } catch (error) {
+        console.log(clientEffects.logInFx.fail)
+      }
+    },
+    [router],
+  )
 
   return (
-    <Layout
-      header={<Header right={<Link to="non-auth.sign-up">Sign up</Link>} />}
-      content={
-        <Background>
-          <Inner>
-            <AllCenter>
-              <Width size={448}>
-                <Card>
-                  <button onClick={handleLogin}>Login</button>
+    <Card level={3}>
+      <Spacing vertical={40} horizontal={80}>
+        <Typography size={32} align="center">
+          Log in
+        </Typography>
+        <Spacing top={16} mix>
+          <form onSubmit={handleLogin}>
+            <Stack vertical={24}>
+              {lastActiveRouteName === 'reset-success' && (
+                <Card color="secondary" level={0}>
+                  <Spacing vertical={8} horizontal={16}>
+                    <Typography size={14} color="on-color-default">
+                      Password reset instructions sent to your email address
+                    </Typography>
+                  </Spacing>
                 </Card>
-              </Width>
-            </AllCenter>
-          </Inner>
-        </Background>
-      }
-    />
+              )}
+              <label>
+                <Stack vertical={4}>
+                  <Typography size={12}>Your email</Typography>
+                  <Input type="email" autoComplete="username" onChange={handleEmail} block>
+                    {email}
+                  </Input>
+                </Stack>
+              </label>
+              <label>
+                <Stack vertical={4}>
+                  <Typography size={12}>Password</Typography>
+                  <Input type="password" autoComplete="current-password" onChange={handlePassword} block>
+                    {password}
+                  </Input>
+                </Stack>
+              </label>
+              <Link to="login.forgot-password">
+                <Typography size={12}>Forgot password?</Typography>
+              </Link>
+              <RegularButton type="submit" disabled={disabled || loading} block>
+                {loading ? 'Logging in...' : 'Log in'}
+              </RegularButton>
+            </Stack>
+          </form>
+        </Spacing>
+      </Spacing>
+    </Card>
   )
 }
 
