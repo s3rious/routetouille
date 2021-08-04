@@ -76,7 +76,7 @@ function getClosestFallbackByActivator(map: RouteMap, activator: RouteMapKey): R
       }
     }
 
-    const nextMaybeKey = arrayOfKeys.splice(0, arrayOfKeys.length - 1)
+    const nextMaybeKey = arrayOfKeys.slice(0, arrayOfKeys.length - 1)
 
     return recurse(nextMaybeKey)
   }
