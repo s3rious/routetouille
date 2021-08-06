@@ -543,6 +543,69 @@ describe('`WithSet` router', () => {
           'hash',
         ])
       })
+
+      it('handles multiple module routes with deep nesting', async () => {
+        const router = Router({
+          optimistic: true,
+          root: ModuleRoute({
+            name: 'root',
+            children: [
+              ModuleRoute({
+                name: 'client',
+                children: [
+                  ModuleRoute({
+                    name: 'non-auth',
+                    children: [
+                      Route({
+                        name: 'login',
+                        path: 'login/',
+                        children: [
+                          Route({
+                            name: 'reset-success',
+                            path: '?resetSuccess',
+                          }),
+                          Route({
+                            name: 'forgot-password',
+                            path: 'forgot-password/',
+                          }),
+                        ],
+                      }),
+                    ],
+                  }),
+                  ModuleRoute({
+                    name: 'auth',
+                    children: [
+                      Route({
+                        name: 'dashboard',
+                        path: 'dashboard/',
+                      }),
+                    ],
+                  }),
+                ],
+              }),
+              FallbackRoute({
+                name: '404',
+              }),
+            ],
+          }),
+        })
+
+        await router.set('/login/')
+        expect(router.pathname).toEqual('/login/')
+        expect(router.params).toEqual([])
+        expect(router.active.map((route) => route.name)).toEqual(['root', 'client', 'non-auth', 'login'])
+
+        await router.set('/login/?resetSuccess')
+        expect(router.pathname).toEqual('/login/?resetSuccess')
+        expect(router.params).toEqual([])
+        expect(router.active.map((route) => route.name)).toEqual([
+          'root',
+          'client',
+          'non-auth',
+          'login',
+          'reset-success',
+        ])
+      })
     })
   })
 })
