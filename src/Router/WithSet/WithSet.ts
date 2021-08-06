@@ -80,6 +80,8 @@ function WithSet<ComposedOptions extends RouterComposedOptions, ComposedInterfac
             const matched = route.match(part)
 
             if (Boolean(matched)) {
+              pathPartIndex = pathPartIndex + 1
+
               if (typeof matched !== 'boolean') {
                 paramsToActive.push(matched)
               }
@@ -87,8 +89,6 @@ function WithSet<ComposedOptions extends RouterComposedOptions, ComposedInterfac
               routesToActive.push(route)
 
               if (route.children != null) {
-                pathPartIndex = pathPartIndex + 1
-
                 return (route.children as AbstractRoute[]).forEach(recurse)
               }
             }
