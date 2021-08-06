@@ -6,7 +6,7 @@ import {
   AnyRouteInterface,
   RouterInterface,
 } from 'router/index'
-import { store } from 'modules/client'
+import { store } from 'domains/client'
 
 function getRoute(router: RouterInterface, children: AnyRouteInterface[] = []): ModuleRouteInterface {
   return ModuleRoute({

@@ -3,7 +3,7 @@ import { ReactElement } from 'react'
 import { useStore } from 'effector-react'
 
 import { WithReactComponentProps } from 'router/routes'
-import { effects as clientEffects } from 'modules/client'
+import { effects as clientEffects } from 'domains/client'
 
 function Dashboard({ router }: WithReactComponentProps): ReactElement {
   const loading = useStore(clientEffects.logOutFx.pending)

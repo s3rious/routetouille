@@ -3,7 +3,7 @@ import { ReactElement, useCallback, useMemo, useState } from 'react'
 import { useStore } from 'effector-react'
 
 import { WithReactComponentProps } from 'router/routes'
-import { effects as clientEffects } from 'modules/client'
+import { effects as clientEffects } from 'domains/client'
 
 import { Card } from 'components/atoms/Card/Card'
 import { Stack } from 'components/atoms/Stack'
