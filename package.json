@@ -8,7 +8,7 @@
     "lint": "eslint src/",
     "test": "jest",
     "test:coverage": "jest --collect-coverage",
-    "prebuild": "yarn lint && yarn test",
+    "prebuild": "rm -rf ./lib && yarn lint && yarn test",
     "build": "tsc",
     "prepublish": "yarn build"
   },
