@@ -56,7 +56,12 @@ function getFinalRouteByActivator(map: RouteMap, activator: Activator): RouteMap
 }
 
 function getActivatorByPartialPath(map: RouteMap, activator: RouteMapKey): string | undefined {
-  return [...map.keys()].find((key) => key.includes(activator))
+  return [...map.keys()].find((key) => {
+    const keyParts = key.split('.')
+    const activatorParts = activator.split('.')
+
+    return activatorParts.every((activatorParts) => keyParts.includes(activatorParts))
+  })
 }
 
 function getClosestFallbackByActivator(map: RouteMap, activator: RouteMapKey): RouteMapRoute | undefined {

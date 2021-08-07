@@ -291,6 +291,25 @@ describe('`WithActive` router', () => {
             expect(loginAfterMount).toBeCalledTimes(1)
           })
 
+          it('handles similar names', async () => {
+            const localRouter = Router({
+              root: ModuleRoute({
+                name: 'root',
+                children: [
+                  ModuleRoute({
+                    name: 'non-auth',
+                  }),
+                  ModuleRoute({
+                    name: 'auth',
+                  }),
+                ],
+              }),
+            })
+
+            await localRouter.activate('auth')
+            expect(getActiveRoutesName(localRouter)).toEqual(['root', 'auth'])
+          })
+
           it('`name`’s joined with `.`', async () => {
             await router.activate('root.auth.info')
             expect(getActiveRoutesName(router)).toEqual(['root', 'auth', 'info'])
