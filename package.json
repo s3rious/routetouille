@@ -1,6 +1,6 @@
 {
   "name": "routetouille",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "description": "A new breed of router: Hackable, extendable, rewritable, isomorphic, framework-agnostic",
   "author": "s3rious a.k.a Leonid Semenov <canismajor@kaschenka.ru>",
   "license": "MIT",
