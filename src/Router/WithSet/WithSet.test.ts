@@ -605,6 +605,11 @@ describe('`WithSet` router', () => {
           'login',
           'reset-success',
         ])
+
+        await router.set('/dashboard/')
+        expect(router.pathname).toEqual('/dashboard/')
+        expect(router.params).toEqual([])
+        expect(router.active.map((route) => route.name)).toEqual(['root', 'client', 'auth', 'dashboard'])
       })
     })
   })
