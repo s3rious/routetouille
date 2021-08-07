@@ -1,0 +1,32 @@
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.Spinner {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border-top: 4px solid var(--color-primary-45);
+  border-right: 4px solid transparent;
+  box-sizing: border-box;
+  animation: rotation var(--animation-speed-slow) linear infinite;
+}
+
+.Spinner::after {
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border-left: 4px solid var(--color-secondary-45);
+  border-bottom: 4px solid transparent;
+  animation: rotation calc(var(--animation-speed-slow) / 2) linear infinite reverse;
+}
