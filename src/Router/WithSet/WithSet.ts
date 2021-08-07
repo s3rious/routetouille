@@ -66,13 +66,32 @@ function WithSet<ComposedOptions extends RouterComposedOptions, ComposedInterfac
       let pathPartIndex = 0
 
       if (rootRoute?.route != null) {
-        const recurse = (route: AbstractRoute): void => {
+        const processParent = (parentKey: RouteMapKey): void => {
+          parentKey
+            .split('.')
+            .map((_, index, array) => array.slice(0, index + 1).join('.'))
+            .map((routeKey) => map.get(routeKey))
+            .filter((mapRoute) => Boolean(mapRoute))
+            .forEach((mapRoute) => {
+              if (mapRoute != null && !routesToActive.includes(mapRoute.route)) {
+                routesToActive.push(mapRoute.route)
+              }
+            })
+        }
+
+        const processChild = (childKey: RouteMapKey): void => {
+          const childMapRoute = map.get(childKey)
+
+          if (childMapRoute != null) {
+            return recurse(childMapRoute)
+          }
+        }
+
+        const recurse = (mapRoute: RouteMapRoute): void => {
+          const route = mapRoute.route
+
           if (pathPartIndex > pathParts.length - 1) {
             return
-          }
-
-          if (!Boolean(route?.match) && route.children != null) {
-            routesToActive.push(route)
           }
 
           if (Boolean(route?.match)) {
@@ -86,22 +105,26 @@ function WithSet<ComposedOptions extends RouterComposedOptions, ComposedInterfac
                 paramsToActive.push(matched)
               }
 
+              if (mapRoute.parent != null) {
+                processParent(mapRoute.parent)
+              }
+
               routesToActive.push(route)
 
-              if (route.children != null) {
-                return (route.children as AbstractRoute[]).forEach(recurse)
+              if (mapRoute.children != null) {
+                return mapRoute.children.forEach(processChild)
               }
             }
 
             return
           }
 
-          if (route.children != null) {
-            return (route.children as AbstractRoute[]).forEach(recurse)
+          if (mapRoute.children != null) {
+            return mapRoute.children.forEach(processChild)
           }
         }
 
-        recurse(rootRoute.route)
+        recurse(rootRoute)
       }
 
       const routesToActiveRegex = new RegExp(
