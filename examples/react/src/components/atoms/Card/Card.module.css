@@ -23,11 +23,3 @@
 .Card_level_4 {
   box-shadow: var(--shadow-level-4);
 }
-
-.Card_color_primary {
-  background-color: var(--color-primary-default);
-}
-
-.Card_color_secondary {
-  background-color: var(--color-secondary-default);
-}

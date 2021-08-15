@@ -6,16 +6,18 @@ import {
   AnyRouteInterface,
   RouterInterface,
 } from 'services/router'
-import { $accessToken, effects as clientEffects } from 'domains/client'
+
+import { $accessToken, $client, effects as clientEffects } from 'domains/client'
 
 function getRoute(router: RouterInterface, children: AnyRouteInterface[] = []): ModuleRouteInterface {
   return ModuleRoute({
     name: 'auth',
     beforeMount: async () => activateFirstChildOf(router, 'auth'),
     afterMount: async () => {
+      const isLoaded = $client.getState().isLoaded()
       const accessToken = $accessToken.getState()
 
-      if (accessToken) {
+      if (!isLoaded && accessToken) {
         await clientEffects.fetchClient({ accessToken })
       }
     },

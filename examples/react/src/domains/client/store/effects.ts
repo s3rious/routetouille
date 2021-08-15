@@ -28,6 +28,18 @@ const logIn = createEffect({
   },
 })
 
+type SignUpParams = {
+  email: string
+  password: string
+}
+
+const signUp = createEffect({
+  name: 'client/signUp',
+  async handler({ email, password }: SignUpParams) {
+    return await api.createClient(email, password)
+  },
+})
+
 const logOut = createEffect({
   name: 'client/logOut',
   async handler() {
@@ -41,4 +53,4 @@ const logOut = createEffect({
   },
 })
 
-export { fetchClient, logIn, logOut }
+export { fetchClient, logIn, signUp, logOut }

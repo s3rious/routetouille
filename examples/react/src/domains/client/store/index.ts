@@ -8,6 +8,13 @@ import * as effects from './effects'
 
 const $client = createStore(new ClientModel({}), { name: 'client/$client' })
   .on(effects.fetchClient.doneData, (state, client) => new ClientModel({ ...state, ...client }))
+  .on(effects.signUp.doneData, (state, response) => {
+    if (response instanceof Error) {
+      return state
+    }
+
+    return new ClientModel({ ...state, ...response })
+  })
   .reset(effects.logOut.done)
 
 type AccessTokenStoreState = string | null
@@ -16,6 +23,15 @@ const $accessToken: Store<AccessTokenStoreState> = createStore<AccessTokenStoreS
   name: 'client/$accessToken',
 })
   .on(effects.logIn.doneData, (state, accessToken) => accessToken)
+  .on(effects.signUp.doneData, (state, response) => {
+    if (response instanceof Error) {
+      return state
+    }
+
+    const { accessToken } = response
+
+    return accessToken
+  })
   .reset(effects.logOut.done)
 
 const $isClientLoading: Store<boolean> = combine(

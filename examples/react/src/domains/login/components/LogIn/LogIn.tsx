@@ -11,6 +11,7 @@ import { Stack } from 'components/atoms/Stack'
 import { Spacing } from 'components/atoms/Spacing'
 import { Typography } from 'components/atoms/Typography'
 import { Link } from 'components/atoms/Link'
+import { Toast } from 'components/molecules/Toast'
 import { Input } from 'components/atoms/Input'
 import { RegularButton } from 'components/molecules/RegularButton'
 import { Preloader } from 'components/atoms/Preloader'
@@ -66,13 +67,7 @@ function LogIn({ router }: WithReactComponentProps): ReactElement {
             <form onSubmit={handleLogin}>
               <Stack vertical={24}>
                 {lastActiveRouteName === 'reset-success' && (
-                  <Card color="secondary" level={0}>
-                    <Spacing vertical={8} horizontal={16}>
-                      <Typography size={14} color="on-color-default">
-                        Password reset instructions sent to your email address
-                      </Typography>
-                    </Spacing>
-                  </Card>
+                  <Toast status="success">Password reset instructions sent to your email address</Toast>
                 )}
                 <label>
                   <Stack vertical={4}>

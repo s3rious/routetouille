@@ -1,0 +1,7 @@
+.Toast_status_error {
+  background-color: var(--color-status-error-default);
+}
+
+.Toast_status_success {
+  background-color: var(--color-status-success-default);
+}

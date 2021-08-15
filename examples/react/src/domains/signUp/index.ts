@@ -7,7 +7,7 @@ import {
   RouterInterface,
 } from 'services/router'
 
-import { SignUp } from './components/SignUp'
+import { Page } from './components/Page'
 
 function getRoute(
   _router: RouterInterface,
@@ -16,7 +16,7 @@ function getRoute(
   return WithReactComponent(Route)({
     name: 'sign-up',
     path: 'sign-up/',
-    component: SignUp,
+    component: Page,
     children,
   })
 }
