@@ -1,7 +1,7 @@
 import { email, capitalizedString, Email } from 'services/model'
 
 type ClientModelProps = {
-  email?: string
+  email?: Email | string
   firstName?: string
   lastName?: string
 }
@@ -19,6 +19,10 @@ class ClientModel {
     const names = [this.firstName, this.lastName].filter(Boolean)
     this.fullName = names.length > 0 ? names.join(' ') : null
   }
+
+  isLoaded(): boolean {
+    return Boolean(this.email)
+  }
 }
 
-export { ClientModel }
+export { ClientModel, ClientModelProps }
