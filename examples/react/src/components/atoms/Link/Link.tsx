@@ -2,7 +2,7 @@ import * as React from 'react'
 import { useMemo, useCallback, ReactNode, HTMLProps, ReactElement, MouseEventHandler } from 'react'
 import classNames from 'classnames/dedupe'
 
-import { useRouter, Activator, Params, RouterInterface } from 'services/router/index'
+import { useRouter, Activator, Params, RouterInterface } from 'services/router'
 
 import styles from './Link.module.css'
 

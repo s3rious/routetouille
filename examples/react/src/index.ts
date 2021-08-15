@@ -1,4 +1,4 @@
-import { Router, BrowserHistory } from 'services/router/index'
+import { Router, BrowserHistory } from 'services/router'
 
 import { getRoute as getRootRoute } from 'domains/root'
 
