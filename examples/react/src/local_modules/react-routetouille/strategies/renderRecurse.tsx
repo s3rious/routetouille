@@ -1,9 +1,14 @@
 import * as React from 'react'
 import { ReactNode } from 'react'
+import { RouterInterface } from 'routetouille'
 
 import { isWithReactComponent } from '../Route'
 
-function renderRecurse<Router, Route>(router: Router, routes: Route[], result?: ReactNode): ReactNode | null {
+function renderRecurse<Router extends RouterInterface, Route>(
+  router: Router,
+  routes: Route[],
+  result?: ReactNode,
+): ReactNode | null {
   const [firstRoute, ...restRoutes] = routes
 
   if (isWithReactComponent(firstRoute)) {

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { ReactElement } from 'react'
 
-import { Activator } from 'router/index'
+import { Activator } from 'services/router/index'
 
 import { Button, ButtonProps } from 'components/atoms/Button'
 import { Spacing, SpacingSize } from 'components/atoms/Spacing'

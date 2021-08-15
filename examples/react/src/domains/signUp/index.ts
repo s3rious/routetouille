@@ -5,7 +5,7 @@ import {
   WithReactComponentInterface,
   AnyRouteInterface,
   RouterInterface,
-} from 'router/index'
+} from 'services/router'
 
 import { SignUp } from './components/SignUp'
 

@@ -4,7 +4,7 @@ import {
   FallbackRouteInterface,
   WithReactComponentInterface,
   RouterInterface,
-} from 'router/index'
+} from 'services/router'
 
 import { Fallback } from './components/Fallback'
 

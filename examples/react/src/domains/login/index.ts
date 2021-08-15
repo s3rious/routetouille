@@ -1,4 +1,10 @@
-import { Route, WithReactComponent, RouteInterface, WithReactComponentInterface, RouterInterface } from 'router/index'
+import {
+  Route,
+  WithReactComponent,
+  RouteInterface,
+  WithReactComponentInterface,
+  RouterInterface,
+} from 'services/router'
 
 import { Page } from './components/Page'
 import { ForgotPassword } from './components/ForgotPassword'

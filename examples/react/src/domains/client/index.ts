@@ -1,6 +1,4 @@
-import { ModuleRoute, ModuleRouteInterface, AnyRouteInterface, RouterInterface } from 'router/index'
-
-import { store, effects } from './store'
+import { ModuleRoute, ModuleRouteInterface, AnyRouteInterface, RouterInterface } from 'services/router'
 
 function getRoute(router: RouterInterface, children: AnyRouteInterface[] = []): ModuleRouteInterface {
   return ModuleRoute({
@@ -9,4 +7,5 @@ function getRoute(router: RouterInterface, children: AnyRouteInterface[] = []): 
   })
 }
 
-export { getRoute, store, effects }
+export { getRoute }
+export * from './store'

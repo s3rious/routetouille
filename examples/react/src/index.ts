@@ -1,14 +1,14 @@
-import { Router, BrowserHistory } from 'router/index'
+import { Router, BrowserHistory } from 'services/router/index'
 
 import { getRoute as getRootRoute } from 'domains/root'
 
 import { getRoute as getClientRoute } from 'domains/client'
 
-import { getRoute as getNonAuthRoute } from 'domains/client/non-auth'
+import { getRoute as getNonAuthRoute } from 'domains/client/domains/non-auth'
 import { getRoute as getLoginRoute } from 'domains/login'
 import { getRoute as getSignUpRoute } from 'domains/signUp'
 
-import { getRoute as getAuthRoute } from 'domains/client/auth'
+import { getRoute as getAuthRoute } from 'domains/client/domains/auth'
 import { getRoute as getDashboardRoute } from 'domains/dashboard'
 
 import { getRoute as getFallbackRoute } from 'domains/fallback'

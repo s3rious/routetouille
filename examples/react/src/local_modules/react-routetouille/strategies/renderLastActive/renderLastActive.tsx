@@ -1,9 +1,11 @@
 import * as React from 'react'
 import { ReactElement } from 'react'
+import { RouterInterface } from 'routetouille'
+
 import { isWithReactComponent } from '../../Route'
 import { Context } from '../../Context'
 
-type AbstractRouter<Route> = {
+type AbstractRouter<Route> = RouterInterface & {
   active: Route[]
 }
 
