@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { ReactElement, useCallback, useMemo, useState } from 'react'
-import { useStore } from 'effector-react'
+import { ReactElement } from 'react'
 
 import { WithReactComponentProps } from 'services/router/routes'
-import { effects as clientEffects } from 'domains/client'
+
+import { useLogIn } from 'domains/login/hooks/useLogIn'
 
 import { Relative } from 'components/atoms/Relative'
 import { Card } from 'components/atoms/Card/Card'
@@ -18,43 +18,7 @@ import { Preloader } from 'components/atoms/Preloader'
 
 function LogIn({ router }: WithReactComponentProps): ReactElement {
   const lastActiveRouteName: string | null = router.active[router.active.length - 1].name ?? null
-  const loading = useStore(clientEffects.logIn.pending)
-
-  const [email, setEmail] = useState<string>('')
-  const [password, setPassword] = useState<string>('')
-  const disabled = useMemo<boolean>(() => email.length <= 0 || password.length <= 0, [email, password])
-
-  const handleEmail = useCallback(
-    (event: React.FormEvent<HTMLInputElement>): void => {
-      if (event.target instanceof HTMLInputElement) {
-        setEmail(event.target.value)
-      }
-    },
-    [setEmail],
-  )
-
-  const handlePassword = useCallback(
-    (event: React.FormEvent<HTMLInputElement>): void => {
-      if (event.target instanceof HTMLInputElement) {
-        setPassword(event.target.value)
-      }
-    },
-    [setPassword],
-  )
-
-  const handleLogin = useCallback(
-    async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
-      event.preventDefault()
-
-      try {
-        await clientEffects.logIn({ email, password })
-        await router.goTo('auth.dashboard', { optimistic: true })
-      } catch (error) {
-        console.log(clientEffects.logIn.fail)
-      }
-    },
-    [router, email, password],
-  )
+  const { loading, email, password, disabled, handleEmail, handlePassword, handleLogin } = useLogIn(router)
 
   return (
     <Relative mix>
