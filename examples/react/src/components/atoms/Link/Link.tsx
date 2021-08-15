@@ -2,7 +2,7 @@ import * as React from 'react'
 import { useMemo, useCallback, ReactNode, HTMLProps, ReactElement, MouseEventHandler } from 'react'
 import classNames from 'classnames/dedupe'
 
-import { useRouter, Activator, Params, RouterInterface } from 'router/index'
+import { useRouter, Activator, Params, RouterInterface } from 'services/router/index'
 
 import styles from './Link.module.css'
 
@@ -18,7 +18,7 @@ function Link({ children, className, to, params, optimistic = true, ...rest }: L
   const router: RouterInterface | undefined = useRouter()
 
   const href: string | undefined = useMemo(() => {
-    if (Boolean(to) && Boolean(router)) {
+    if (to != null && router != null) {
       return router.urlTo(to, params) ?? undefined
     }
 
@@ -27,7 +27,7 @@ function Link({ children, className, to, params, optimistic = true, ...rest }: L
 
   const handleClick: MouseEventHandler<HTMLAnchorElement> = useCallback(
     async (event) => {
-      if (Boolean(to) && Boolean(router)) {
+      if (to != null && router != null) {
         event.preventDefault()
 
         await router.goTo(to, { params, optimistic })

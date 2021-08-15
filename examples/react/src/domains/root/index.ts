@@ -5,7 +5,7 @@ import {
   WithReactRootInterface,
   AnyRouteInterface,
   RouterInterface,
-} from 'router/index'
+} from 'services/router'
 
 import { Root } from './components/Root'
 

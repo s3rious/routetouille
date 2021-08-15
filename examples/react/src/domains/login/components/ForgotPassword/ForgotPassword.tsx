@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { ReactElement, useCallback, useMemo, useState } from 'react'
 
-import { WithReactComponentProps } from 'router/routes'
+import { WithReactComponentProps } from 'services/router/routes'
 
 import { Card } from 'components/atoms/Card/Card'
 import { Stack } from 'components/atoms/Stack'

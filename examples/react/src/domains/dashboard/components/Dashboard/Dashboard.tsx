@@ -1,19 +1,20 @@
 import * as React from 'react'
-import { ReactElement } from 'react'
+import { Fragment, ReactElement } from 'react'
 import { useStore } from 'effector-react'
 
-import { WithReactComponentProps } from 'router/routes'
-import { effects as clientEffects } from 'domains/client'
+import { WithReactComponentProps } from 'services/router/routes'
+import { $client, $isClientLoading, effects as clientEffects } from 'domains/client'
 
 function Dashboard({ router }: WithReactComponentProps): ReactElement {
-  const loading = useStore(clientEffects.logOutFx.pending)
+  const client = useStore($client)
+  const loading = useStore($isClientLoading)
 
   const handleLogout = async (): Promise<void> => {
     try {
-      await clientEffects.logOutFx()
+      await clientEffects.logOut()
       await router.goTo('non-auth', { optimistic: true })
     } catch (error) {
-      console.log(clientEffects.logOutFx.fail)
+      console.log(clientEffects.logOut.fail)
     }
   }
 
@@ -22,9 +23,10 @@ function Dashboard({ router }: WithReactComponentProps): ReactElement {
   }
 
   return (
-    <>
+    <Fragment>
+      {JSON.stringify(client)}
       <button onClick={handleLogout}>Logout</button>
-    </>
+    </Fragment>
   )
 }
 

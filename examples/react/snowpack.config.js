@@ -16,7 +16,7 @@ module.exports = {
     'local_modules/': './src/local_modules',
     'components/': './src/components',
     'domains/': './src/domains',
-    'router/': './src/router',
+    'services/': './src/services',
   },
   plugins: ['@snowpack/plugin-react-refresh', '@snowpack/plugin-typescript', '@snowpack/plugin-sass'],
   devOptions: {

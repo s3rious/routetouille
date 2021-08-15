@@ -1,6 +1,6 @@
 import { useMemo, ReactElement } from 'react'
 
-import { useRouterRoot, renderLastExclusiveAndTree, RouterInterface, AnyRouteInterface } from 'router/index'
+import { useRouterRoot, renderLastExclusiveAndTree, RouterInterface, AnyRouteInterface } from 'services/router'
 
 import './Root.css'
 import 'components/atoms/Palette/Palette.css'

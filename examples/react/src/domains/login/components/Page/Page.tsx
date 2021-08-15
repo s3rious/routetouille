@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { ReactElement } from 'react'
 
-import { WithReactComponentProps } from 'router/routes'
+import { WithReactComponentProps } from 'services/router/routes'
 
 import { Layout } from 'components/atoms/Layout'
 import { Inner } from 'components/atoms/Inner'

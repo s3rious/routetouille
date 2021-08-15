@@ -5,8 +5,8 @@ import {
   ModuleRouteInterface,
   AnyRouteInterface,
   RouterInterface,
-} from 'router/index'
-import { store } from 'domains/client'
+} from 'services/router'
+import { $accessToken } from 'domains/client'
 
 function getRoute(router: RouterInterface, children: AnyRouteInterface[] = []): ModuleRouteInterface {
   return ModuleRoute({
@@ -16,7 +16,7 @@ function getRoute(router: RouterInterface, children: AnyRouteInterface[] = []): 
       redirect(
         router,
         async () => {
-          const { accessToken } = store.getState()
+          const accessToken = $accessToken.getState()
 
           return Boolean(accessToken)
         },
