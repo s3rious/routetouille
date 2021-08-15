@@ -16,6 +16,7 @@ function getRoute(
   return WithReactComponent(Route)({
     name: 'sign-up',
     path: 'sign-up/',
+    exclusive: true,
     component: Page,
     children,
   })
