@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { ReactElement, useCallback, useEffect, useMemo, useState } from 'react'
-import { useStore } from 'effector-react'
+import { ReactElement } from 'react'
 
 import { WithReactComponentProps } from 'services/router/routes'
-import { effects as clientEffects } from 'domains/client'
+
+import { useSignUp } from 'domains/signUp/hooks/useSignUp'
 
 import { Relative } from 'components/atoms/Relative'
 import { Card } from 'components/atoms/Card/Card'
@@ -16,48 +16,7 @@ import { RegularButton } from 'components/molecules/RegularButton'
 import { Preloader } from 'components/atoms/Preloader'
 
 function SignUp({ router }: WithReactComponentProps): ReactElement {
-  const loading = useStore(clientEffects.signUp.pending)
-  const [error, setError] = useState<Error | null>(null)
-
-  const [email, setEmail] = useState<string>('')
-  const [password, setPassword] = useState<string>('')
-  const disabled = useMemo<boolean>(() => email.length <= 0 || password.length <= 0, [email, password])
-
-  useEffect(() => {
-    console.error(error)
-  }, [error])
-
-  const handleEmail = useCallback(
-    (event: React.FormEvent<HTMLInputElement>): void => {
-      if (event.target instanceof HTMLInputElement) {
-        setEmail(event.target.value)
-      }
-    },
-    [setEmail],
-  )
-
-  const handlePassword = useCallback(
-    (event: React.FormEvent<HTMLInputElement>): void => {
-      if (event.target instanceof HTMLInputElement) {
-        setPassword(event.target.value)
-      }
-    },
-    [setPassword],
-  )
-
-  const handleSignUp = useCallback(
-    async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
-      event.preventDefault()
-
-      try {
-        await clientEffects.signUp({ email, password })
-        await router.goTo('auth.dashboard', { optimistic: true })
-      } catch (error) {
-        setError(error)
-      }
-    },
-    [router, error, email, password],
-  )
+  const { loading, email, password, error, disabled, handleEmail, handlePassword, handleSignUp } = useSignUp(router)
 
   return (
     <Relative mix>
