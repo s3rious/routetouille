@@ -177,20 +177,36 @@
 }
 
 /* weights */
+.Typography_weight_thin {
+  font-weight: 100;
+}
+
+.Typography_weight_extra-light {
+  font-weight: 200;
+}
+
+.Typography_weight_light {
+  font-weight: 300;
+}
+
 .Typography_weight_regular {
   font-weight: 400;
 }
 
-.Typography_weight_semibold {
+.Typography_weight_medium {
   font-weight: 500;
 }
 
-.Typography_weight_bold {
+.Typography_weight_semi-bold {
   font-weight: 600;
 }
 
-.Typography_weight_extra {
+.Typography_weight_bold {
   font-weight: 700;
+}
+
+.Typography_weight_extra-bold {
+  font-weight: 800;
 }
 
 .Typography_weight_black {

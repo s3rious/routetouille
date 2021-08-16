@@ -1,11 +1,14 @@
 import * as React from 'react'
 import { ReactElement } from 'react'
 
-// import { Link } from 'components/atoms/Link'
+import { Typography } from 'components/atoms/Typography'
 
 function Logo(): ReactElement {
-  return <div>⚛ Routetouille</div>
-  // return <Link to="root">⚛ Routetouille</Link>
+  return (
+    <Typography size={20} weight="light">
+      ⚛ Routetouille
+    </Typography>
+  )
 }
 
 export { Logo }
