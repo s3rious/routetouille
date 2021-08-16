@@ -14,8 +14,8 @@ type TypographyColor =
   | 'on-color-default'
   | 'warning'
   | 'error'
-type TypographySize = 10 | 12 | 14 | 16 | 18 | 20 | 24 | 32 | 48 | 54 | 64
-type TypographyWeight = 'regular' | 'semibold' | 'bold' | 'extra'
+type TypographySize = 10 | 12 | 14 | 16 | 18 | 20 | 24 | 32 | 48 | 54 | 64 | 128
+type TypographyWeight = 'regular' | 'semibold' | 'bold' | 'extra' | 'black'
 type TypographyLineHeight = 'small' | 'medium'
 type TypographyAligns = 'left' | 'center' | 'right'
 type TypographyNumerics = 'tabular'
