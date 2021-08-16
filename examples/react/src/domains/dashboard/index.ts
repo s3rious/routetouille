@@ -17,6 +17,7 @@ function getRoute(
     name: 'dashboard',
     path: 'dashboard/',
     component: Dashboard,
+    exclusive: true,
     children,
   })
 }

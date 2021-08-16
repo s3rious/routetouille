@@ -13,8 +13,8 @@ function getRoute(_router: RouterInterface): WithReactComponentInterface & Route
   return WithReactComponent(Route)({
     name: 'login',
     path: 'login/',
-    exclusive: true,
     component: Page,
+    exclusive: true,
     children: [
       Route({
         name: 'reset-success',

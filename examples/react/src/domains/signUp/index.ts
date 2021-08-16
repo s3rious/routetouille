@@ -12,8 +12,8 @@ function getRoute(_router: RouterInterface): WithReactComponentInterface & Route
   return WithReactComponent(Route)({
     name: 'sign-up',
     path: 'sign-up/',
-    exclusive: true,
     component: Page,
+    exclusive: true,
   })
 }
 
