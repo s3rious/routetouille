@@ -164,6 +164,18 @@
   line-height: 96px;
 }
 
+.Typography_size_128 {
+  font-size: 128px;
+}
+
+.Typography_size_128.Typography_lineHeight_small {
+  line-height: 144px;
+}
+
+.Typography_size_128.Typography_lineHeight_medium {
+  line-height: 192px;
+}
+
 /* weights */
 .Typography_weight_regular {
   font-weight: 400;
@@ -179,6 +191,10 @@
 
 .Typography_weight_extra {
   font-weight: 700;
+}
+
+.Typography_weight_black {
+  font-weight: 900;
 }
 
 /* aligns */
