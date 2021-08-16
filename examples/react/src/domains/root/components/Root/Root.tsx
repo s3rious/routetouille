@@ -14,7 +14,7 @@ function Root(props: RootProps): ReactElement | null {
     logger: console,
     verbose: true,
   })
-  const hideGUI: boolean = useMemo(() => window.localStorage.getItem('HIDE_GUI') === 'true', [])
+  const hideGUI: boolean = useMemo(() => globalThis.localStorage.getItem('HIDE_GUI') === 'true', [])
 
   if (hideGUI) {
     return null

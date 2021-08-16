@@ -4,6 +4,7 @@ import { getRoute as getRootRoute } from 'domains/root'
 
 import { getRoute as getClientRoute } from 'domains/client'
 
+import { getRoute as getLogOutRoute } from 'domains/logout'
 import { getRoute as getNonAuthRoute } from 'domains/client/domains/non-auth'
 import { getRoute as getLoginRoute } from 'domains/login'
 import { getRoute as getSignUpRoute } from 'domains/signUp'
@@ -21,7 +22,8 @@ async function main(): Promise<void> {
 
   router.root = getRootRoute(router, [
     getClientRoute(router, [
-      getNonAuthRoute(router, [getLoginRoute(router), getSignUpRoute(router, [])]),
+      getLogOutRoute(router),
+      getNonAuthRoute(router, [getLoginRoute(router), getSignUpRoute(router)]),
       getAuthRoute(router, [getDashboardRoute(router)]),
     ]),
     getFallbackRoute(router),

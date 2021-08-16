@@ -3,22 +3,17 @@ import {
   WithReactComponent,
   RouteInterface,
   WithReactComponentInterface,
-  AnyRouteInterface,
   RouterInterface,
 } from 'services/router'
 
 import { Page } from './components/Page'
 
-function getRoute(
-  _router: RouterInterface,
-  children: AnyRouteInterface[] = [],
-): WithReactComponentInterface & RouteInterface {
+function getRoute(_router: RouterInterface): WithReactComponentInterface & RouteInterface {
   return WithReactComponent(Route)({
     name: 'sign-up',
     path: 'sign-up/',
     exclusive: true,
     component: Page,
-    children,
   })
 }
 
