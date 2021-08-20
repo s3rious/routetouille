@@ -23,6 +23,7 @@ function AuthLayout({ header = <DefaultAuthHeader />, content, footer = <Footer 
 
   return (
     <Fragment>
+      <Preloader shown={loading} />
       <Layout
         header={header}
         content={
@@ -34,7 +35,6 @@ function AuthLayout({ header = <DefaultAuthHeader />, content, footer = <Footer 
         }
         footer={footer}
       />
-      <Preloader shown={loading} />
     </Fragment>
   )
 }

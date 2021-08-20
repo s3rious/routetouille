@@ -11,3 +11,9 @@
   background: var(--color-background-overlay);
   z-index: calc(var(--z-index-modal) + 1);
 }
+
+.Preloader + .Preloader,
+.Preloader ~ .Preloader,
+.Preloader ~ * .Preloader {
+  display: none;
+}

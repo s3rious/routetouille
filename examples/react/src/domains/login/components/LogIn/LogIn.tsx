@@ -23,6 +23,7 @@ function LogIn({ router }: WithReactComponentProps): ReactElement {
   return (
     <Relative mix>
       <Card level={3}>
+        <Preloader shown={loading} />
         <Spacing vertical={40} horizontal={80}>
           <Typography size={32} align="center">
             Log in
@@ -59,7 +60,6 @@ function LogIn({ router }: WithReactComponentProps): ReactElement {
             </form>
           </Spacing>
         </Spacing>
-        <Preloader shown={loading} />
       </Card>
     </Relative>
   )
