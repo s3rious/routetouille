@@ -1,15 +1,46 @@
 import * as React from 'react'
 import { Fragment, ReactElement } from 'react'
-import { useStore } from 'effector-react'
 
-import { $client } from 'domains/client'
+import { useDashboard } from 'domains/dashboard/hooks/useDashboard'
+
+import { Preloader } from 'components/atoms/Preloader'
+import { Stack } from 'components/atoms/Stack'
+import { Typography } from 'components/atoms/Typography'
 
 import { AuthLayout } from 'domains/client/domains/auth/components/AuthLayout'
+import { PostCard } from 'domains/posts/components/PostCard'
 
 function Dashboard(): ReactElement {
-  const client = useStore($client)
+  const { loading, latestPosts } = useDashboard()
 
-  return <AuthLayout content={<Fragment>{JSON.stringify(client)}</Fragment>} />
+  return (
+    <Fragment>
+      <Preloader shown={loading} />
+      <AuthLayout
+        content={
+          <Fragment>
+            <Stack vertical={32}>
+              <Typography size={32} weight="semi-bold" lineHeight="small">
+                My dashboard
+              </Typography>
+              <Fragment>
+                <Stack vertical={32}>
+                  <Typography size={24} weight="semi-bold" lineHeight="small">
+                    Last posts
+                  </Typography>
+                  <Stack vertical={24}>
+                    {latestPosts.map((post, index) => (
+                      <PostCard key={post?.id ?? index} post={post} skeleton={loading} />
+                    ))}
+                  </Stack>
+                </Stack>
+              </Fragment>
+            </Stack>
+          </Fragment>
+        }
+      />
+    </Fragment>
+  )
 }
 
 export { Dashboard }
