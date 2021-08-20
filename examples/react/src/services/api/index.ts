@@ -1,49 +1,33 @@
-async function get<Data extends unknown, Result extends unknown>(
-  url: string,
-  data: Data,
-  result: Result,
-): Promise<Result> {
-  console.info(`Sending \`GET\` to \`${url}\`...`, data)
+async function makeCall<Data, Result>(method: string, url: string, data: Data, result: Result): Promise<Result> {
+  return await new Promise((resolve, reject) => {
+    console.info(`Sending \`${method}\` to \`${url}\`...`, data)
 
-  const call: Promise<Result> = new Promise((resolve, reject) => {
     setTimeout(() => {
       if (result instanceof Error) {
+        console.info(`... unsuccessfully!`, result)
         return reject(result)
       }
 
+      console.info(`... successfully!`, result)
       resolve(result)
     }, 1000)
   })
-
-  const success = await call
-
-  console.info(`... successfully!`, success)
-
-  return success
 }
 
-async function post<Data extends unknown, Result extends unknown>(
-  url: string,
-  data: Data,
-  result: Result,
-): Promise<Result> {
-  console.info(`Sending \`POST\` to \`${url}\`...`, data)
-
-  const call: Promise<Result> = new Promise((resolve, reject) => {
-    setTimeout(() => {
-      if (result instanceof Error) {
-        return reject(result)
-      }
-
-      resolve(result)
-    }, 1000)
-  })
-
-  const success = await call
-
-  console.info(`... successfully!`, success)
-
-  return success
+async function GET<Data, Result>(url: string, data: Data, result: Result): Promise<Result> {
+  return await makeCall('GET', url, data, result)
 }
 
-export { get, post }
+async function POST<Data, Result>(url: string, data: Data, result: Result): Promise<Result> {
+  return await makeCall('POST', url, data, result)
+}
+
+async function PATCH<Data, Result>(url: string, data: Data, result: Result): Promise<Result> {
+  return await makeCall('PATCH', url, data, result)
+}
+
+async function DELETE<Data, Result>(url: string, data: Data, result: Result): Promise<Result> {
+  return await makeCall('DELETE', url, data, result)
+}
+
+export { GET, POST, PATCH, DELETE }
