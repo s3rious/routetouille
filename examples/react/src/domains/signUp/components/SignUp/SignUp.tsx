@@ -20,6 +20,7 @@ function SignUp({ router }: WithReactComponentProps): ReactElement {
 
   return (
     <Relative mix>
+      <Preloader shown={loading} />
       <Card level={3}>
         <Spacing vertical={40} horizontal={80}>
           <Typography size={32} align="center">
@@ -52,7 +53,6 @@ function SignUp({ router }: WithReactComponentProps): ReactElement {
             </form>
           </Spacing>
         </Spacing>
-        <Preloader shown={loading} />
       </Card>
     </Relative>
   )
