@@ -46,7 +46,7 @@ function useLogIn(router: RouterInterface): UseLogInInterface {
 
       try {
         await clientEffects.logIn({ email, password })
-        await router.goTo('auth.dashboard', { optimistic: true })
+        await router.goTo('auth', { optimistic: true })
       } catch (error) {
         console.log(clientEffects.logIn.fail)
       }
