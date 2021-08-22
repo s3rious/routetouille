@@ -1,19 +1,12 @@
-import { useStore } from 'effector-react'
+import { useList, UseListInterface } from 'domains/posts/domains/list/hooks/useList'
 
-import { $posts, $isPostsLoading, PostModel } from 'domains/posts'
-
-type UseDashboardInterface = {
-  loading: boolean
-  latestPosts: Array<Partial<PostModel>>
-}
-
-function useDashboard(): UseDashboardInterface {
-  const loading = useStore($isPostsLoading)
-  const latestPosts = useStore($posts).getLatest()
+function useDashboard(): UseListInterface {
+  const { loading, posts: allPosts } = useList(5)
+  const posts = allPosts.getLatest()
 
   return {
     loading,
-    latestPosts: latestPosts.length < 1 && loading ? Array.from({ length: 5 }).map(() => ({})) : latestPosts,
+    posts,
   }
 }
 

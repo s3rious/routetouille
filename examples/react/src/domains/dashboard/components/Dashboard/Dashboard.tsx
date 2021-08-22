@@ -6,12 +6,13 @@ import { useDashboard } from 'domains/dashboard/hooks/useDashboard'
 import { Preloader } from 'components/atoms/Preloader'
 import { Stack } from 'components/atoms/Stack'
 import { Typography } from 'components/atoms/Typography'
+import { Link } from 'components/atoms/Link'
 
 import { AuthLayout } from 'domains/client/domains/auth/components/AuthLayout'
 import { PostCard } from 'domains/posts/components/PostCard'
 
 function Dashboard(): ReactElement {
-  const { loading, latestPosts } = useDashboard()
+  const { loading, posts } = useDashboard()
 
   return (
     <Fragment>
@@ -25,11 +26,16 @@ function Dashboard(): ReactElement {
               </Typography>
               <Fragment>
                 <Stack vertical={32}>
-                  <Typography size={24} weight="semi-bold" lineHeight="small">
-                    Last posts
-                  </Typography>
+                  <Stack horizontal={12} align="baseline">
+                    <Typography size={24} weight="semi-bold" lineHeight="small">
+                      Last posts
+                    </Typography>
+                    <Typography size={16} lineHeight="small" mix>
+                      <Link to="posts-list">See all</Link>
+                    </Typography>
+                  </Stack>
                   <Stack vertical={24}>
-                    {latestPosts.map((post, index) => (
+                    {posts.map((post, index) => (
                       <PostCard key={post?.id ?? index} post={post} skeleton={loading} />
                     ))}
                   </Stack>
