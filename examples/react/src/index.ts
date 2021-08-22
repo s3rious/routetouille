@@ -13,6 +13,7 @@ import { getRoute as getSignUpRoute } from 'domains/signUp'
 import { getRoute as getPostsRoute } from 'domains/posts'
 import { getRoute as getDashboardRoute } from 'domains/dashboard'
 import { getRoute as getPostsListRoute } from 'domains/posts/domains/list'
+import { getRoute as getPostRoute } from 'domains/posts/domains/post'
 
 import { getRoute as getFallbackRoute } from 'domains/fallback'
 
@@ -26,7 +27,9 @@ async function main(): Promise<void> {
     getClientRoute(router, [
       getLogOutRoute(router),
       getNonAuthRoute(router, [getLoginRoute(router), getSignUpRoute(router)]),
-      getAuthRoute(router, [getPostsRoute(router, [getDashboardRoute(router, [getPostsListRoute(router)])])]),
+      getAuthRoute(router, [
+        getPostsRoute(router, [getDashboardRoute(router, [getPostsListRoute(router, [getPostRoute(router)])])]),
+      ]),
     ]),
     getFallbackRoute(router),
   ])

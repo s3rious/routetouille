@@ -19,7 +19,7 @@ function PostCard({ post, skeleton = false }: PostCardProps): ReactElement {
   return (
     <Link
       to="post"
-      params={post.id ? [{ id: post.id.toString() }] : undefined}
+      params={post.id ? [{ postId: post.id.toString() }] : undefined}
       style={skeleton ? { pointerEvents: 'none' } : undefined}
     >
       <Card>

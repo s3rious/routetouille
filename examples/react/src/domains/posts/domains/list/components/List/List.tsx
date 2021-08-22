@@ -21,7 +21,7 @@ function List(): ReactElement {
         content={
           <Fragment>
             <Stack vertical={32}>
-              <Stack horizontal={12} align="center">
+              <Stack vertical={12}>
                 <Typography size={16} lineHeight="small" mix>
                   <Link to="dashboard">← Dashboard</Link>
                 </Typography>
