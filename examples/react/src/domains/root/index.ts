@@ -30,4 +30,5 @@ function getRoute(
   })
 }
 
+export * from './store'
 export { getRoute }

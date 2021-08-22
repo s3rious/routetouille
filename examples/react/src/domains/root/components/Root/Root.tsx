@@ -1,6 +1,8 @@
-import { useMemo, ReactElement } from 'react'
+import { ReactElement } from 'react'
 
-import { useRouterRoot, renderLastExclusiveAndTree, RouterInterface, AnyRouteInterface } from 'services/router'
+import { RouterInterface } from 'services/router'
+
+import { useRoot } from 'domains/root/hooks/useRoot'
 
 import './Root.css'
 import 'components/atoms/Palette/Palette.css'
@@ -10,17 +12,9 @@ type RootProps = {
 }
 
 function Root(props: RootProps): ReactElement | null {
-  const { router, active } = useRouterRoot<AnyRouteInterface, RouterInterface>(props.router, {
-    logger: console,
-    verbose: true,
-  })
-  const hideGUI: boolean = useMemo(() => globalThis.localStorage.getItem('HIDE_GUI') === 'true', [])
+  const { render } = useRoot(props.router)
 
-  if (hideGUI) {
-    return null
-  }
-
-  return renderLastExclusiveAndTree(router, active)
+  return render()
 }
 
 export { Root }
