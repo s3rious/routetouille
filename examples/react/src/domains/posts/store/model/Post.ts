@@ -1,10 +1,10 @@
 import { capitalizedString } from 'services/model'
 
 type PostModelProps = {
-  id: number
-  title: string | undefined | null
-  body: string | undefined | null
-  datetime: Date | undefined | null
+  id?: number
+  title?: string | undefined | null
+  body?: string | undefined | null
+  datetime?: Date | undefined | null
 }
 
 class PostModel {

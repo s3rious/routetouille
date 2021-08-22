@@ -41,7 +41,7 @@ function renderLastExclusiveAndTree<Route extends {}, Router extends AbstractRou
   )
 
   if (lastExclusiveIndex > -1) {
-    componentRoutes = componentRoutes.slice(lastExclusiveIndex, componentRoutes.length - lastExclusiveIndex)
+    componentRoutes = componentRoutes.slice(lastExclusiveIndex, componentRoutes.length + 1 - lastExclusiveIndex)
   }
 
   return <Context.Provider value={{ router }}>{renderRecurse<Router, Route>(router, componentRoutes)}</Context.Provider>
