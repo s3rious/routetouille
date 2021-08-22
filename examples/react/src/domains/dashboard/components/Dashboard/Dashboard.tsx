@@ -31,7 +31,7 @@ function Dashboard(): ReactElement {
                       Last posts
                     </Typography>
                     <Typography size={16} lineHeight="small" mix>
-                      <Link to="posts-list">See all</Link>
+                      <Link to="post-list">See all</Link>
                     </Typography>
                   </Stack>
                   <Stack vertical={24}>
