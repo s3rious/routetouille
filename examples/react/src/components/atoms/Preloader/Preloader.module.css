@@ -1,5 +1,5 @@
 .Preloader {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -16,4 +16,8 @@
 .Preloader ~ .Preloader,
 .Preloader ~ * .Preloader {
   display: none;
+}
+
+.Preloader_insideRelative {
+  position: absolute;
 }

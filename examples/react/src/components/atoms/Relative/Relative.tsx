@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ReactElement, ReactNode } from 'react'
+import { Context as ReactContext, createContext, ReactElement, ReactNode } from 'react'
 
 import styles from './Relative.module.css'
 
@@ -8,12 +8,23 @@ type RelativeProps = {
   mix?: boolean
 }
 
+const RelativeContext: ReactContext<boolean> = createContext<boolean>(false)
+RelativeContext.displayName = `RelativeContext`
+
 function Relative({ children, mix = false }: RelativeProps): ReactElement {
   if (mix && React.isValidElement(children)) {
-    return React.cloneElement(children, { className: styles.Relative })
+    return (
+      <RelativeContext.Provider value={true}>
+        {React.cloneElement(children, { className: styles.Relative })}
+      </RelativeContext.Provider>
+    )
   }
 
-  return <div className={styles.Relative}>{children}</div>
+  return (
+    <RelativeContext.Provider value={true}>
+      <div className={styles.Relative}>{children}</div>
+    </RelativeContext.Provider>
+  )
 }
 
-export { Relative, RelativeProps }
+export { Relative, RelativeContext, RelativeProps }
