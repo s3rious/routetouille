@@ -28,6 +28,7 @@ type TypographyWeight =
 type TypographyLineHeight = 'small' | 'medium'
 type TypographyAligns = 'left' | 'center' | 'right'
 type TypographyNumerics = 'tabular'
+type TypographyWordBreaks = 'break-all'
 
 type TypographyProps = {
   children?: ReactNode
@@ -39,6 +40,7 @@ type TypographyProps = {
   lineHeight?: TypographyLineHeight
   align?: TypographyAligns
   numeric?: TypographyNumerics
+  wordBreak?: TypographyWordBreaks
   mix?: boolean
 }
 
@@ -52,6 +54,7 @@ function Typography({
   lineHeight = 'medium',
   align = 'left',
   numeric,
+  wordBreak,
   mix = false,
 }: TypographyProps): ReactElement | null {
   /* eslint-disable @typescript-eslint/restrict-template-expressions */
@@ -62,6 +65,7 @@ function Typography({
     [styles[`Typography_lineHeight_${lineHeight}`]]: lineHeight,
     [styles[`Typography_align_${align}`]]: align,
     [styles[`Typography_numeric_${numeric}`]]: numeric,
+    [styles[`Typography_wordBreak_${wordBreak}`]]: wordBreak,
   })
   /* eslint-enable @typescript-eslint/restrict-template-expressions */
 
