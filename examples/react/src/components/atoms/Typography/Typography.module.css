@@ -230,3 +230,8 @@
 .Typography_numeric_tabular {
   font-variant-numeric: tabular-nums;
 }
+
+/* wordBreaks */
+.Typography_wordBreak_break-all {
+  word-break: break-all;
+}

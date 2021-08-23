@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Fragment, ReactElement } from 'react'
 import { useStore } from 'effector-react'
 
-import { $client, $isClientLoading } from 'domains/client'
+import { $client, $accessToken } from 'domains/client'
 
 import { Header } from 'components/molecules/Header'
 import { Stack } from 'components/atoms/Stack'
@@ -13,7 +13,7 @@ import { RegularButton } from 'components/molecules/RegularButton'
 
 function DefaultAuthHeader(): ReactElement {
   const client = useStore($client)
-  const isClientLoading = useStore($isClientLoading)
+  const accessToken = useStore($accessToken)
 
   return (
     <Header
@@ -21,7 +21,7 @@ function DefaultAuthHeader(): ReactElement {
         <Stack horizontal={20} align="center" inline>
           <Typography size={14} color="minor">
             Hello,{' '}
-            {!isClientLoading ? (
+            {client.fullName ? (
               client.fullName
             ) : (
               <Fragment>
@@ -31,7 +31,7 @@ function DefaultAuthHeader(): ReactElement {
               </Fragment>
             )}
           </Typography>
-          <Skeleton shown={isClientLoading}>
+          <Skeleton shown={!accessToken}>
             <RegularButton to="logout" theme="outline" size="small" block>
               Log out
             </RegularButton>

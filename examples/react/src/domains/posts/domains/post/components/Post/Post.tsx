@@ -41,7 +41,7 @@ function Post({ router }: PostProps): ReactElement {
                 {post?.body ? (
                   <Typography size={16}>{post.body}</Typography>
                 ) : (
-                  <SkeletonTypography size={16} minLength={400} maxLength={600} />
+                  <SkeletonTypography size={16} minLength={2200} maxLength={2800} wordBreak="break-all" />
                 )}
               </Stack>
             </Stack>
