@@ -20,12 +20,25 @@
   content: '';
   display: block;
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: -0.1em;
+  right: -0.1em;
+  bottom: -0.1em;
+  left: -0.1em;
   background-image: linear-gradient(90deg, transparent, white, transparent);
   background-size: 320px 99999px;
   background-repeat: no-repeat;
   animation: shine var(--animation-speed-super-slow) var(--animation-transition-default) infinite;
+  z-index: 1;
+}
+
+.Skeleton_background::after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: var(--color-typography-on-background-additional);
+  z-index: 0;
 }

@@ -20,7 +20,7 @@ class ClientModel {
     this.fullName = names.length > 0 ? names.join(' ') : null
   }
 
-  isLoaded(): boolean {
+  isFetched(): boolean {
     return Boolean(this.email)
   }
 }
