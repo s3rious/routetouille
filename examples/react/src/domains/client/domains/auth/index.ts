@@ -14,10 +14,10 @@ function getRoute(router: RouterInterface, children: AnyRouteInterface[] = []): 
     name: 'auth',
     beforeMount: async () => activateFirstChildOf(router, 'auth'),
     afterMount: async () => {
-      const isLoaded = $client.getState().isLoaded()
+      const isClientFetched = $client.getState().isFetched()
       const accessToken = $accessToken.getState()
 
-      if (!isLoaded && accessToken) {
+      if (!isClientFetched && accessToken) {
         await clientEffects.fetchClient({ accessToken })
       }
     },

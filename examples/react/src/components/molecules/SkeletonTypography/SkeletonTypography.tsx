@@ -1,19 +1,28 @@
 import * as React from 'react'
 import { ReactElement, useEffect, useMemo, useState } from 'react'
 
+import { Skeleton } from 'components/atoms/Skeleton'
 import { Typography, TypographyProps } from 'components/atoms/Typography'
-import { Skeleton } from '../../atoms/Skeleton'
 
-type SkeletonTypographyProps = {
+type SkeletonTypographyExactProps = {
+  length: number
+}
+
+type SkeletonTypographyMinMaxProps = {
   minLength: number
   maxLength: number
-} & TypographyProps
+}
+
+type SkeletonTypographyProps = XOR<SkeletonTypographyExactProps, SkeletonTypographyMinMaxProps> & TypographyProps
 
 function SkeletonTypography({
-  minLength,
-  maxLength,
+  length: lengthProp,
+  minLength: minLengthProp,
+  maxLength: maxLengthProp,
   ...typographyProps
 }: SkeletonTypographyProps): ReactElement | null {
+  const minLength: number = lengthProp ?? minLengthProp ?? 0
+  const maxLength: number = lengthProp ?? maxLengthProp ?? 0
   const [length, setLength] = useState<number | null>(null)
   const text: string = useMemo(() => {
     if (length) {
@@ -34,7 +43,7 @@ function SkeletonTypography({
 
   if (length) {
     return (
-      <Skeleton mix>
+      <Skeleton background={false} mix>
         <Typography {...typographyProps}>{text}</Typography>
       </Skeleton>
     )
