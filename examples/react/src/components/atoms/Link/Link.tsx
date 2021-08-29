@@ -12,6 +12,7 @@ type LinkProps = {
   to?: Activator
   params?: Params
   optimistic?: boolean
+  saveScrollPosition?: boolean
 } & HTMLProps<HTMLAnchorElement>
 
 function Link({
@@ -20,10 +21,11 @@ function Link({
   to,
   params,
   optimistic = true,
-  href: hrefProps,
+  saveScrollPosition = true,
+  href: hrefProp,
   ...rest
 }: LinkProps): ReactElement {
-  const { href, handleClick } = useLink({ to, params, optimistic, href: hrefProps })
+  const { href, handleClick } = useLink({ to, params, optimistic, href: hrefProp, saveScrollPosition })
 
   return (
     <a className={classNames(className, styles.Link)} href={href} onClick={handleClick} {...rest}>

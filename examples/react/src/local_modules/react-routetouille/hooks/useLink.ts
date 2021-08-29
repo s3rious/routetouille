@@ -7,6 +7,7 @@ type UseLinkProps<LinkActivator, LinkParams> = {
   to?: LinkActivator
   params?: LinkParams
   optimistic?: boolean
+  saveScrollPosition?: boolean
   href?: string
 }
 
@@ -19,6 +20,7 @@ function useLink<LinkActivator extends Activator, LinkParams extends Params>({
   to,
   params,
   optimistic,
+  saveScrollPosition,
   href: hrefProp,
 }: UseLinkProps<LinkActivator, LinkParams>): UseLink {
   const router: RouterInterface | undefined = useRouter()
@@ -36,10 +38,15 @@ function useLink<LinkActivator extends Activator, LinkParams extends Params>({
       if (to != null && router != null) {
         event.preventDefault()
 
+        if (saveScrollPosition && router.history?.replace) {
+          const pathname = `${globalThis.location.pathname}${globalThis.location.search}${globalThis.location.hash}`
+          router.history.replace(pathname, { scrollTop: globalThis.scrollY })
+        }
+
         await router.goTo(to, { params, optimistic })
       }
     },
-    [to, params, optimistic, router],
+    [to, params, optimistic, saveScrollPosition, router],
   )
 
   return {
