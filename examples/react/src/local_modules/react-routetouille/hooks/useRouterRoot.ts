@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import { RouterInterface, isGoToState } from 'routetouille'
 
 type AbstractRouter<Route> = {
   active: Route[]
-  on: (event: 'afterActivate', callback: (routes: Route[]) => void) => void
-}
+} & RouterInterface
 
 type UseRouterRootOptions = {
   logger?: Console
@@ -19,7 +19,25 @@ function useRouterRoot<Route extends {}, Router extends AbstractRouter<Route>>(
 } {
   const [active, setActive] = useState<Route[]>(router.active)
 
-  useEffect(() => router.on('afterActivate', () => setActive(router.active)), [])
+  const handleHistoryChange = useCallback((_pathname: string, state: unknown) => {
+    if (isGoToState(state)) {
+      globalThis.scrollTo(0, state.scrollTop)
+
+      // move to next tick
+      setTimeout(() => globalThis.scrollTo(0, state.scrollTop), 0)
+    }
+  }, [])
+
+  const handleAfterActivate = useCallback(() => setActive(router.active), [])
+
+  useEffect(() => {
+    if (router.history?.emitter) {
+      router.history.emitter.on('change', handleHistoryChange)
+    }
+
+    router.on('afterActivate', handleAfterActivate)
+  }, [])
+
   useEffect(() => {
     if (logger && verbose) {
       logger.info('@Root/active', active)

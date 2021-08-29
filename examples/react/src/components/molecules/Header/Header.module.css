@@ -1,7 +1,9 @@
 .Header {
-  box-shadow: var(--shadow-level-1);
   position: sticky;
+  top: 0;
   z-index: calc(var(--z-index-modal) - 1);
+  background-color: var(--color-background-default);
+  box-shadow: var(--shadow-level-1);
 }
 
 .HeaderInner {
