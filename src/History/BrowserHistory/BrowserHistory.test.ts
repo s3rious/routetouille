@@ -2,8 +2,8 @@
  * @jest-environment jsdom
  */
 
-import { BrowserHistory } from './BrowserHistory'
 import { HistoryInterface } from '../index'
+import { BrowserHistory } from './BrowserHistory'
 
 describe('BrowserHistory', () => {
   it('creates with proper `pathname` when empty', () => {
@@ -13,81 +13,81 @@ describe('BrowserHistory', () => {
   })
 
   it('push', () => {
-    jest.spyOn(window.history, 'pushState')
+    jest.spyOn(globalThis.history, 'pushState')
 
     const history: HistoryInterface = BrowserHistory()
 
     history.push('/foo/')
     expect(history.pathname).toEqual('/foo/')
-    expect(window.location.pathname).toEqual('/foo/')
-    expect(window.history.pushState).lastCalledWith('', '', '/foo/')
+    expect(globalThis.location.pathname).toEqual('/foo/')
+    expect(globalThis.history.pushState).lastCalledWith(null, '', '/foo/')
 
-    history.push('/foo/?bar')
+    history.push('/foo/?bar', { scrollTop: 100 })
     expect(history.pathname).toEqual('/foo/?bar')
-    expect(window.location.pathname).toEqual('/foo/')
-    expect(window.location.search).toEqual('?bar')
-    expect(window.history.pushState).lastCalledWith('', '', '/foo/?bar')
+    expect(globalThis.location.pathname).toEqual('/foo/')
+    expect(globalThis.location.search).toEqual('?bar')
+    expect(globalThis.history.pushState).lastCalledWith({ scrollTop: 100 }, '', '/foo/?bar')
 
     history.push('/foo/?bar=baz')
     expect(history.pathname).toEqual('/foo/?bar=baz')
-    expect(window.location.pathname).toEqual('/foo/')
-    expect(window.location.search).toEqual('?bar=baz')
-    expect(window.history.pushState).lastCalledWith('', '', '/foo/?bar=baz')
+    expect(globalThis.location.pathname).toEqual('/foo/')
+    expect(globalThis.location.search).toEqual('?bar=baz')
+    expect(globalThis.history.pushState).lastCalledWith(null, '', '/foo/?bar=baz')
 
-    history.push('/foo/?bar=baz#quz')
+    history.push('/foo/?bar=baz#quz', { scrollTop: 200 })
     expect(history.pathname).toEqual('/foo/?bar=baz#quz')
-    expect(window.location.pathname).toEqual('/foo/')
-    expect(window.location.search).toEqual('?bar=baz')
-    expect(window.location.hash).toEqual('#quz')
-    expect(window.history.pushState).lastCalledWith('', '', '/foo/?bar=baz#quz')
+    expect(globalThis.location.pathname).toEqual('/foo/')
+    expect(globalThis.location.search).toEqual('?bar=baz')
+    expect(globalThis.location.hash).toEqual('#quz')
+    expect(globalThis.history.pushState).lastCalledWith({ scrollTop: 200 }, '', '/foo/?bar=baz#quz')
 
-    expect(window.history.pushState).toBeCalledTimes(4)
+    expect(globalThis.history.pushState).toBeCalledTimes(4)
     history.push(null)
-    expect(window.history.pushState).toBeCalledTimes(4)
+    expect(globalThis.history.pushState).toBeCalledTimes(4)
     expect(history.pathname).toEqual('/foo/?bar=baz#quz')
-    expect(window.location.pathname).toEqual('/foo/')
-    expect(window.location.search).toEqual('?bar=baz')
-    expect(window.location.hash).toEqual('#quz')
-    expect(window.history.pushState).lastCalledWith('', '', '/foo/?bar=baz#quz')
+    expect(globalThis.location.pathname).toEqual('/foo/')
+    expect(globalThis.location.search).toEqual('?bar=baz')
+    expect(globalThis.location.hash).toEqual('#quz')
+    expect(globalThis.history.pushState).lastCalledWith({ scrollTop: 200 }, '', '/foo/?bar=baz#quz')
   })
 
   it('replace', () => {
-    jest.spyOn(window.history, 'replaceState')
+    jest.spyOn(globalThis.history, 'replaceState')
 
     const history: HistoryInterface = BrowserHistory()
 
     history.replace('/foo/')
     expect(history.pathname).toEqual('/foo/')
-    expect(window.location.pathname).toEqual('/foo/')
-    expect(window.history.replaceState).lastCalledWith('', '', '/foo/')
+    expect(globalThis.location.pathname).toEqual('/foo/')
+    expect(globalThis.history.replaceState).lastCalledWith(null, '', '/foo/')
 
-    history.replace('/foo/?bar')
+    history.replace('/foo/?bar', { scrollTop: 100 })
     expect(history.pathname).toEqual('/foo/?bar')
-    expect(window.location.pathname).toEqual('/foo/')
-    expect(window.location.search).toEqual('?bar')
-    expect(window.history.replaceState).lastCalledWith('', '', '/foo/?bar')
+    expect(globalThis.location.pathname).toEqual('/foo/')
+    expect(globalThis.location.search).toEqual('?bar')
+    expect(globalThis.history.replaceState).lastCalledWith({ scrollTop: 100 }, '', '/foo/?bar')
 
     history.replace('/foo/?bar=baz')
     expect(history.pathname).toEqual('/foo/?bar=baz')
-    expect(window.location.pathname).toEqual('/foo/')
-    expect(window.location.search).toEqual('?bar=baz')
-    expect(window.history.replaceState).lastCalledWith('', '', '/foo/?bar=baz')
+    expect(globalThis.location.pathname).toEqual('/foo/')
+    expect(globalThis.location.search).toEqual('?bar=baz')
+    expect(globalThis.history.replaceState).lastCalledWith(null, '', '/foo/?bar=baz')
 
-    history.replace('/foo/?bar=baz#quz')
+    history.replace('/foo/?bar=baz#quz', { scrollTop: 200 })
     expect(history.pathname).toEqual('/foo/?bar=baz#quz')
-    expect(window.location.pathname).toEqual('/foo/')
-    expect(window.location.search).toEqual('?bar=baz')
-    expect(window.location.hash).toEqual('#quz')
-    expect(window.history.replaceState).lastCalledWith('', '', '/foo/?bar=baz#quz')
+    expect(globalThis.location.pathname).toEqual('/foo/')
+    expect(globalThis.location.search).toEqual('?bar=baz')
+    expect(globalThis.location.hash).toEqual('#quz')
+    expect(globalThis.history.replaceState).lastCalledWith({ scrollTop: 200 }, '', '/foo/?bar=baz#quz')
 
-    expect(window.history.replaceState).toBeCalledTimes(4)
+    expect(globalThis.history.replaceState).toBeCalledTimes(4)
     history.replace(null)
-    expect(window.history.replaceState).toBeCalledTimes(4)
+    expect(globalThis.history.replaceState).toBeCalledTimes(4)
     expect(history.pathname).toEqual('/foo/?bar=baz#quz')
-    expect(window.location.pathname).toEqual('/foo/')
-    expect(window.location.search).toEqual('?bar=baz')
-    expect(window.location.hash).toEqual('#quz')
-    expect(window.history.replaceState).lastCalledWith('', '', '/foo/?bar=baz#quz')
+    expect(globalThis.location.pathname).toEqual('/foo/')
+    expect(globalThis.location.search).toEqual('?bar=baz')
+    expect(globalThis.location.hash).toEqual('#quz')
+    expect(globalThis.history.replaceState).lastCalledWith({ scrollTop: 200 }, '', '/foo/?bar=baz#quz')
   })
 
   it('emitter', () => {
@@ -109,7 +109,7 @@ describe('BrowserHistory', () => {
 
     globalThis.dispatchEvent(new Event('popstate'))
     expect(handlePopState).toBeCalledTimes(1)
-    expect(handlePopState).lastCalledWith('/foo/bar/?bar=foo#quz')
+    expect(handlePopState).lastCalledWith('/foo/bar/?bar=foo#quz', undefined)
 
     // eslint-disable-next-line no-global-assign
     window = originalWindow

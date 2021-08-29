@@ -12,23 +12,23 @@ function BrowserHistory(): HistoryInterface {
   const pathname: string = getPathName()
   const emitter = createNanoEvents()
 
-  function push(this: HistoryInterface, pathname: string | null): void {
+  function push(this: HistoryInterface, pathname: string | null, state?: unknown): void {
     if (pathname != null) {
-      window.history.pushState('', '', pathname)
+      globalThis.history.pushState(state ?? null, '', pathname)
       this.pathname = pathname
     }
   }
 
-  function replace(this: HistoryInterface, pathname: string | null): void {
+  function replace(this: HistoryInterface, pathname: string | null, state?: unknown): void {
     if (pathname != null) {
-      window.history.replaceState('', '', pathname)
+      globalThis.history.replaceState(state ?? null, '', pathname)
       this.pathname = pathname
     }
   }
 
-  function onPopState(this: HistoryInterface): void {
+  function onPopState(this: Window, event: PopStateEvent): void {
     const pathname: string = getPathName()
-    emitter.emit('popstate', pathname)
+    emitter.emit('popstate', pathname, event?.state)
   }
 
   globalThis.addEventListener('popstate', onPopState)
