@@ -1,6 +1,9 @@
 import { Emitter } from 'nanoevents'
 
 type Events = {
+  push: (pathname: string, state?: unknown) => void
+  replace: (pathname: string, state?: unknown) => void
+  change: (pathname: string, state?: unknown) => void
   popstate: (pathname: string, state?: unknown) => void
 }
 

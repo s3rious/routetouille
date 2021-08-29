@@ -20,10 +20,13 @@ type RouterComposedInterface = WithGoToInterface &
   WithActiveInterface &
   WithMapInterface
 
+type GoToState = {
+  scrollTop: number
+}
 type GoToMethod = 'push' | 'replace' | null
 type GoToOptions = {
   method?: GoToMethod
-  state?: { scrollTop: number }
+  state?: GoToState
 } & OriginalGoToOptions
 
 type WithHistoryOptions = {
@@ -32,6 +35,16 @@ type WithHistoryOptions = {
 type WithHistoryInterface = WithHistoryOptions & {
   goTo: (activator: SetActivator | ActiveActivator, options?: GoToOptions) => Promise<void>
   init: () => Promise<void>
+}
+
+function isGoToState(unknown: unknown): unknown is GoToState {
+  if (typeof unknown === 'object' && unknown !== null) {
+    if (Object.prototype.hasOwnProperty.call(unknown, 'scrollTop')) {
+      return true
+    }
+  }
+
+  return false
 }
 
 function WithHistory<ComposedOptions extends RouterComposedOptions, ComposedInterface extends RouterComposedInterface>(
@@ -79,8 +92,14 @@ function WithHistory<ComposedOptions extends RouterComposedOptions, ComposedInte
 
     async function init(this: WithHistoryInterface & ComposedInterface): Promise<void> {
       if (this.history?.pathname != null) {
-        this.history.emitter.on('popstate', (pathname): void => {
-          void this.goTo.bind(this)(pathname, { optimistic: true, method: null })
+        this.history.emitter.on('popstate', (pathname, popState): void => {
+          const state = { scrollTop: 0 }
+
+          if (isGoToState(popState)) {
+            state.scrollTop = popState.scrollTop
+          }
+
+          void this.goTo.bind(this)(pathname, { optimistic: true, method: null, state })
         })
 
         await this.goTo.bind(this)(this.history.pathname, { method: 'replace', state: { scrollTop: 0 } })
@@ -91,4 +110,4 @@ function WithHistory<ComposedOptions extends RouterComposedOptions, ComposedInte
   }
 }
 
-export { WithHistory, WithHistoryOptions, WithHistoryInterface }
+export { WithHistory, WithHistoryOptions, WithHistoryInterface, isGoToState }

@@ -16,6 +16,9 @@ function BrowserHistory(): HistoryInterface {
     if (pathname != null) {
       globalThis.history.pushState(state ?? null, '', pathname)
       this.pathname = pathname
+
+      emitter.emit('push', pathname, state)
+      emitter.emit('change', pathname, state)
     }
   }
 
@@ -23,12 +26,17 @@ function BrowserHistory(): HistoryInterface {
     if (pathname != null) {
       globalThis.history.replaceState(state ?? null, '', pathname)
       this.pathname = pathname
+
+      emitter.emit('replace', pathname, state)
+      emitter.emit('change', pathname, state)
     }
   }
 
   function onPopState(this: Window, event: PopStateEvent): void {
     const pathname: string = getPathName()
+
     emitter.emit('popstate', pathname, event?.state)
+    emitter.emit('change', pathname, event?.state)
   }
 
   globalThis.addEventListener('popstate', onPopState)
