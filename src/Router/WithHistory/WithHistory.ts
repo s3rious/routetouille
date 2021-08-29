@@ -23,6 +23,7 @@ type RouterComposedInterface = WithGoToInterface &
 type GoToMethod = 'push' | 'replace' | null
 type GoToOptions = {
   method?: GoToMethod
+  state?: { scrollTop: number }
 } & OriginalGoToOptions
 
 type WithHistoryOptions = {
@@ -52,7 +53,7 @@ function WithHistory<ComposedOptions extends RouterComposedOptions, ComposedInte
       if (currentCount + 1 > currentCount) {
         if (currentCount > 0) {
           if (this.history != null) {
-            this.history.replace(this.pathname)
+            this.history.replace(this.pathname, { scrollTop: 0 })
           }
         }
 
@@ -65,14 +66,14 @@ function WithHistory<ComposedOptions extends RouterComposedOptions, ComposedInte
     async function goTo(
       this: WithHistoryInterface & ComposedInterface,
       activator: SetActivator | ActiveActivator,
-      options: GoToOptions = { method: 'push' },
+      options: GoToOptions = { method: 'push', state: { scrollTop: 0 } },
     ): Promise<void> {
       currentCount = 0
       const { method = 'push', ...restOptions } = options
       await composed.goTo.bind(this)(activator, restOptions)
 
       if (this.history != null && typeof method === 'string') {
-        this.history[method](this.pathname)
+        this.history[method](this.pathname, options.state ?? { scrollTop: 0 })
       }
     }
 
@@ -82,7 +83,7 @@ function WithHistory<ComposedOptions extends RouterComposedOptions, ComposedInte
           void this.goTo.bind(this)(pathname, { optimistic: true, method: null })
         })
 
-        await this.goTo.bind(this)(this.history.pathname, { method: 'replace' })
+        await this.goTo.bind(this)(this.history.pathname, { method: 'replace', state: { scrollTop: 0 } })
       }
     }
 
