@@ -1,3 +1,4 @@
+// import { createStore } from 'effector'
 import { createStore } from 'effector-logger'
 import { persist } from 'effector-storage/local'
 
