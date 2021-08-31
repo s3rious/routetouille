@@ -12,13 +12,17 @@ module.exports = {
     },
   ],
   alias: {
-    // effector: /* __SNOWPACK_ENV__.MODE === */ 'effector-logger' /* ? 'effector-logger' : 'effector' */,
     'local_modules/': './src/local_modules',
     'components/': './src/components',
     'domains/': './src/domains',
     'services/': './src/services',
   },
-  plugins: ['@snowpack/plugin-react-refresh', '@snowpack/plugin-typescript', '@snowpack/plugin-sass'],
+  plugins: [
+    '@snowpack/plugin-react-refresh',
+    '@snowpack/plugin-babel',
+    '@snowpack/plugin-typescript',
+    '@snowpack/plugin-sass',
+  ],
   devOptions: {
     open: 'none',
   },

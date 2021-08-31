@@ -1,7 +1,7 @@
-// import { createEffect } from 'effector'
-import { createEffect } from 'effector-logger'
-import * as api from './api'
+import { createEffect } from 'effector'
+
 import { $accessToken } from './index'
+import * as api from './api'
 
 type FetchClientParams = {
   accessToken: string

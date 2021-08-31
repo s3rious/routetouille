@@ -1,5 +1,4 @@
-import { Store /*, createStore, combine */ } from 'effector'
-import { createStore, combine } from 'effector-logger'
+import { createStore, Store, combine } from 'effector'
 
 import { PostsModel, PostModel } from './model'
 import * as effects from './effects'
