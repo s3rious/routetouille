@@ -1,5 +1,4 @@
-// import { createStore } from 'effector'
-import { createStore } from 'effector-logger'
+import { createStore } from 'effector'
 import { persist } from 'effector-storage/local'
 
 const $hideGui = createStore(false, { name: 'root/$hideGui' })

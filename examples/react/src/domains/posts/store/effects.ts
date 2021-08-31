@@ -1,5 +1,5 @@
-// import { createEffect } from 'effector'
-import { createEffect } from 'effector-logger'
+import { createEffect } from 'effector'
+
 import * as api from './api'
 
 const fetchPosts = createEffect({
