@@ -1,5 +1,5 @@
-import { createElement, FunctionComponent } from 'react'
-import { render, unmountComponentAtNode } from 'react-dom'
+import { StrictMode, createElement, FunctionComponent } from 'react'
+import { createRoot, render, unmountComponentAtNode } from 'react-dom'
 import {
   RouterInterface,
   WithAfterMountInterface,
@@ -46,19 +46,27 @@ function WithReactRoot<ComposedOptions extends ComposedRouteOptions, ComposedInt
         await composedBeforeMount()
       }
 
-      let root = globalThis.document.getElementById(id)
+      let container = globalThis.document.getElementById(id)
 
-      if (root == null) {
+      if (container == null) {
         const createdRoot = globalThis.document.createElement('div')
         createdRoot.id = id
         globalThis.document.body.append(createdRoot)
 
-        root = createdRoot
+        container = createdRoot
       }
 
-      render(createElement(Component, { router: router }), root)
+      const reactApp = createElement(StrictMode, null, createElement(Component, { router: router }))
 
-      await new Promise((resolve) => setTimeout(() => resolve(''), 0))
+      if (typeof createRoot === 'function') {
+        const root = createRoot(container)
+
+        root.render(reactApp)
+      } else {
+        render(reactApp, container)
+      }
+
+      return await new Promise((resolve) => setTimeout(() => resolve(undefined), 0))
     }
 
     async function afterMount(this: ComposedInterface & ComposedRouteInterface): Promise<void> {
