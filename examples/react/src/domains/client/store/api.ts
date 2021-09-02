@@ -50,7 +50,7 @@ async function createClient(email: string, password: string): Promise<CreateClie
 }
 
 async function revokeAccessToken(accessToken: string): Promise<null> {
-  return POST('oauth/revoke-token/', { accessToken }, null)
+  return POST('oauth/revoke-token', { accessToken }, null)
 }
 
 export { fetchClient, getAccessTokenByEmailPasswordPair, createClient, revokeAccessToken }
