@@ -1,9 +1,9 @@
 import { email, capitalizedString, Email } from 'services/model'
 
 type ClientModelProps = {
-  email?: Email | string
-  firstName?: string
-  lastName?: string
+  email?: Email | string | null
+  firstName?: string | null
+  lastName?: string | null
 }
 
 class ClientModel {

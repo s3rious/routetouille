@@ -1,9 +1,9 @@
 import { GET, POST } from 'services/api'
 
 type FetchClientResponse = {
-  email: string
-  firstName: string
-  lastName: string
+  email: string | null
+  firstName: string | null
+  lastName: string | null
 }
 
 async function fetchClient(accessToken: string): Promise<FetchClientResponse> {
@@ -22,9 +22,9 @@ async function getAccessTokenByEmailPasswordPair(email: string, password: string
 type CreateClientResponse =
   | {
       accessToken: string
-      email: string
-      firstName: string
-      lastName: string
+      email: string | null
+      firstName: string | null
+      lastName: string | null
     }
   | Error
 

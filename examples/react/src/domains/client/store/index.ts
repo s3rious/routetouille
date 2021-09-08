@@ -26,9 +26,7 @@ const $accessToken: Store<AccessTokenStoreState> = createStore<AccessTokenStoreS
       return state
     }
 
-    const { accessToken } = response
-
-    return accessToken
+    return response.accessToken
   })
   .reset(effects.logOut.done)
 
