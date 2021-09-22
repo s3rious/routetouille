@@ -20,10 +20,8 @@ function getRoute(
     preloaderId: 'preloader',
     component: Root,
     beforeMount: async () => {
-      if (router.pathname === '/') {
-        if (router.active[router.active.length - 1].fallback) {
-          await router.goTo('non-auth', { method: 'replace', optimistic: true })
-        }
+      if (router.pathname === '/' && router.active[router.active.length - 1].fallback) {
+        await router.goTo('non-auth', { method: 'replace', optimistic: true })
       }
     },
     children,
