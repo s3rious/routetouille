@@ -7,4 +7,7 @@ module.exports = {
     '^domains(.*)$': '<rootDir>/src/domains$1',
     '^services(.*)$': '<rootDir>/src/services$1',
   },
+  transform: {
+    '^.+\\.(j|t)sx?$': 'babel-jest',
+  },
 }
