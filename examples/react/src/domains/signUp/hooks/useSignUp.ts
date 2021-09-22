@@ -50,7 +50,9 @@ function useSignUp(router: RouterInterface): UseSignUpInterface {
         await clientEffects.signUp({ email, password })
         await router.goTo('auth', { optimistic: true })
       } catch (error) {
-        setError(error)
+        if (error instanceof Error) {
+          setError(error)
+        }
       }
     },
     [router, error, email, password],
