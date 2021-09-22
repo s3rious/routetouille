@@ -27,6 +27,12 @@ type WithReactRootOptions = {
 
 type WithReactRootInterface = {}
 
+function waitATick() {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, 0)
+  })
+}
+
 function WithReactRoot<ComposedOptions extends ComposedRouteOptions, ComposedInterface extends ComposedRouteInterface>(
   createRoute: (options: ComposedOptions) => ComposedInterface,
 ) {
@@ -45,6 +51,8 @@ function WithReactRoot<ComposedOptions extends ComposedRouteOptions, ComposedInt
       if (composedBeforeMount) {
         await composedBeforeMount()
       }
+
+      await waitATick()
 
       let container = globalThis.document.getElementById(id)
 
@@ -65,8 +73,6 @@ function WithReactRoot<ComposedOptions extends ComposedRouteOptions, ComposedInt
       } else {
         render(reactApp, container)
       }
-
-      return await new Promise((resolve) => setTimeout(() => resolve(undefined), 0))
     }
 
     async function afterMount(this: ComposedInterface & ComposedRouteInterface): Promise<void> {
