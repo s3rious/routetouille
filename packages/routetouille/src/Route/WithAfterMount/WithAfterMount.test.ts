@@ -71,9 +71,6 @@ describe('`WithAfterMount` route', () => {
               () => {},
               async () => {
                 afterMountErrorHandle()
-
-                // eslint-disable-next-line @typescript-eslint/no-throw-literal
-                throw 'Error!'
               },
             ),
         )

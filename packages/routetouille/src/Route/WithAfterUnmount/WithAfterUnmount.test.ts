@@ -68,9 +68,6 @@ describe('`WithAfterUnmount` route', () => {
               () => {},
               async () => {
                 afterUnmountErrorHandle()
-
-                // eslint-disable-next-line @typescript-eslint/no-throw-literal
-                throw 'Error!'
               },
             ),
         )
