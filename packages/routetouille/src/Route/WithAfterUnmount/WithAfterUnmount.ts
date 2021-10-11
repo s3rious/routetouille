@@ -25,7 +25,7 @@ function WithAfterUnmount<ComposedOptions extends MountableOptions, ComposedInte
         }
       })
 
-      return unmount
+      return await unmount
     }
 
     return { ...composed, unmount }

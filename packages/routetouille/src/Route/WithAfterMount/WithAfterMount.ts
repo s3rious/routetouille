@@ -27,7 +27,7 @@ function WithAfterMount<ComposedOptions extends MountableOptions, ComposedInterf
         }
       })
 
-      return mount
+      return await mount
     }
 
     return { ...composed, mount }
