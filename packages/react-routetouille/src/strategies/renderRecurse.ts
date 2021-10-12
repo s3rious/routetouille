@@ -13,7 +13,7 @@ function renderRecurse<Router extends RouterInterface, Route>(
 
   if (isWithReactComponent(firstRoute)) {
     const Component = firstRoute.component
-    const element = <Component route={firstRoute} router={router} />
+    const element = React.createElement(Component, { route: firstRoute, router: router })
 
     if (React.isValidElement(result)) {
       result = React.cloneElement(result, {}, element)

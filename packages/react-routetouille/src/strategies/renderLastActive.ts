@@ -2,8 +2,8 @@ import * as React from 'react'
 import { ReactElement } from 'react'
 import { RouterInterface } from 'routetouille'
 
-import { isWithReactComponent } from '../../Route'
-import { Context } from '../../Context'
+import { isWithReactComponent } from '../Route'
+import { Context } from '../Context'
 
 type AbstractRouter<Route> = RouterInterface & {
   active: Route[]
@@ -18,10 +18,10 @@ function renderLastActive<Route extends {}, Router extends AbstractRouter<Route>
   if (isWithReactComponent(route)) {
     const Component = route.component
 
-    return (
-      <Context.Provider value={{ router }}>
-        <Component router={router} route={route} />
-      </Context.Provider>
+    return React.createElement(
+      Context.Provider,
+      { value: { router } },
+      React.createElement(Component, { router, route }),
     )
   }
 
