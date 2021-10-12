@@ -1,6 +1,6 @@
 {
   "name": "react-routetouille",
-  "version": "0.0.22",
+  "version": "0.0.24",
   "description": "Official React bindings for Routetouille",
   "author": "s3rious a.k.a Leonid Semenov <canismajor@kaschenka.ru>",
   "license": "MIT",
