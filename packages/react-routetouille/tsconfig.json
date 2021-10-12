@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "lib": ["ESNext", "DOM"],
+    "jsx": "preserve",
+
+    "baseUrl": "./src",
+
+    "module": "CommonJS",
+
+    "outDir": "./lib",
+    "declaration": true,
+    "target": "ES2019", // node 12 → https://github.com/microsoft/TypeScript/wiki/Node-Target-Mapping
+
+    "types": ["jest", "react/experimental", "react-dom/experimental"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "src/**/*.test.ts"]
+}
