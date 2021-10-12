@@ -27,8 +27,8 @@ type WithReactRootOptions = {
 
 type WithReactRootInterface = {}
 
-function waitATick() {
-  return new Promise(function (resolve) {
+async function waitATick(): Promise<void> {
+  return await new Promise(function (resolve) {
     setTimeout(resolve, 0)
   })
 }

@@ -1,5 +1,5 @@
 import { ReactElement, useCallback } from 'react'
-import { renderLastExclusiveAndTree, useRouterRoot } from 'local_modules/react-routetouille'
+import { renderLastExclusiveAndTree, useRouterRoot } from 'react-routetouille'
 import { useStore } from 'effector-react'
 
 import { AnyRouteInterface, RouterInterface } from 'services/router'

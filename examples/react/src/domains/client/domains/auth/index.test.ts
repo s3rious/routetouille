@@ -26,7 +26,7 @@ const rootRoute = Route({
 })
 router.root = rootRoute
 
-async function wait(timeout = 1) {
+async function wait(timeout = 1): Promise<void> {
   return await new Promise(function (resolve) {
     setTimeout(resolve, timeout)
   })

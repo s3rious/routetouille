@@ -2,7 +2,7 @@ import * as React from 'react'
 import { ReactElement, ReactNode, ReactNodeArray } from 'react'
 import classNames from 'classnames/dedupe'
 
-import { Spacing, SpacingProps, SpacingSize } from 'components/atoms/Spacing'
+import { Spacing, SpacingSize } from 'components/atoms/Spacing'
 
 import styles from './Stack.module.css'
 
