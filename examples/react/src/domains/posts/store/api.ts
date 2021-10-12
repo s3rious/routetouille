@@ -34,7 +34,7 @@ async function fetchPosts(): Promise<PostDTO[]> {
     }
   })
 
-  return GET('posts/', null, postsData)
+  return await GET('posts/', null, postsData)
 }
 
 async function fetchPost(id: number): Promise<PostDTO> {
@@ -45,7 +45,7 @@ async function fetchPost(id: number): Promise<PostDTO> {
     id,
   }
 
-  return GET(`posts/${id}`, null, postData)
+  return await GET(`posts/${id}`, null, postData)
 }
 
 async function createPost(data: Omit<PostDTO, 'id'>): Promise<PostDTO> {
@@ -54,7 +54,7 @@ async function createPost(data: Omit<PostDTO, 'id'>): Promise<PostDTO> {
     ...data,
   }
 
-  return POST(`posts/`, null, postData)
+  return await POST(`posts/`, null, postData)
 }
 
 async function updatePost(id: number, data: Omit<PostDTO, 'id'>): Promise<PostDTO> {
@@ -63,11 +63,11 @@ async function updatePost(id: number, data: Omit<PostDTO, 'id'>): Promise<PostDT
     ...data,
   }
 
-  return PATCH(`posts/${id}`, null, postData)
+  return await PATCH(`posts/${id}`, null, postData)
 }
 
 async function deletePost(id: number): Promise<boolean> {
-  return DELETE(`posts/${id}`, null, true)
+  return await DELETE(`posts/${id}`, null, true)
 }
 
 export { fetchPosts, fetchPost, createPost, updatePost, deletePost }

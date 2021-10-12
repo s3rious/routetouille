@@ -25,7 +25,7 @@ function ForgotPassword({ router }: WithReactComponentProps): ReactElement {
   )
 
   const handleReset = useCallback(
-    async (): Promise<void> => router.goTo('login.reset-success', { optimistic: true }),
+    async (): Promise<void> => await router.goTo('login.reset-success', { optimistic: true }),
     [router],
   )
 

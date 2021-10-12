@@ -1,7 +1,7 @@
 import { Router, Route } from 'services/router'
 
 import { getRoute } from './index'
-import { $client, $accessToken, effects } from 'domains/client'
+import { $accessToken } from 'domains/client'
 
 jest.mock('domains/client')
 
@@ -26,7 +26,7 @@ const rootRoute = Route({
 })
 router.root = rootRoute
 
-async function wait(timeout = 1) {
+async function wait(timeout = 1): Promise<void> {
   return await new Promise(function (resolve) {
     setTimeout(resolve, timeout)
   })

@@ -11,7 +11,7 @@ import {
   WithReactRootOptions,
   WithReactComponentInterface,
   WithReactComponentOptions,
-} from 'local_modules/react-routetouille/Route'
+} from 'react-routetouille/lib/Route'
 
 type GenericRouteInterface<Interface> =
   | Interface
@@ -31,5 +31,5 @@ type AnyRouteOptions =
   | GenericRouteOptions<FallbackRouteOptions>
 
 export * from 'routetouille/lib/Route'
-export * from 'local_modules/react-routetouille/Route'
+export * from 'react-routetouille/lib/Route'
 export { AnyRouteInterface, AnyRouteOptions }

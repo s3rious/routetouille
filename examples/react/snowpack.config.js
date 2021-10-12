@@ -12,7 +12,6 @@ module.exports = {
     },
   ],
   alias: {
-    'local_modules/': './src/local_modules',
     'components/': './src/components',
     'domains/': './src/domains',
     'services/': './src/services',

@@ -12,11 +12,11 @@ async function fetchClient(accessToken: string): Promise<FetchClientResponse> {
   const firstName = names.split('.')[0] ?? null
   const lastName = names.split('.')[1] ?? null
 
-  return GET('client/', { accessToken }, { email, firstName, lastName })
+  return await GET('client/', { accessToken }, { email, firstName, lastName })
 }
 
 async function getAccessTokenByEmailPasswordPair(email: string, password: string): Promise<{ accessToken: string }> {
-  return POST('oauth/token', { email, password }, { accessToken: `accessToken+${email}+${password}` })
+  return await POST('oauth/token', { email, password }, { accessToken: `accessToken+${email}+${password}` })
 }
 
 type CreateClientResponse =
@@ -34,7 +34,7 @@ async function createClient(email: string, password: string): Promise<CreateClie
   const lastName = names.split('.')[1] ?? null
 
   if (/@example.com$/.test(email)) {
-    return POST(
+    return await POST(
       'client',
       { email, password },
       {
@@ -46,11 +46,11 @@ async function createClient(email: string, password: string): Promise<CreateClie
     )
   }
 
-  return POST('client', { email, password }, new Error('Only clients with emails at ‘example.com’ can sign up'))
+  return await POST('client', { email, password }, new Error('Only clients with emails at ‘example.com’ can sign up'))
 }
 
 async function revokeAccessToken(accessToken: string): Promise<null> {
-  return POST('oauth/revoke-token', { accessToken }, null)
+  return await POST('oauth/revoke-token', { accessToken }, null)
 }
 
 export { fetchClient, getAccessTokenByEmailPasswordPair, createClient, revokeAccessToken }

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { ReactElement } from 'react'
-import { WithReactComponentProps } from 'local_modules/react-routetouille'
+import { WithReactComponentProps } from 'react-routetouille'
 
 import { Stack } from 'components/atoms/Stack'
 import { Typography } from 'components/atoms/Typography'
