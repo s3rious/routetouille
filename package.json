@@ -1,8 +1,9 @@
 {
-  "name": "routetouille",
+  "name": "routetouille-root",
   "private": true,
   "scripts": {
-    "test": "lerna exec npm run test"
+    "test": "lerna exec npm run test",
+    "publish": "lerna publish"
   },
   "devDependencies": {
     "lerna": "^4.0.0"
