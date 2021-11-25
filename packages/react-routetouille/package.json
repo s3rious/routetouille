@@ -1,6 +1,6 @@
 {
   "name": "react-routetouille",
-  "version": "0.0.24",
+  "version": "1.0.0-alpha.0",
   "description": "Official React bindings for Routetouille",
   "keywords": [
     "router",

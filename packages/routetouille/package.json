@@ -1,6 +1,6 @@
 {
   "name": "routetouille",
-  "version": "0.0.22",
+  "version": "1.0.0-alpha.0",
   "description": "The new breed of JavaScript router: hackable, extendable, framework-agnostic, isomorphic, and with the lifecycle",
   "keywords": [
     "router",
