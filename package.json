@@ -1,0 +1,10 @@
+{
+  "name": "routetouille",
+  "private": true,
+  "scripts": {
+    "test": "lerna exec npm run test"
+  },
+  "devDependencies": {
+    "lerna": "^4.0.0"
+  }
+}
