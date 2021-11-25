@@ -1,7 +1,14 @@
 {
   "name": "routetouille",
   "version": "0.0.22",
-  "description": "A new breed of router: Hackable, extendable, rewritable, isomorphic, framework-agnostic",
+  "description": "The new breed of JavaScript router: hackable, extendable, framework-agnostic, isomorphic, and with the lifecycle",
+  "keywords": [
+    "router",
+    "route",
+    "routing",
+    "history",
+    "link"
+  ],
   "author": "s3rious a.k.a Leonid Semenov <canismajor@kaschenka.ru>",
   "license": "MIT",
   "scripts": {
