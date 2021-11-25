@@ -12,6 +12,10 @@
     "reactjs"
   ],
   "author": "s3rious a.k.a Leonid Semenov <canismajor@kaschenka.ru>",
+  "repository": "s3rious/routetouille",
+  "bugs": {
+    "url": "https://github.com/s3rious/routetouille/issues"
+  },
   "license": "MIT",
   "scripts": {
     "lint": "eslint src/",
