@@ -2,8 +2,49 @@
 
 Routetouille (route + ratatouille): the new breed of JavaScript router: hackable, extendable, framework-agnostic, isomorphic, and with the lifecycle.
 
-<!-- START doctoc -->
-<!-- END doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table of contents
+
+- [Router](#router)
+  - [Options](#options)
+    - [`root: AbstractRoute`](#root-abstractroute)
+    - [`history: HistoryInterface`](#history-historyinterface)
+    - [`optimistic?: boolean`](#optimistic-boolean)
+  - [Methods](#methods)
+    - [`init: () => Promise<void>`](#init---promisevoid)
+    - [`urlTo: (activator: Activator, params: Params) => string`](#urlto-activator-activator-params-params--string)
+    - [`goTo: (activator: Activator, options?: {}) => Promise<void>`](#goto-activator-activator-options---promisevoid)
+    - [`activate: (activator: Activator, optimistic?: boolean) => Promise<void>`](#activate-activator-activator-optimistic-boolean--promisevoid)
+    - [`set: (path: string, optimistic?: boolean) => Promise<void>`](#set-path-string-optimistic-boolean--promisevoid)
+    - [`getMap: () => Map<RouteMapKey, RouteMapRoute>`](#getmap---maproutemapkey-routemaproute)
+    - [`on: (event, callback: (active) => () => void`](#on-event-callback-active----void)
+  - [Fields](#fields)
+    - [`root: AbstractRoute`](#root-abstractroute-1)
+    - [`active: Array<AbstractRoute>`](#active-arrayabstractroute)
+    - [`params: Array<{ [param: string]: string }>`](#params-array-param-string-string-)
+    - [`pathname: string`](#pathname-string)
+    - [`history: HistoryInterface`](#history-historyinterface-1)
+- [Routes](#routes)
+  - [Route](#route)
+  - [ModuleRoute](#moduleroute)
+  - [FallbackRoute](#fallbackroute)
+  - [Options](#options-1)
+    - [`name: string`](#name-string)
+    - [`path: Slug | Search | Hash`](#path-slug--search--hash)
+    - [`children?: AbstractRoute[]`](#children-abstractroute)
+    - [`beforeMount?: () => Promise<void>`](#beforemount---promisevoid)
+    - [`afterMount?: () => Promise<void>`](#aftermount---promisevoid)
+    - [`afterUnmount?: () => Promise<void>`](#afterunmount---promisevoid)
+    - [`afterUnmount?: () => Promise<void>`](#afterunmount---promisevoid-1)
+    - [`redirects?: Redirect[]`](#redirects-redirect)
+  - [Fields](#fields-1)
+    - [`name: string`](#name-string-1)
+    - [`path: string`](#path-string)
+    - [`mounted: boolean`](#mounted-boolean)
+    - [`children?: AbstractRoute[]`](#children-abstractroute-1)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Router
 
