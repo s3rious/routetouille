@@ -2,6 +2,9 @@
 
 Routetouille (route + ratatouille): the new breed of JavaScript router: hackable, extendable, framework-agnostic, isomorphic, and with the lifecycle.
 
+<!-- START doctoc -->
+<!-- END doctoc -->
+
 ## Router
 
 `Router` is the main part of the Routetouille, the router itself.
