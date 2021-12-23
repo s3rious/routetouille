@@ -43,6 +43,8 @@ Routetouille (route + ratatouille): the new breed of JavaScript router: hackable
     - [`path: string`](#path-string)
     - [`mounted: boolean`](#mounted-boolean)
     - [`children?: AbstractRoute[]`](#children-abstractroute-1)
+- [History](#history)
+  - [BrowserHistory](#browserhistory)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
