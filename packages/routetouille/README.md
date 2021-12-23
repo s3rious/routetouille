@@ -343,3 +343,22 @@ Returns the boolean that indicated is the route is mounted or not.
 #### `children?: AbstractRoute[]`
 
 Returns the routes array that was passed as an option or the `undefined`.
+
+## History
+
+History provider could vary, but it should be any object-like structure matching that interface:
+
+```typescript
+type HistoryInterface = {
+  pathname: string | null
+  push: (pathname: string | null, state?: unknown) => void
+  replace: (pathname: string | null, state?: unknown) => void
+  emitter: Emitter<Events>
+}
+```
+
+Right now there is only one first-party provider, the `BrowserHistory`, but you can write your matching that matches the interface.
+
+### BrowserHistory
+
+Is the provider that used to play along with the browser‘s History API, it emits `pushState` and `replaceState` events when `push` or `replace` happens, and subscribes to the `popstate` event to handle the browser‘s “Back” and “Forward” buttons.
