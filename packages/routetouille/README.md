@@ -1,366 +1,181 @@
 # Routetouille
 
-Routetouille (route + ratatouille): the new breed of JavaScript router: hackable, extendable, framework-agnostic, isomorphic, and with the lifecycle.
+> **A new breed of JavaScript router: hackable, extendable, framework-agnostic, isomorphic, and lifecycle-driven.**
 
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-## Table of contents
+---
 
-- [Router](#router)
-  - [Options](#options)
-    - [`root: AbstractRoute`](#root-abstractroute)
-    - [`history: HistoryInterface`](#history-historyinterface)
-    - [`optimistic?: boolean`](#optimistic-boolean)
-  - [Methods](#methods)
-    - [`init: () => Promise<void>`](#init---promisevoid)
-    - [`urlTo: (activator: Activator, params: Params) => string`](#urlto-activator-activator-params-params--string)
-    - [`goTo: (activator: Activator, options?: {}) => Promise<void>`](#goto-activator-activator-options---promisevoid)
-    - [`activate: (activator: Activator, optimistic?: boolean) => Promise<void>`](#activate-activator-activator-optimistic-boolean--promisevoid)
-    - [`set: (path: string, optimistic?: boolean) => Promise<void>`](#set-path-string-optimistic-boolean--promisevoid)
-    - [`getMap: () => Map<RouteMapKey, RouteMapRoute>`](#getmap---maproutemapkey-routemaproute)
-    - [`on: (event, callback: (active) => () => void`](#on-event-callback-active----void)
-  - [Fields](#fields)
-    - [`root: AbstractRoute`](#root-abstractroute-1)
-    - [`active: Array<AbstractRoute>`](#active-arrayabstractroute)
-    - [`params: Array<{ [param: string]: string }>`](#params-array-param-string-string-)
-    - [`pathname: string`](#pathname-string)
-    - [`history: HistoryInterface`](#history-historyinterface-1)
-- [Routes](#routes)
-  - [Route](#route)
-  - [ModuleRoute](#moduleroute)
-  - [FallbackRoute](#fallbackroute)
-  - [Options](#options-1)
-    - [`name: string`](#name-string)
-    - [`path: Slug | Search | Hash`](#path-slug--search--hash)
-    - [`children?: AbstractRoute[]`](#children-abstractroute)
-    - [`beforeMount?: () => Promise<void>`](#beforemount---promisevoid)
-    - [`afterMount?: () => Promise<void>`](#aftermount---promisevoid)
-    - [`afterUnmount?: () => Promise<void>`](#afterunmount---promisevoid)
-    - [`afterUnmount?: () => Promise<void>`](#afterunmount---promisevoid-1)
-    - [`redirects?: Redirect[]`](#redirects-redirect)
-  - [Fields](#fields-1)
-    - [`name: string`](#name-string-1)
-    - [`path: string`](#path-string)
-    - [`mounted: boolean`](#mounted-boolean)
-    - [`children?: AbstractRoute[]`](#children-abstractroute-1)
-- [History](#history)
-  - [BrowserHistory](#browserhistory)
+## What does "Routetouille" mean?
 
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+**Routetouille** is a blend of "route" and "ratatouille"—just as ratatouille is a dish made from diverse, harmonious ingredients, Routetouille is a router designed to be composed, extended, and enjoyed in many flavors. It brings together the best ingredients of modern routing: lifecycle, extensibility, and framework-agnostic design.
 
-## Router
+---
 
-`Router` is the main part of the Routetouille, the router itself.
+## Philosophy
 
-It's just a plain function and should be created like this:
+Routetouille is designed for ambitious applications and libraries that demand:
+- **Lifecycle hooks** for routes, enabling data fetching, analytics, and resource management.
+- **Total hackability**—compose, extend, or override any behavior, including route types and history strategies.
+- **Framework-agnostic** core: works with React, Vue, Svelte, or vanilla JS.
+- **Isomorphic**: supports browser, server, and custom histories.
+- **Composable, type-safe API** for modern TypeScript/JavaScript.
 
-```typescript
-const router = Router({
-  root: Route({
-    ...,
-  }),
-  history, BrowserHistory(),
-  optimistic: true,
-})
+---
+
+## Why Routetouille?
+
+- **Lifecycle-first:** Each route has `beforeMount`, `afterMount`, `beforeUnmount`, and `afterUnmount` hooks for full control.
+- **Extensible by design:** Add custom behaviors, route types, or history strategies.
+- **No framework lock-in:** Use with or without UI frameworks.
+- **Isomorphic routing:** Works in browsers, SSR, or custom environments.
+- **Composable, declarative API:** Build route trees and behaviors with plain objects and functions.
+- **Battle-tested:** Used in complex, real-world apps.
+
+---
+
+## Quickstart
+
+### Installation
+
+```sh
+npm install routetouille
+# or
+yarn add routetouille
 ```
 
-### Options
+### Minimal Example
 
-#### `root: AbstractRoute`
+```typescript
+import { Router, Route, FallbackRoute, BrowserHistory } from 'routetouille';
 
-The root route should be any of the `Route`‘s, like `Route`, `ModuleRoute`, or any custom one.
+const router = Router({
+  history: BrowserHistory(),
+  root: Route({
+    name: 'main',
+    path: '/',
+    afterMount: () => {
+      document.getElementById('root').innerHTML = `<h1>Main page</h1>`;
+    },
+    children: [
+      Route({
+        name: 'foo',
+        path: 'foo/',
+        afterMount: () => {
+          document.getElementById('root').innerHTML = `<h1>Foo</h1>`;
+        },
+      }),
+      FallbackRoute({
+        name: '404',
+        afterMount: () => {
+          document.getElementById('root').innerHTML = `<h1>404 Not Found</h1>`;
+        },
+      }),
+    ],
+  }),
+});
 
-#### `history: HistoryInterface`
+router.init();
+```
 
-The router history interface should be `HistoryInterface` or any custom one.
+---
 
-#### `optimistic?: boolean`
+## Core Concepts
 
-When `true` will change `active` routes to the next active state instantly, and only then will try to unmount the previous and mount the next state. Optional, defaults to `false`.
+### Router
+- **`Router(options)`**: Creates a router instance.
+  - `root`: The root route (see below).
+  - `history`: History provider (e.g., `BrowserHistory`).
+  - `optimistic?`: If true, updates active routes instantly for snappier UX.
 
-Because of this any of the promises, like, `.goTo`, `.set` and `.activate`, will be fulfilled instantly.
+### Route Types
+- **`Route`**: Standard route with a path and lifecycle hooks.
+- **`ModuleRoute`**: Logical grouping of routes, no path.
+- **`FallbackRoute`**: Handles unmatched paths (404s).
 
-Recommended using as `true` for client-side routing, for better UX.
+### Lifecycle Hooks
+- `beforeMount`: Runs before route is mounted (e.g., blocking data fetch).
+- `afterMount`: Runs after route is mounted (e.g., analytics, async fetch).
+- `beforeUnmount`: Runs before route is unmounted (e.g., validation).
+- `afterUnmount`: Runs after route is unmounted (e.g., cleanup).
 
-### Methods
+### History Providers
+- **`BrowserHistory`**: Uses the browser’s History API.
+- **Custom**: Implement the `HistoryInterface` for SSR, memory, or other environments.
 
-#### `init: () => Promise<void>`
+---
 
-Bounds the router to the history that was passed as an option.
+## API Reference
 
-Should be triggered at the application initialization.
+### Router Methods
+- **`init(): Promise<void>`** — Bind router to history and start listening.
+- **`goTo(activator, options?): Promise<void>`** — Activate a route by name, path, or array.
+- **`urlTo(activator, params?): string`** — Get the URL for a route and params.
+- **`set(path, optimistic?): Promise<void>`** — Activate a route by path.
+- **`getMap(): Map<RouteMapKey, RouteMapRoute>`** — Inspect the route tree.
+- **`on(event, callback): () => void`** — Subscribe to lifecycle events.
 
-#### `urlTo: (activator: Activator, params: Params) => string`
+### Route Options
+- `name: string` — Unique route name (recommended: kebab-case).
+- `path: string` — Path, query, or hash (e.g., `/`, `foo/`, `?edit`, `#share`).
+- `children?: AbstractRoute[]` — Nested routes.
+- `beforeMount?`, `afterMount?`, `beforeUnmount?`, `afterUnmount?`: Lifecycle hooks.
+- `redirects?`: Array of redirect tuples (see advanced usage).
 
-Will return the pathname of the route you've asked to.
+---
 
-`activator: Activator`: the name or names of the routes which pathname should be returned. Can be:
-* `string`: route name (`'post'`)
-* `string` route names separated with `.` (`'dashboard.posts.post'`)
-* `string[]`: array of route names (`['dashboard', 'posts', 'post']`)
+## Advanced Usage
 
-`params: Array<{ [param: string]: string }>`: array of the params if route is parametrized
-* in the example `urlTo('posts.post', [{ postId: '123' }])` will return `/dashboard/posts/123/`
-
-#### `goTo: (activator: Activator, options?: {}) => Promise<void>`
-
-The abstraction of `activate` and `set` methods, triggers the router to activate the route that asked.
-
-`activator: Activator`, the pathname, or the name of the route which should be activated. Can be:
-* `string`: pathname (`'/dashboard/posts/123/'`)
-* `string`: route name (`'post'`)
-* `string`: route names separated with `.` (`'dashboard.posts.post'`)
-* `string[]`: the array of route names (`['dashboard', 'posts', 'post']`)
-
-`options`, the options object, can be different if you extended or use custom behavior of the router, but in default uses these parameters:
-* `params: Array<{ [param: string]: string }>`, array params if route is parametrized.
-  * in the example `goTo('posts.post', { params: [{ postId: '123' }] })` will activate the `/dashboard/posts/123/` pathname.
-* `optimistic?: boolean`
-  * will force the `optimistic` behavior of the router options just for one activation, when not passed defaults to the router option.
-* `method?: 'push' | 'replace' | null`:
-  * the method to be used with router’s history, when not passed or passed as null defaults to `'push'`
-* `state?: { scrollTo: number }`
-  * the state pushed to the router’s history, by default has only one option `scrollTo`, which defines the scrollTop position of the router after activation (you should implement that in the UI library yourself)
-
-#### `activate: (activator: Activator, optimistic?: boolean) => Promise<void>`
-
-Will activate the route that asked.
-
-`activator: Activator`: the name or names of the routes which pathname should be activated. Can be
-* `string`: route name (`'post'`)
-* `string`: route names separated with `.` (`'dashboard.posts.post'`)
-* `string[]`: the array of route names (`['dashboard', 'posts', 'post']`)
-
-`optimistic?: boolean`
-* will force the `optimistic` behavior of the router options just for one activation, when not passed defaults to the router option.
-
-#### `set: (path: string, optimistic?: boolean) => Promise<void>`
-
-Will activate the route that asked.
-
-`set: string`, the pathname which should be activated:
-* pathname (`'/dashboard/posts/123/'`)
-
-`optimistic?: boolean`
-* will force the `optimistic` behavior of the router options just for one activation, when not passed defaults to the router option.
-
-#### `getMap: () => Map<RouteMapKey, RouteMapRoute>`
-
-Return the map of all routes in the application.
-
-* `RouteMapKey` is the route names separated with `.` always starting from the root route (`'root'`, `'root.dashboard.posts.post'`. etc)
-* `RouteMapRoute` is an object with these parameters:
-  * `route: AbstactRoute` is the actual route object of the current route.
-  * `parent?: RouteMapKey` the parent of the route if there is.
-  * `children?: Array<RouteMapKey>` the array of the route children if there is.
-  * `fallback?: RouteMapKey` the array of the route fallback if there is.
-
-#### `on: (event, callback: (active) => () => void`
-
-The way to subscribe and do something before activation or after.
-
-The default type of `event` is `'beforeActivate' | 'afterActivate'`, but can differ if any custom behavior is used.
-
-The callback receives the array of active routes as an `active: Array<string>` argument, which is an array of routes before or after the activation respectfully.
-
-Returns the `unbind: () => void` function which, when called, unbinds the event.
-
-### Fields
-
-#### `root: AbstractRoute`
-
-The current `root` of the router, basically returns the route passed as the `root` option.
-
-#### `active: Array<AbstractRoute>`
-
-An array of currently active routes.
-
-#### `params: Array<{ [param: string]: string }>`
-
-An array of params of the currently active routes.
-
-#### `pathname: string`
-
-The current active pathname of the router.
-
-#### `history: HistoryInterface`
-
-The current `history` interface of the router, basically returns the history passed as the `root` option.
-
-## Routes
-
-### Route
-
-`Route` is is the classic route with a specific path.
-
-For example:
-
+### Parametrized Routes
 ```typescript
 Route({
   name: 'post',
   path: ':postId/',
   afterMount: async () => {
-    const id = getParam(router.params, 'id') 
-    
-    await fetchPost(id)
+    const id = getParam(router.params, 'postId');
+    await fetchPost(id);
   },
-})
+});
 ```
 
-Is a route with a specific path which used to show data of one specific post and will fetch its data after the route is mounted.
-
-### ModuleRoute
-
-`ModuleRoute` is a route without a path that is used to group specific logic, usually a business domain one, and has specific `Route`‘s inside.
-
-For example:
-
-```typescript
-ModuleRoute({
-  name: 'posts',
-  afterMount: fetchAuthors,
-  children: [
-    postRoute,
-  ]
-})
-```
-
-Is a route that will fetch all the authors when mounted, and it will be mounted when every of its child routes will be mounted.
-
-### FallbackRoute
-
-`FallbackRoute` is a specific route that will be mounted if the user tried to visit any of the routes which path is not specified in the tree.
-
-For example:
-
-```typescript
-Route({
-  name: 'root',
-  path: '/',
-  children: [
-    Route({
-      name: 'foo',
-      path: 'foo/'
-    }),
-    FallbackRoute({
-      name: '404',
-      component: Fallback,
-    }),
-  ]
-})
-```
-
-When the user tries to visit the `/bar/` route or any other than `/foo/`, the fallback will be mounted.
-
-### Options
-
-#### `name: string`
-
-`name: string` is the simple name of the route. Required in any routes.
-
-it can be any string, just don‘t use the `.` symbol inside, but, I recommend using `kebab-case`.
-
-#### `path: Slug | Search | Hash`
-
-`path: Slug | Search | Hash` is the path of the route. Required in `Route`.
-
-Should always be the string, but should be one of three specific ones:
-
-* `Slug` is the string that ends with `/`
-  Just the normal part of the pathname, e.g. `/`, `posts/`, `:postId`.
-* `Search` is the string that starts with `?`.
-  The query parameter route name, e.g. `?edit`, `?postId=123`.
-  Non-initial query parameters, like `&edit` will also be matched by the `?edit` route, the position isn't important.
-* `Hash` is the string that starts with `#`
-  The hash route name, e.g. `#edit`, '#share'.
-
-Every route can be parametrized with `:<name>`, e.g.:
-* `/:postId`
-* `/author-:name`
-* `?postId=:postId`
-* `?:key=:value`
-* `#:action`
-
-#### `children?: AbstractRoute[]`
-
-The array of children routes. Optional.
-
-`AbstractRoute` can be any of the default routes or custom routes, but it should have a `name` field.
-
-#### `beforeMount?: () => Promise<void>`
-
-Is a lifecycle callback that will be triggered just before the route is mounted. Optional.
-
-Used to perform some action that doesn't need to wait until the whole tree is rendered, like, for example:
-* Initialize a framework or a library, like `React`
-* Fetch data in blocking fashion
-
-#### `afterMount?: () => Promise<void>`
-
-Is a lifecycle callback that will be triggered right after the route is mounted. Optional.
-
-Used to perform some action in async with mounting:
-* Fetch data for a route view
-* Call some analytics page view
-
-#### `afterUnmount?: () => Promise<void>`
-
-Is a lifecycle callback that will be triggered just before the route is unmounted. Optional.
-
-It's rare, but can be used to perform some action that validates the page inputs or something:
-* Check if the user fulfilled the required field of the form page, and if not, redirect it back to the page
-
-#### `afterUnmount?: () => Promise<void>`
-
-Is a lifecycle callback that will be triggered right after a route is unmounted. Optional.
-
-Used to perform some action in async with unmounting:
-* Destroy a framework or a library, like `React`
-* Invalidate or reset store data to default values
-
-#### `redirects?: Redirect[]`
-
-Is a highly specific superset of `beforeMount` callbacks which used to redirect a user from a route to another route if some condition was met. Optional.
-
-`Redirect: [ShouldWe, WhatTo]` is a tuple of two async functions:
-* `ShouldWe: () => Promise<boolean>` is an async function that returns a boolean
-* `WhatTo: () => Promise<void>` is an async function that called if `ShouldWe` returned `true`, used to call and return `router.goTo` method.
-
-I consider deleting that from the `1.0` release cuz it's rare to use and kinda redundant.
-
-### Fields
-
-#### `name: string`
-
-Returns the route name that was passed as an option.
-
-#### `path: string`
-
-Returns the route path that was passed as an option.
-
-#### `mounted: boolean`
-
-Returns the boolean that indicated is the route is mounted or not.
-
-#### `children?: AbstractRoute[]`
-
-Returns the routes array that was passed as an option or the `undefined`.
-
-## History
-
-History provider could vary, but it should be any object-like structure matching that interface:
-
+### Custom History Provider
 ```typescript
 type HistoryInterface = {
-  pathname: string | null
-  push: (pathname: string | null, state?: unknown) => void
-  replace: (pathname: string | null, state?: unknown) => void
-  emitter: Emitter<Events>
-}
+  pathname: string | null;
+  push: (pathname: string | null, state?: unknown) => void;
+  replace: (pathname: string | null, state?: unknown) => void;
+  emitter: Emitter<Events>;
+};
 ```
 
-Right now there is only one first-party provider, the `BrowserHistory`, but you can write your matching that matches the interface.
+### Extending Routes
+```typescript
+const LoggingRoute = (options) => Route({
+  ...options,
+  afterMount: async () => {
+    console.log('Route mounted:', options.name);
+    if (options.afterMount) await options.afterMount();
+  },
+});
+```
 
-### BrowserHistory
+---
 
-Is the provider that used to play along with the browser‘s History API, it emits `pushState` and `replaceState` events when `push` or `replace` happens, and subscribes to the `popstate` event to handle the browser‘s “Back” and “Forward” buttons.
+## Related Packages & Ecosystem
+- [React-Routetouille](../react-routetouille) — Official React bindings
+- [Examples](../../examples/react) — Example React app
+
+---
+
+## Contributing
+
+We welcome contributions! Please:
+- Follow the [Development Guidelines](../../DEVELOPMENT_GUIDELINES.md)
+- Use Biome for linting and formatting (`npm run lint`, `npm run format`)
+- Write and colocate tests with Vitest (`*.test.ts`, `*.test.tsx`)
+- Write clear, focused commit messages
+- See [CONTRIBUTING.md](../../CONTRIBUTING.md) if available
+
+---
+
+## License
+
+MIT

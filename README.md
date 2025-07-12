@@ -1,147 +1,119 @@
-# Routetouille
+# Routetouille Monorepo
 
-Routetouille (route + ratatouille): the new breed of JavaScript router: hackable, extendable, framework-agnostic, isomorphic, and with the lifecycle.
+> **A modern, extensible, and lifecycle-driven routing ecosystem for JavaScript and TypeScript.**
 
-## Principles:
+---
 
-* ### The route should have its lifecycle.
+## What is "Routetouille"?
 
-    The lifecycle proved to be a great strategy for UI libraries and it's used in the core of Routetouille.
+**Routetouille** is a playful blend of "route" and "ratatouille"—just as ratatouille is a dish made from diverse, harmonious ingredients, Routetouille is a router designed to be composed, extended, and enjoyed in many flavors. It brings together the best ingredients of modern routing: lifecycle, extensibility, and framework-agnostic design.
 
-    Every route can (and by default has) live cycle methods, such as `beforeMount`, `afterMount`, `beforeUnmount`, and `afterUnmount`, so you can fetch data, log info, initialize and destroy instances of any framework in any way you want.
+---
 
-* ### Everything should be hackable and extendable.
+## Vision & Philosophy
 
-    If you need to add some specific functionality that extends the behavior of some route, e.g. render react component, log the data to the custom logger, and so on – you can easily write a new route behavior and use it with any route or router.
+Routetouille is a next-generation routing platform for ambitious web applications and libraries. It is:
+- **Lifecycle-first**: Every route has hooks for data loading, analytics, and cleanup.
+- **Hackable & Extensible**: Compose, override, or extend any behavior. Build your own route types, history strategies, or integrations.
+- **Framework-agnostic**: Use with React, Vue, Svelte, or vanilla JS. The core is UI-agnostic.
+- **Isomorphic**: Works in browsers, SSR, and custom environments. Swap out history providers as needed.
+- **Type-safe**: Built for modern TypeScript and JavaScript, with strict types and composable APIs.
 
-    If you don't like how any behavior of the router or the route, even the core one, e.g, the way the route mounts, you can rework and replace that behavior.
+---
 
-    You can combine default and custom behaviors of router or route into custom router or route at any time.
+## Monorepo Structure
 
-* ### The router should be framework-agnostic.
+This repository contains all official Routetouille packages and examples:
 
-    The Routetouille by itself isn't tied to any framework, you can write (but probably shouldn't) a vanilla js application with just the Routetouille, but it's designed to play nicely with any of the major frameworks out there.
-    
-    It can handle multiple instances of one or many frameworks, it's built with microfrontends in mind.
-
-* ### The router should be isomorphic.
-
-    Right now there is only Browser’s history API as a first-class module, but Routetouille is designed to handle any kind of history (memory, hashbang, or else) with just a simple function.
-
-## Documentation
-
-### Installation
-
-Via npm:
-```sh
-npm install routetouille --save
+```
+/packages
+  /routetouille         # Core router (framework-agnostic, lifecycle-driven)
+  /react-routetouille   # Official React bindings (idiomatic hooks, context, components)
+/examples
+  /react                # Example React app using Routetouille
 ```
 
-Or yarn npm:
+- Each package is self-contained, with its own source, tests, and documentation.
+- All code is TypeScript, formatted and linted with Biome.
+
+---
+
+## Packages
+
+### [routetouille](./packages/routetouille)
+- **Core, framework-agnostic router**
+- Lifecycle hooks for routes: `beforeMount`, `afterMount`, `beforeUnmount`, `afterUnmount`
+- Composable API: build route trees, extend or override behaviors
+- Isomorphic history: works with browser, memory, or custom providers
+- Use in any JS/TS project, or as a base for your own bindings
+
+#### Quickstart
 ```sh
-yarn add routetouille
+npm install routetouille
 ```
-
-### Quick start
-
-Create the router object:
 ```typescript
+import { Router, Route, FallbackRoute, BrowserHistory } from 'routetouille';
 const router = Router({
-  history: BrowserHistory()
+  history: BrowserHistory(),
+  root: Route({
+    name: 'main',
+    path: '/',
+    children: [
+      Route({ name: 'foo', path: 'foo/' }),
+      FallbackRoute({ name: '404' }),
+    ],
+  }),
 });
-``` 
-
-Create a root route and it‘s children:
-```typescript
-router.root = Route({
-  name: "main",
-  path: "/",
-  afterMount: () => {
-    document.getElementById("root").innerHTML = `
-      <h1>
-        Main page
-      </h1>
-      <ul>
-        <li>
-          <a href="/foo/">
-            Foo
-          </a>
-        </li>
-        <li>
-          <a href="/bar/">
-            Bar
-          </a>
-        </li>
-        <li>
-          <a href="/baz/">
-            Baz
-          </a>
-        </li>
-      </ul>
-    `;
-  },
-  children: [
-    Route({
-      name: "foo",
-      path: "foo/",
-      afterMount: () => {
-        document.getElementById("root").innerHTML = `
-          <h1>
-            Foo
-          </h1>
-          <a href="/">
-            Main page
-          </a>
-        `;
-      }
-    }),
-    Route({
-      name: "bar",
-      path: "bar/",
-      afterMount: () => {
-        document.getElementById("root").innerHTML = `
-          <h1>
-            Bar
-          </h1>
-          <a href="/">
-            Main page
-          </a>
-        `;
-      }
-    }),
-    FallbackRoute({
-      name: "404",
-      afterMount: () => {
-        document.getElementById("root").innerHTML = `
-          <h1>
-            Oopsie, Daisy! That‘s 404.
-          </h1>
-          <a href="/">
-            Main page
-          </a>
-        `;
-      }
-    })
-  ]
-});
-```
-
-Initialize the router:
-```typescript
 router.init();
 ```
+- See [detailed API and advanced usage](./packages/routetouille/README.md)
 
-And voilà, the simplest example is ready. [Here you can see it in action](https://codesandbox.io/s/routetouille-quick-start-mmr30) and tinker with it.
+---
 
-More elaborate and detailed quick start using react you can see [here](packages/react-routetouille#quick-start).
+### [react-routetouille](./packages/react-routetouille)
+- **Official React bindings**
+- Idiomatic hooks (`useRoute`, `useGoTo`, etc.), context, and components
+- Full TypeScript support, SSR/CSR ready
+- Compose with React state, context, or data-fetching libraries
 
-### Detailed
+#### Quickstart
+```sh
+npm install routetouille react-routetouille
+```
+```tsx
+import { RoutetouilleProvider, useRoute, useGoTo } from 'react-routetouille';
+<RoutetouilleProvider router={router}>
+  <MainView />
+</RoutetouilleProvider>
+```
+- See [API reference and advanced integration](./packages/react-routetouille/README.md)
 
-For more detailed documentation please take a look at the readme of the specific package:
-
-* [Routetouille](packages/routetouille)
-* [React-Routetouille](packages/react-routetouille)
+---
 
 ## Examples
 
-* [React application with single react root](examples/react) 
+- [React Example App](./examples/react) — See Routetouille in action with React, including route trees, navigation, and lifecycle hooks.
+
+---
+
+## Development & Contribution
+
+We welcome contributions! To keep the codebase consistent and maintainable:
+- Follow the [Development Guidelines](./DEVELOPMENT_GUIDELINES.md) (strictly based on actual codebase conventions)
+- Use Biome for linting and formatting (`npm run lint`, `npm run format`)
+- Write and colocate tests with Vitest (`*.test.ts`, `*.test.tsx`)
+- Use clear, focused commit messages
+- See [CONTRIBUTING.md](./CONTRIBUTING.md) if available
+
+---
+
+## Community & Support
+
+- [GitHub Issues](https://github.com/your-org/routetouille/issues) — Bug reports & feature requests
+- [Discussions](https://github.com/your-org/routetouille/discussions) — Q&A, ideas, and help
+
+---
+
+## License
+
+MIT 
