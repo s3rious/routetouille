@@ -1,1 +1,1 @@
-export * from './WithReactRoot'
+export * from './WithReactRoot.js'

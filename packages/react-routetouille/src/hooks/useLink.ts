@@ -1,7 +1,7 @@
 import { useCallback, useMemo, MouseEventHandler } from 'react'
 import { Activator, Params, RouterInterface } from 'routetouille'
 
-import { useRouter } from './useRouter'
+import { useRouter } from './useRouter.js'
 
 type UseLinkProps<LinkActivator, LinkParams> = {
   to?: LinkActivator

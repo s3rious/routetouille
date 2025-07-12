@@ -1,18 +1,21 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
     "strict": true,
-    "lib": ["ESNext", "DOM"],
-
+    "lib": ["ES2024", "DOM"],
     "baseUrl": "./src",
-
-    "module": "CommonJS",
-
+    "module": "nodenext",
     "outDir": "./lib",
     "declaration": true,
-    "target": "ES2019", // node 12 → https://github.com/microsoft/TypeScript/wiki/Node-Target-Mapping
-
-    "types": ["jest", "react/experimental", "react-dom/experimental"]
+    "target": "ES2024",
+    "types": ["node"]
   },
   "include": ["src"],
-  "exclude": ["node_modules", "src/**/*.test.ts"]
+  "exclude": [
+    "node_modules",
+    "lib",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.test.js"
+  ]
 }

@@ -1,2 +1,2 @@
-export * from './WithReactRoot'
-export * from './WithReactComponent'
+export * from './WithReactRoot/index.js'
+export * from './WithReactComponent/index.js'

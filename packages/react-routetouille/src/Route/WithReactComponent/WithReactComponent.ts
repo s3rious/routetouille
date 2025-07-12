@@ -1,10 +1,10 @@
-import { FunctionComponent, ReactChild } from 'react'
+import { FunctionComponent } from 'react'
 import { RouterInterface } from 'routetouille'
 
 type WithReactComponentProps = {
   route: WithReactComponentInterface
   router: RouterInterface
-  children?: ReactChild
+  children?: React.ReactNode
 }
 
 type WithReactComponentOptions = {

@@ -2,7 +2,7 @@ import * as React from 'react'
 import { ReactNode } from 'react'
 import { RouterInterface } from 'routetouille'
 
-import { isWithReactComponent } from '../Route'
+import { isWithReactComponent } from '../Route/index.js'
 
 function renderRecurse<Router extends RouterInterface, Route>(
   router: Router,

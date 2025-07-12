@@ -1,5 +1,5 @@
 import { StrictMode, createElement, FunctionComponent } from 'react'
-import { createRoot, render, unmountComponentAtNode } from 'react-dom'
+import * as ReactDOM from 'react-dom'
 import {
   RouterInterface,
   WithAfterMountInterface,
@@ -66,13 +66,25 @@ function WithReactRoot<ComposedOptions extends ComposedRouteOptions, ComposedInt
 
       const reactApp = createElement(StrictMode, null, createElement(Component, { router: router }))
 
-      if (typeof createRoot === 'function') {
-        const root = createRoot(container)
-
-        root.render(reactApp)
-      } else {
-        render(reactApp, container)
+      // Try to import createRoot type from react-dom/client if available
+      let hasCreateRoot = false
+      let createRoot: ((container: Element | DocumentFragment) => { render: (node: React.ReactNode) => void }) | undefined
+      if (!(globalThis as any).__TEST_DISABLE_CREATE_ROOT__) {
+        try {
+          // eslint-disable-next-line @typescript-eslint/no-var-requires
+          createRoot = require('react-dom/client').createRoot
+          hasCreateRoot = typeof createRoot === 'function'
+        } catch {}
       }
+
+      if (hasCreateRoot && createRoot) {
+        const root = createRoot(container)
+        root.render(reactApp)
+        return
+      }
+
+      // Legacy ReactDOM.render fallback (only for React 17 and below)
+      ;(ReactDOM as any).render(reactApp, container)
     }
 
     async function afterMount(this: ComposedInterface & ComposedRouteInterface): Promise<void> {
@@ -97,10 +109,8 @@ function WithReactRoot<ComposedOptions extends ComposedRouteOptions, ComposedInt
       const root = globalThis.document.getElementById(id)
 
       if (root != null) {
-        const parent = root.parentNode
-
-        unmountComponentAtNode(root)
-
+        const parent = root.parentNode as (Node & { removeChild(node: Node): void }) | null
+        (ReactDOM as any).unmountComponentAtNode(root)
         if (parent != null) {
           parent.removeChild(root)
         }
