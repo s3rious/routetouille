@@ -1,32 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-## Table of contents
-
-- [Routetouille](#routetouille)
-  - [What does "Routetouille" mean?](#what-does-routetouille-mean)
-  - [Philosophy](#philosophy)
-  - [Why Routetouille?](#why-routetouille)
-  - [Quickstart](#quickstart)
-    - [Installation](#installation)
-    - [Minimal Example](#minimal-example)
-  - [Core Concepts](#core-concepts)
-    - [Router](#router)
-    - [Route Types](#route-types)
-    - [Lifecycle Hooks](#lifecycle-hooks)
-    - [History Providers](#history-providers)
-  - [API Reference](#api-reference)
-    - [Router Methods](#router-methods)
-    - [Route Options](#route-options)
-  - [Advanced Usage](#advanced-usage)
-    - [Parametrized Routes](#parametrized-routes)
-    - [Custom History Provider](#custom-history-provider)
-    - [Extending Routes](#extending-routes)
-  - [Related Packages & Ecosystem](#related-packages--ecosystem)
-  - [Contributing](#contributing)
-  - [License](#license)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 # Routetouille
 
 > **A new breed of JavaScript router: hackable, extendable, framework-agnostic, isomorphic, and lifecycle-driven.**
@@ -36,6 +7,11 @@
 ## What does "Routetouille" mean?
 
 **Routetouille** is a blend of "route" and "ratatouille"—just as ratatouille is a dish made from diverse, harmonious ingredients, Routetouille is a router designed to be composed, extended, and enjoyed in many flavors. It brings together the best ingredients of modern routing: lifecycle, extensibility, and framework-agnostic design.
+
+---
+
+<!-- START doctoc -->
+<!-- END doctoc -->
 
 ---
 
@@ -190,7 +166,7 @@ const LoggingRoute = (options) => Route({
 
 ## Related Packages & Ecosystem
 - [React-Routetouille](../react-routetouille) — Official React bindings
-- [Examples](../../examples/react) — Example React app
+- [Examples](../../examples/react-complex-app) — Complex, heavy React app example
 
 ---
 

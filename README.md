@@ -1,27 +1,11 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-## Table of contents
-
-- [Routetouille Monorepo](#routetouille-monorepo)
-  - [What is "Routetouille"?](#what-is-routetouille)
-  - [Vision & Philosophy](#vision--philosophy)
-  - [Monorepo Structure](#monorepo-structure)
-  - [Packages](#packages)
-    - [routetouille](#routetouille)
-      - [Quickstart](#quickstart)
-    - [react-routetouille](#react-routetouille)
-      - [Quickstart](#quickstart-1)
-  - [Examples](#examples)
-  - [Development & Contribution](#development--contribution)
-  - [Community & Support](#community--support)
-  - [Contributing](#contributing)
-  - [License](#license)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 # Routetouille Monorepo
 
 > **A modern, extensible, and lifecycle-driven routing ecosystem for JavaScript and TypeScript.**
+
+---
+
+<!-- START doctoc -->
+<!-- END doctoc -->
 
 ---
 
@@ -114,7 +98,7 @@ import { RoutetouilleProvider, useRoute, useGoTo } from 'react-routetouille';
 ## Examples
 
 - [No-Framework Example](./examples/no-framework) — Minimal vanilla JS usage as an npm package. Demonstrates Routetouille routing and DOM manipulation without any frontend framework.
-- [React Example App](./examples/react) — See Routetouille in action with React, including route trees, navigation, and lifecycle hooks.
+- [React Complex App](./examples/react-complex-app) — See Routetouille in action with a complex, heavy React app, including route trees, navigation, and lifecycle hooks.
 
 ---
 

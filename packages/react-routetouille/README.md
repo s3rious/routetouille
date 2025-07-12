@@ -1,26 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-## Table of contents
-
-- [React-Routetouille](#react-routetouille)
-  - [What is "Routetouille"?](#what-is-routetouille)
-  - [Introduction](#introduction)
-  - [Why use React-Routetouille?](#why-use-react-routetouille)
-  - [Quickstart](#quickstart)
-    - [Installation](#installation)
-    - [Minimal Example](#minimal-example)
-  - [API Reference](#api-reference)
-    - [`<RoutetouilleProvider>`](#routetouilleprovider)
-    - [Hooks](#hooks)
-    - [Components](#components)
-  - [Idiomatic Usage](#idiomatic-usage)
-  - [Advanced Integration](#advanced-integration)
-  - [Related Resources](#related-resources)
-  - [Contributing](#contributing)
-  - [License](#license)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 # React-Routetouille
 
 > **Official React bindings for Routetouille: type-safe, idiomatic, and fully lifecycle-aware.**
@@ -30,6 +7,11 @@
 ## What is "Routetouille"?
 
 **Routetouille** is a blend of "route" and "ratatouille"—just as ratatouille is a dish made from diverse, harmonious ingredients, Routetouille is a router designed to be composed, extended, and enjoyed in many flavors. The React bindings bring this philosophy to React apps, providing idiomatic hooks, context, and components.
+
+---
+
+<!-- START doctoc -->
+<!-- END doctoc -->
 
 ---
 
@@ -147,7 +129,7 @@ function MainView() {
 
 ## Related Resources
 - [Routetouille Core](../routetouille) — Core router documentation
-- [React Example](../../examples/react) — Example React app
+- [React Complex Example](../../examples/react-complex-app) — Complex, heavy React app example
 
 ---
 

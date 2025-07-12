@@ -7,7 +7,7 @@
   "scripts": {
     "format": "biome format . --write",
     "lint": "biome lint . --write",
-    "test": "vitest",
+    "test": "vitest run",
     "test:ui": "vitest --ui",
     "palettier": "palettier --src src/components/atoms/Palette/tokens/index.js --dist src/components/atoms/Palette/ --transform cssVariables:Palette.css",
     "predev": "npm run palettier",
