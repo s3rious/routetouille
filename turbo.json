@@ -19,6 +19,13 @@
     "build": {
       "dependsOn": ["^build", "test"],
       "outputs": ["dist/**", "lib/**"]
+    },
+    "publish": {
+      "dependsOn": ["build"],
+      "outputs": []
+    },
+    "upgrade": {
+      "outputs": []
     }
   }
 } 

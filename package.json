@@ -9,7 +9,9 @@
     "lint": "turbo run lint",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck",
-    "build": "turbo run build"
+    "build": "turbo run build",
+    "publish": "turbo run publish",
+    "upgrade": "turbo run upgrade"
   },
   "devDependencies": {
     "turbo": "^1.13.0"

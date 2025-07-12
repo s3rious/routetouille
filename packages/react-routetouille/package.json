@@ -24,7 +24,9 @@
     "test:coverage": "vitest run --coverage",
     "prebuild": "rm -rf ./lib && npm run format && npm run lint && npm run test",
     "build": "tsc",
-    "prepublish": "npm run build"
+    "prepublish": "npm run build",
+    "publish": "npm publish --access public",
+    "upgrade": "npx npm-upgrade"
   },
   "engines": {
     "node": ">=23.0.0"

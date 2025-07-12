@@ -23,6 +23,7 @@
     "prebuild": "rm -rf ./lib && npm run format && npm run lint && npm run test",
     "build": "tsc",
     "prepublish": "npm run build",
+    "publish": "npm publish --access public",
     "upgrade": "npx npm-upgrade"
   },
   "engines": {
