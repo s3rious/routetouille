@@ -1,4 +1,5 @@
-import { FallbackRoute } from './FallbackRoute'
+import { describe, it, expect, vi } from 'vitest'
+import { FallbackRoute } from './FallbackRoute.js'
 
 describe('FallbackRoute', () => {
   it('can be created', async () => {

@@ -1,6 +1,7 @@
-import { Mountable } from './Mountable'
+import { describe, it, expect, vi } from 'vitest'
+import { Mountable } from './Mountable.js'
 
-import { omitFunctions } from '../_tests-shared'
+import { omitFunctions } from '../_tests-shared/index.js'
 
 describe('`Mountable` route', () => {
   describe('extends', () => {

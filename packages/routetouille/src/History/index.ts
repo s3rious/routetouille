@@ -14,5 +14,5 @@ type HistoryInterface = {
   emitter: Emitter<Events>
 }
 
-export * from './BrowserHistory'
+export * from './BrowserHistory/index.js'
 export { HistoryInterface }

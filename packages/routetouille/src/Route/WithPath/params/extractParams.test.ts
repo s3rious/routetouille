@@ -1,4 +1,5 @@
-import { extractParams } from './extractParams'
+import { describe, it, expect, vi } from 'vitest'
+import { extractParams } from './extractParams.js'
 
 type Result = { [key: string]: string } | false
 

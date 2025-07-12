@@ -1,7 +1,8 @@
-import { WithAfterMount } from './WithAfterMount'
-import { Mountable, MountableInterface, MountableOptions } from '../Mountable'
+import { describe, it, expect, vi } from 'vitest'
+import { WithAfterMount } from './WithAfterMount.js'
+import { Mountable, MountableInterface, MountableOptions } from '../Mountable/index.js'
 
-import { omitFunctions } from '../_tests-shared'
+import { omitFunctions } from '../_tests-shared/index.js'
 
 describe('`WithAfterMount` route', () => {
   const Route = WithAfterMount<MountableOptions, MountableInterface>(Mountable())
@@ -30,10 +31,10 @@ describe('`WithAfterMount` route', () => {
 
     describe('mount (with redirects)', () => {
       it('calls `afterMount` after mount', async () => {
-        jest.useFakeTimers()
+        vi.useFakeTimers()
 
-        const afterMountCallback = jest.fn()
-        const afterMount = jest.fn().mockImplementation(
+        const afterMountCallback = vi.fn()
+        const afterMount = vi.fn().mockImplementation(
           async () =>
             await new Promise((resolve) => {
               setTimeout(() => {
@@ -52,16 +53,16 @@ describe('`WithAfterMount` route', () => {
         expect(afterMount).toBeCalledTimes(0)
         expect(afterMountCallback).toBeCalledTimes(0)
 
-        jest.runAllTimers()
+        vi.runAllTimers()
 
         expect(afterMount).toBeCalledTimes(1)
         expect(afterMountCallback).toBeCalledTimes(1)
       })
 
       it('error in `afterMount` does not interfere with mount', async () => {
-        jest.useFakeTimers()
-        const afterMountErrorHandle = jest.fn()
-        const afterMount = jest.fn().mockImplementation(
+        vi.useFakeTimers()
+        const afterMountErrorHandle = vi.fn()
+        const afterMount = vi.fn().mockImplementation(
           async () =>
             await new Promise((resolve, reject) => {
               setTimeout(() => {
@@ -84,7 +85,7 @@ describe('`WithAfterMount` route', () => {
         expect(afterMount).toBeCalledTimes(0)
         expect(afterMountErrorHandle).toBeCalledTimes(0)
 
-        await jest.runAllTimers()
+        await vi.runAllTimers()
 
         expect(afterMount).toBeCalledTimes(1)
         expect(afterMountErrorHandle).toBeCalledTimes(1)

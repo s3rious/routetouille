@@ -1,6 +1,6 @@
-import { isSlug, Slug, WithSlug, WithSlugInterface, WithSlugOptions } from './WithSlug'
-import { isSearch, Search, WithSearch, WithSearchInterface, WithSearchOptions } from './WithSearch'
-import { isHash, Hash, WithHash, WithHashInterface, WithHashOptions } from './WithHash'
+import { isSlug, Slug, WithSlug, WithSlugInterface, WithSlugOptions } from './WithSlug/index.js'
+import { isSearch, Search, WithSearch, WithSearchInterface, WithSearchOptions } from './WithSearch/index.js'
+import { isHash, Hash, WithHash, WithHashInterface, WithHashOptions } from './WithHash/index.js'
 
 type Path = Slug | Search | Hash
 

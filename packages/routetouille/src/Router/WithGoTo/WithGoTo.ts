@@ -1,8 +1,8 @@
-import { WithSetInterface, WithSetOptions, SetActivator, isActivator as isSetActivator } from '../WithSet'
-import { Params, WithParamsInterface, WithParamsOptions } from '../WithParams'
-import { WithPathnameInterface, WithPathnameOptions } from '../WithPathname'
-import { WithActiveInterface, WithActiveOptions, Activator as ActiveActivator } from '../WithActive'
-import { WithMapInterface, WithMapOptions } from '../WithMap'
+import { WithSetInterface, WithSetOptions, SetActivator, isActivator as isSetActivator } from '../WithSet/index.js'
+import { Params, WithParamsInterface, WithParamsOptions } from '../WithParams/index.js'
+import { WithPathnameInterface, WithPathnameOptions } from '../WithPathname/index.js'
+import { WithActiveInterface, WithActiveOptions, Activator as ActiveActivator } from '../WithActive/index.js'
+import { WithMapInterface, WithMapOptions } from '../WithMap/index.js'
 
 type RouterComposedOptions = WithSetOptions &
   WithParamsOptions &
@@ -40,9 +40,10 @@ function WithGoTo<ComposedOptions extends RouterComposedOptions, ComposedInterfa
     ): Promise<void> {
       if (isSetActivator(activator)) {
         await this.set(activator, options?.optimistic)
-      } else {
-        await this.activate(activator, options?.params ?? [], options?.optimistic)
+        return
       }
+      
+      await this.activate(activator, options?.params ?? [], options?.optimistic)
     }
 
     return { ...composed, goTo }

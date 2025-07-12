@@ -1,14 +1,14 @@
-import { WithName, WithNameOptions, WithNameInterface } from './WithName'
-import { WithPath, WithPathOptions, WithPathInterface } from './WithPath'
+import { WithName, WithNameOptions, WithNameInterface } from './WithName/index.js'
+import { WithPath, WithPathOptions, WithPathInterface } from './WithPath/index.js'
 
-import { Mountable, MountableOptions, MountableInterface } from './Mountable'
-import { WithBeforeMount, WithBeforeMountOptions, WithBeforeMountInterface } from './WithBeforeMount'
-import { WithBeforeUnmount, WithBeforeUnmountOptions, WithBeforeUnmountInterface } from './WithBeforeUnmount'
-import { WithAfterMount, WithAfterMountOptions, WithAfterMountInterface } from './WithAfterMount'
-import { WithAfterUnmount, WithAfterUnmountOptions, WithAfterUnmountInterface } from './WithAfterUnmount'
-import { Redirectable, RedirectableOptions, RedirectableInterface } from './Redirectable'
+import { Mountable, MountableOptions, MountableInterface } from './Mountable/index.js'
+import { WithBeforeMount, WithBeforeMountOptions, WithBeforeMountInterface } from './WithBeforeMount/index.js'
+import { WithBeforeUnmount, WithBeforeUnmountOptions, WithBeforeUnmountInterface } from './WithBeforeUnmount/index.js'
+import { WithAfterMount, WithAfterMountOptions, WithAfterMountInterface } from './WithAfterMount/index.js'
+import { WithAfterUnmount, WithAfterUnmountOptions, WithAfterUnmountInterface } from './WithAfterUnmount/index.js'
+import { Redirectable, RedirectableOptions, RedirectableInterface } from './Redirectable/index.js'
 
-import { WithChildren, WithChildrenOptions, WithChildrenInterface } from './WithChildren'
+import { WithChildren, WithChildrenOptions, WithChildrenInterface } from './WithChildren/index.js'
 
 type RouteOptions = WithNameOptions &
   WithPathOptions &

@@ -1,6 +1,7 @@
-import { WithSlug, Slug } from './WithSlug'
+import { describe, it, expect, vi } from 'vitest'
+import { WithSlug, Slug } from './WithSlug.js'
 
-import { omitFunctions } from '../../_tests-shared'
+import { omitFunctions } from '../../_tests-shared/index.js'
 
 describe('`WithSlug` route', () => {
   describe('extends', () => {

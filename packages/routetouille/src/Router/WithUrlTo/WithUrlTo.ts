@@ -1,8 +1,8 @@
-import { fillPathnameWithParams, Params, WithParamsInterface, WithParamsOptions } from '../WithParams'
-import { WithPathnameInterface, WithPathnameOptions, getPathnameFromRoutesTrack } from '../WithPathname'
-import { Activator, WithActiveInterface, WithActiveOptions, getRoutesTrackByActivator } from '../WithActive'
-import { AbstractRoute, WithMapInterface, WithMapOptions } from '../WithMap'
-import { WithRootInterface, WithRootOptions } from '../WithRoot'
+import { fillPathnameWithParams, Params, WithParamsInterface, WithParamsOptions } from '../WithParams/index.js'
+import { WithPathnameInterface, WithPathnameOptions, getPathnameFromRoutesTrack } from '../WithPathname/index.js'
+import { Activator, WithActiveInterface, WithActiveOptions, getRoutesTrackByActivator } from '../WithActive/index.js'
+import { AbstractRoute, WithMapInterface, WithMapOptions } from '../WithMap/index.js'
+import { WithRootInterface, WithRootOptions } from '../WithRoot/index.js'
 
 type RouterComposedOptions = WithParamsOptions &
   WithPathnameOptions &

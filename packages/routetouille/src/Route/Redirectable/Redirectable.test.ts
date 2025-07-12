@@ -1,7 +1,8 @@
-import { Redirectable } from './Redirectable'
-import { Mountable, MountableInterface, MountableOptions } from '../Mountable'
+import { describe, it, expect, vi } from 'vitest'
+import { Redirectable } from './Redirectable.js'
+import { Mountable, MountableInterface, MountableOptions } from '../Mountable/index.js'
 
-import { omitFunctions } from '../_tests-shared'
+import { omitFunctions } from '../_tests-shared/index.js'
 
 describe('`Redirectable` route', () => {
   const Route = Redirectable<MountableOptions, MountableInterface>(Mountable())
@@ -30,12 +31,12 @@ describe('`Redirectable` route', () => {
 
     describe('mount (with redirects)', () => {
       it('mounts', async () => {
-        const firstShouldWe = jest.fn().mockImplementation(() => false)
-        const firstWhatTo = jest.fn()
-        const secondShouldWe = jest.fn().mockImplementation(() => false)
-        const secondWhatTo = jest.fn()
-        const thirdShouldWe = jest.fn().mockImplementation(() => false)
-        const thirdWhatTo = jest.fn()
+        const firstShouldWe = vi.fn().mockImplementation(() => false)
+        const firstWhatTo = vi.fn()
+        const secondShouldWe = vi.fn().mockImplementation(() => false)
+        const secondWhatTo = vi.fn()
+        const thirdShouldWe = vi.fn().mockImplementation(() => false)
+        const thirdWhatTo = vi.fn()
 
         const route = Route({
           redirects: [
@@ -58,12 +59,12 @@ describe('`Redirectable` route', () => {
       })
 
       it('redirected', async () => {
-        const firstShouldWe = jest.fn().mockImplementation(() => false)
-        const firstWhatTo = jest.fn()
-        const secondShouldWe = jest.fn().mockImplementation(() => true)
-        const secondWhatTo = jest.fn()
-        const thirdShouldWe = jest.fn().mockImplementation(() => true)
-        const thirdWhatTo = jest.fn()
+        const firstShouldWe = vi.fn().mockImplementation(() => false)
+        const firstWhatTo = vi.fn()
+        const secondShouldWe = vi.fn().mockImplementation(() => true)
+        const secondWhatTo = vi.fn()
+        const thirdShouldWe = vi.fn().mockImplementation(() => true)
+        const thirdWhatTo = vi.fn()
 
         const route = Route({
           redirects: [

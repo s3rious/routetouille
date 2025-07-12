@@ -1,6 +1,7 @@
-import { WithHash, Hash } from './WithHash'
+import { describe, it, expect, vi } from 'vitest'
+import { WithHash, Hash } from './WithHash.js'
 
-import { omitFunctions } from '../../_tests-shared'
+import { omitFunctions } from '../../_tests-shared/index.js'
 
 describe('`WithHash` route', () => {
   describe('extends', () => {

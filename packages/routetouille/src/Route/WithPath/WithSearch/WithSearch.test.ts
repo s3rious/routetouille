@@ -1,6 +1,7 @@
-import { WithSearch, Search } from './WithSearch'
+import { describe, it, expect, vi } from 'vitest'
+import { WithSearch, Search } from './WithSearch.js'
 
-import { omitFunctions } from '../../_tests-shared'
+import { omitFunctions } from '../../_tests-shared/index.js'
 
 describe('`WithSearch` route', () => {
   describe('extends', () => {

@@ -1,9 +1,6 @@
-/**
- * @jest-environment jsdom
- */
-
-import { HistoryInterface } from '../index'
-import { BrowserHistory } from './BrowserHistory'
+import { describe, it, expect, vi } from 'vitest'
+import { HistoryInterface } from '../index.js'
+import { BrowserHistory } from './BrowserHistory.js'
 
 describe('BrowserHistory', () => {
   it('creates with proper `pathname` when empty', () => {
@@ -13,7 +10,7 @@ describe('BrowserHistory', () => {
   })
 
   it('push', () => {
-    jest.spyOn(globalThis.history, 'pushState')
+    vi.spyOn(globalThis.history, 'pushState')
 
     const history: HistoryInterface = BrowserHistory()
 
@@ -52,7 +49,7 @@ describe('BrowserHistory', () => {
   })
 
   it('replace', () => {
-    jest.spyOn(globalThis.history, 'replaceState')
+    vi.spyOn(globalThis.history, 'replaceState')
 
     const history: HistoryInterface = BrowserHistory()
 
@@ -103,7 +100,7 @@ describe('BrowserHistory', () => {
       },
     })
 
-    const handlePopState = jest.fn()
+    const handlePopState = vi.fn()
     const history: HistoryInterface = BrowserHistory()
     history.emitter.on('popstate', handlePopState)
 

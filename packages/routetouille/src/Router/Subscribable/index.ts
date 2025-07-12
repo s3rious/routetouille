@@ -1,1 +1,1 @@
-export * from './Subscribable'
+export * from './Subscribable.js'

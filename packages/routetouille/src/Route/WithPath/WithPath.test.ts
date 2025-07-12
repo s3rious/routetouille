@@ -1,4 +1,5 @@
-import { WithPath } from './WithPath'
+import { describe, it, expect, vi } from 'vitest'
+import { WithPath } from './WithPath.js'
 
 describe('`WithPath` route', () => {
   it('slug', () => {

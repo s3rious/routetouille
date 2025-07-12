@@ -1,1 +1,1 @@
-export * from './WithBeforeMount'
+export * from './WithBeforeMount.js'

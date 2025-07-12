@@ -1,11 +1,11 @@
-import { WithGoToOptions, WithGoToInterface, GoToOptions as OriginalGoToOptions } from '../WithGoTo'
-import { WithSetInterface, WithSetOptions, SetActivator } from '../WithSet'
-import { Params, WithParamsInterface, WithParamsOptions } from '../WithParams'
-import { WithPathnameInterface, WithPathnameOptions } from '../WithPathname'
-import { WithActiveInterface, WithActiveOptions, Activator as ActiveActivator, Activator } from '../WithActive'
-import { WithMapInterface, WithMapOptions } from '../WithMap'
+import { WithGoToOptions, WithGoToInterface, GoToOptions as OriginalGoToOptions } from '../WithGoTo/index.js'
+import { WithSetInterface, WithSetOptions, SetActivator } from '../WithSet/index.js'
+import { Params, WithParamsInterface, WithParamsOptions } from '../WithParams/index.js'
+import { WithPathnameInterface, WithPathnameOptions } from '../WithPathname/index.js'
+import { WithActiveInterface, WithActiveOptions, Activator as ActiveActivator, Activator } from '../WithActive/index.js'
+import { WithMapInterface, WithMapOptions } from '../WithMap/index.js'
 
-import { HistoryInterface } from '../../History'
+import { HistoryInterface } from '../../History/index.js'
 
 type RouterComposedOptions = WithGoToOptions &
   WithSetOptions &

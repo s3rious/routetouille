@@ -1,6 +1,6 @@
 import { createNanoEvents, Emitter } from 'nanoevents'
-import { Activator, WithActiveInterface, WithActiveOptions } from '../WithActive'
-import { AbstractRoute } from '../WithMap'
+import { Activator, WithActiveInterface, WithActiveOptions } from '../WithActive/index.js'
+import { AbstractRoute } from '../WithMap/index.js'
 
 type Events = {
   beforeActivate: (routes: AbstractRoute[]) => void

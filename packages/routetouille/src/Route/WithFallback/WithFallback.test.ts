@@ -1,4 +1,5 @@
-import { WithFallback } from './WithFallback'
+import { describe, it, expect, vi } from 'vitest'
+import { WithFallback } from './WithFallback.js'
 
 describe('`WithFallback` route', () => {
   describe('extends', () => {

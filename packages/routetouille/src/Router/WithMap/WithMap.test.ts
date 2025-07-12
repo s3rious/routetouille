@@ -1,14 +1,12 @@
-import { WithMap } from './WithMap'
-import { WithRoot, WithRootInterface, WithRootOptions } from '../WithRoot'
+import { describe, it, expect } from 'vitest'
+import { WithMap } from './WithMap.js'
+import { WithRoot, WithRootInterface, WithRootOptions } from '../WithRoot/index.js'
+import { FallbackRoute, ModuleRoute, Route } from '../../Route/index.js'
 
-import { FallbackRoute, ModuleRoute, Route } from '../../Route'
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function replacer(jsonKey: any, jsonValue: any): any {
+function replacer(jsonKey: string, jsonValue: unknown): unknown {
   if (jsonValue instanceof Map) {
-    return [...jsonValue]
+    return Array.from(jsonValue)
   }
-
   return jsonValue
 }
 

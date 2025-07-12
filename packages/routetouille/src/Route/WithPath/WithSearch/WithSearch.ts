@@ -1,4 +1,4 @@
-import { hasParams, extractParams, Params } from '../params'
+import { hasParams, extractParams, Params } from '../params/index.js'
 
 type Search = `?${string}` | `?${string}=${string}`
 

@@ -1,7 +1,8 @@
-import { WithParamsInterface, WithParamsOptions } from '../WithParams'
-import { WithPathnameInterface, WithPathnameOptions } from '../WithPathname'
-import { WithActiveInterface, WithActiveOptions } from '../WithActive'
-import { WithMapInterface, WithMapOptions, RouteMapRoute, RouteMapKey, AbstractRoute } from '../WithMap'
+import { WithParams, WithParamsOptions, WithParamsInterface } from '../WithParams/index.js'
+import { WithPathname, WithPathnameOptions, WithPathnameInterface } from '../WithPathname/index.js'
+import { WithActive, WithActiveOptions, WithActiveInterface } from '../WithActive/index.js'
+import { WithRoot, WithRootOptions, WithRootInterface } from '../WithRoot/index.js'
+import { WithMap, WithMapOptions, WithMapInterface, AbstractRoute, RouteMapKey, RouteMapRoute } from '../WithMap/index.js'
 
 type RouterComposedOptions = WithParamsOptions & WithPathnameOptions & WithActiveOptions & WithMapOptions
 type RouterComposedInterface = WithParamsInterface & WithPathnameInterface & WithActiveInterface & WithMapInterface
@@ -59,7 +60,9 @@ function WithSet<ComposedOptions extends RouterComposedOptions, ComposedInterfac
       const map = this.getMap()
       const gotSlashRoute = [...map.values()].findIndex((route) => route.route.path === '/') > -1
       const pathParts = getPathParts(path, gotSlashRoute)
-      const rootKey: RouteMapKey = map.entries().next().value[0]
+      const nextValue = map.entries().next().value
+      if (!nextValue) throw new Error('Map is empty')
+      const rootKey: RouteMapKey = nextValue[0]
       const rootRoute: RouteMapRoute | undefined = map.get(rootKey)
       const routesToActive: AbstractRoute[] = []
       const paramsToActive: Array<{ [key: string]: string }> = []

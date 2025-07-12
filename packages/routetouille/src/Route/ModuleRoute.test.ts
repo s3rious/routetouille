@@ -1,4 +1,5 @@
-import { ModuleRoute } from './ModuleRoute'
+import { describe, it, expect, vi } from 'vitest'
+import { ModuleRoute } from './ModuleRoute.js'
 
 describe('ModuleRoute', () => {
   it('can be created', async () => {

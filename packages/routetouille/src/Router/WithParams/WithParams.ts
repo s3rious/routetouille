@@ -1,5 +1,5 @@
-import { WithPathnameInterface, WithPathnameOptions } from '../WithPathname'
-import { Activator, WithActiveInterface, WithActiveOptions } from '../WithActive'
+import { WithPathnameInterface, WithPathnameOptions } from '../WithPathname/index.js'
+import { Activator, WithActiveInterface, WithActiveOptions } from '../WithActive/index.js'
 
 type RouterComposedOptions = WithPathnameOptions & WithActiveOptions
 type RouterComposedInterface = WithPathnameInterface & WithActiveInterface

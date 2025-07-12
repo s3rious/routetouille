@@ -1,1 +1,1 @@
-export * from './WithActive'
+export * from './WithActive.js'

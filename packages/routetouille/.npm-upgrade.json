@@ -1,8 +1,0 @@
-{
-  "ignore": {
-    "nanoevents": {
-      "versions": "6.*",
-      "reason": "Nanoevents 6+ requires ES modules"
-    }
-  }
-}

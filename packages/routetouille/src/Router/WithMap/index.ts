@@ -1,1 +1,1 @@
-export * from './WithMap'
+export * from './WithMap.js'

@@ -1,9 +1,10 @@
-import { Subscribable } from './Subscribable'
-import { WithActive, WithActiveInterface, WithActiveOptions } from '../WithActive'
-import { WithRoot, WithRootInterface, WithRootOptions } from '../WithRoot'
-import { WithMap, WithMapInterface, WithMapOptions } from '../WithMap'
+import { describe, it, expect, vi } from 'vitest'
+import { Subscribable } from './Subscribable.js'
+import { WithActive, WithActiveInterface, WithActiveOptions } from '../WithActive/index.js'
+import { WithRoot, WithRootInterface, WithRootOptions } from '../WithRoot/index.js'
+import { WithMap, WithMapInterface, WithMapOptions } from '../WithMap/index.js'
 
-import { Route } from '../../Route'
+import { Route } from '../../Route/index.js'
 
 describe('`Subscribable` router', () => {
   const Router = Subscribable<
@@ -35,8 +36,8 @@ describe('`Subscribable` router', () => {
 
   describe('methods', () => {
     it('`emit`', async () => {
-      const beforeActivateCallback = jest.fn()
-      const afterActivateCallback = jest.fn()
+      const beforeActivateCallback = vi.fn()
+      const afterActivateCallback = vi.fn()
       const router = Router({})
       router.root = rootRoute
       router.on('beforeActivate', beforeActivateCallback)
@@ -56,8 +57,8 @@ describe('`Subscribable` router', () => {
     })
 
     it('`on`', async () => {
-      const beforeActivateCallback = jest.fn()
-      const afterActivateCallback = jest.fn()
+      const beforeActivateCallback = vi.fn()
+      const afterActivateCallback = vi.fn()
       const router = Router({})
       router.root = rootRoute
       router.on('beforeActivate', beforeActivateCallback)

@@ -1,1 +1,1 @@
-export * from './WithChildren'
+export * from './WithChildren.js'

@@ -1,5 +1,6 @@
-import { WithBeforeUnmount } from './WithBeforeUnmount'
-import { Mountable, MountableInterface, MountableOptions } from '../Mountable'
+import { describe, it, expect, vi } from 'vitest'
+import { WithBeforeUnmount } from './WithBeforeUnmount.js'
+import { Mountable, MountableInterface, MountableOptions } from '../Mountable/index.js'
 
 describe('`WithBeforeUnmount` route', () => {
   const Route = WithBeforeUnmount<MountableOptions, MountableInterface>(Mountable())
@@ -29,10 +30,10 @@ describe('`WithBeforeUnmount` route', () => {
 
     describe('unmount (with `beforeUnmount)', () => {
       it('calls `beforeUnmount` before `unmount`', async () => {
-        jest.useFakeTimers()
+        vi.useFakeTimers()
 
-        const beforeUnmountCallback = jest.fn()
-        const beforeUnmount = jest.fn().mockImplementation(
+        const beforeUnmountCallback = vi.fn()
+        const beforeUnmount = vi.fn().mockImplementation(
           async () =>
             await new Promise((resolve) => {
               setTimeout(() => {
@@ -46,17 +47,17 @@ describe('`WithBeforeUnmount` route', () => {
 
         expect(route.mounted).toBe(false)
         expect(beforeUnmount).toBeCalledTimes(0)
-        await Promise.all([route.unmount(), jest.runAllTimers()])
+        await Promise.all([route.unmount(), vi.runAllTimers()])
         expect(beforeUnmount).toBeCalledTimes(1)
         expect(beforeUnmountCallback).toBeCalledTimes(1)
         expect(route.mounted).toBe(false)
       })
 
       it('error in `beforeUnmount` interferes with mount', async () => {
-        jest.useFakeTimers()
+        vi.useFakeTimers()
 
-        const beforeUnmountErrorHandle = jest.fn()
-        const beforeUnmount = jest.fn().mockImplementation(
+        const beforeUnmountErrorHandle = vi.fn()
+        const beforeUnmount = vi.fn().mockImplementation(
           async () =>
             await new Promise((resolve, reject) => {
               setTimeout(() => {
@@ -80,7 +81,7 @@ describe('`WithBeforeUnmount` route', () => {
           expect(route.mounted).toBe(true)
           expect(beforeUnmount).toBeCalledTimes(0)
 
-          await Promise.all([route.unmount(), jest.runAllTimers()])
+          await Promise.all([route.unmount(), vi.runAllTimers()])
         } catch (error) {
           expect(error).toBe('Error!')
         } finally {

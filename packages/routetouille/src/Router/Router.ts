@@ -1,13 +1,13 @@
-import { WithRoot, WithRootOptions, WithRootInterface } from './WithRoot'
-import { WithMap, WithMapOptions, WithMapInterface } from './WithMap'
-import { WithActive, WithActiveOptions, WithActiveInterface } from './WithActive'
-import { WithPathname, WithPathnameOptions, WithPathnameInterface } from './WithPathname'
-import { WithParams, WithParamsOptions, WithParamsInterface } from './WithParams'
-import { WithSet, WithSetOptions, WithSetInterface } from './WithSet'
-import { WithUrlTo, WithUrlToOptions, WithUrlToInterface } from './WithUrlTo'
-import { WithGoTo, WithGoToOptions, WithGoToInterface } from './WithGoTo'
-import { WithHistory, WithHistoryOptions, WithHistoryInterface } from './WithHistory'
-import { Subscribable, SubscribableOptions, SubscribableInterface } from './Subscribable'
+import { WithRoot, WithRootOptions, WithRootInterface } from './WithRoot/index.js'
+import { WithMap, WithMapOptions, WithMapInterface } from './WithMap/index.js'
+import { WithActive, WithActiveOptions, WithActiveInterface } from './WithActive/index.js'
+import { WithPathname, WithPathnameOptions, WithPathnameInterface } from './WithPathname/index.js'
+import { WithParams, WithParamsOptions, WithParamsInterface } from './WithParams/index.js'
+import { WithSet, WithSetOptions, WithSetInterface } from './WithSet/index.js'
+import { WithUrlTo, WithUrlToOptions, WithUrlToInterface } from './WithUrlTo/index.js'
+import { WithGoTo, WithGoToOptions, WithGoToInterface } from './WithGoTo/index.js'
+import { WithHistory, WithHistoryOptions, WithHistoryInterface } from './WithHistory/index.js'
+import { Subscribable, SubscribableOptions, SubscribableInterface } from './Subscribable/index.js'
 
 type RouterOptions = WithRootOptions &
   WithMapOptions &

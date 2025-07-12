@@ -1,4 +1,4 @@
-import { MountableOptions, MountableInterface } from '../Mountable'
+import { MountableOptions, MountableInterface } from '../Mountable/index.js'
 
 type WithAfterMountOptions = {
   afterMount?: () => Promise<void>

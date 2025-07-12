@@ -1,4 +1,5 @@
-import { hasParams } from './hasParams'
+import { describe, it, expect, vi } from 'vitest'
+import { hasParams } from './hasParams.js'
 
 const slugs: Array<[path: string, result: boolean]> = [
   ['foo/', false],

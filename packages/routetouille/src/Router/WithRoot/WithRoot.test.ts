@@ -1,6 +1,6 @@
-import { WithRoot } from './WithRoot'
-
-import { Route } from '../../Route'
+import { describe, it, expect, vi } from 'vitest'
+import { WithRoot } from './WithRoot.js'
+import { Route } from '../../Route/index.js'
 
 describe('`WithRoot` router', () => {
   describe('creation', () => {

@@ -1,11 +1,11 @@
-import { WithUrlTo } from './WithUrlTo'
-import { WithParams, WithParamsOptions, WithParamsInterface } from '../WithParams'
-import { WithPathname, WithPathnameOptions, WithPathnameInterface } from '../WithPathname'
-import { WithActive, WithActiveOptions, WithActiveInterface } from '../WithActive'
-import { WithMap, WithMapOptions, WithMapInterface } from '../WithMap'
-import { WithRoot, WithRootOptions, WithRootInterface } from '../WithRoot'
-
-import { FallbackRoute, Route } from '../../Route'
+import { describe, it, expect } from 'vitest'
+import { WithUrlTo } from './WithUrlTo.js'
+import { WithParams, WithParamsOptions, WithParamsInterface } from '../WithParams/index.js'
+import { WithPathname, WithPathnameOptions, WithPathnameInterface } from '../WithPathname/index.js'
+import { WithActive, WithActiveOptions, WithActiveInterface } from '../WithActive/index.js'
+import { WithMap, WithMapOptions, WithMapInterface } from '../WithMap/index.js'
+import { WithRoot, WithRootOptions, WithRootInterface } from '../WithRoot/index.js'
+import { FallbackRoute, Route } from '../../Route/index.js'
 
 type RouterComposedOptions = WithParamsOptions &
   WithPathnameOptions &

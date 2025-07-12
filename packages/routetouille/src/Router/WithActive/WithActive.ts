@@ -1,5 +1,5 @@
-import { AbstractRoute, RouteMap, RouteMapRoute, RouteMapKey, WithMapInterface, WithMapOptions } from '../WithMap'
-import { WithRootInterface, WithRootOptions } from '../WithRoot'
+import { AbstractRoute, RouteMap, RouteMapRoute, RouteMapKey, WithMapInterface, WithMapOptions } from '../WithMap/index.js'
+import { WithRootInterface, WithRootOptions } from '../WithRoot/index.js'
 
 type RouterComposedOptions = WithMapOptions & WithRootOptions
 type RouterComposedInterface = WithMapInterface & WithRootInterface
@@ -90,7 +90,9 @@ function getClosestFallbackByActivator(map: RouteMap, activator: RouteMapKey): R
 }
 
 function getFirstFallback(map: RouteMap): RouteMapRoute | undefined {
-  const root: RouteMapRoute = map.entries().next().value[1]
+  const nextValue = map.entries().next().value
+  if (!nextValue) throw new Error('Map is empty')
+  const root: RouteMapRoute = nextValue[1]
 
   const recurse = (route: RouteMapRoute): RouteMapRoute | undefined => {
     if (route.fallback != null) {

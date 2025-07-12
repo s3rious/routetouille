@@ -1,10 +1,10 @@
-import { WithParams } from './WithParams'
-import { WithPathname, WithPathnameInterface, WithPathnameOptions } from '../WithPathname'
-import { WithActive, WithActiveInterface, WithActiveOptions } from '../WithActive'
-import { WithRoot, WithRootInterface, WithRootOptions } from '../WithRoot'
-import { WithMap, WithMapInterface, WithMapOptions } from '../WithMap'
-
-import { Route } from '../../Route'
+import { describe, it, expect } from 'vitest'
+import { WithParams } from './WithParams.js'
+import { WithPathname, WithPathnameInterface, WithPathnameOptions } from '../WithPathname/index.js'
+import { WithActive, WithActiveInterface, WithActiveOptions } from '../WithActive/index.js'
+import { WithRoot, WithRootInterface, WithRootOptions } from '../WithRoot/index.js'
+import { WithMap, WithMapInterface, WithMapOptions } from '../WithMap/index.js'
+import { Route } from '../../Route/index.js'
 
 type RouterComposedOptions = WithPathnameOptions & WithActiveOptions & WithMapOptions & WithRootOptions
 type RouterComposedInterface = WithPathnameInterface & WithActiveInterface & WithMapInterface & WithRootInterface

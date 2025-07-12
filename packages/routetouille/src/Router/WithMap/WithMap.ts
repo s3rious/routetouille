@@ -1,14 +1,14 @@
-import { WithRootInterface, WithRootOptions } from '../WithRoot'
+import { WithRootInterface, WithRootOptions } from '../WithRoot/index.js'
 import {
-  FallbackInterface,
+  FallbackRouteInterface,
   MountableInterface,
   WithChildrenInterface,
   WithNameInterface,
   WithPathInterface,
-} from '../../Route'
+} from '../../Route/index.js'
 
 type AbstractRoute = WithNameInterface &
-  FallbackInterface &
+  FallbackRouteInterface &
   WithChildrenInterface &
   MountableInterface &
   WithPathInterface
@@ -43,11 +43,9 @@ function extractMapFromRoot(root?: AbstractRoute): RouteMap {
     }
 
     if (route?.children != null) {
-      value.children = route.children.map((route) => (route as AbstractRoute).name).map((name) => `${key}.${name}`)
+      value.children = (route.children as AbstractRoute[]).map((route) => (route as AbstractRoute).name).map((name: string) => `${key}.${name}`)
 
-      const fallbackSiblingRoute = route.children.find((route) => (route as AbstractRoute).fallback) as
-        | AbstractRoute
-        | undefined
+      const fallbackSiblingRoute = (route.children as AbstractRoute[]).find((route) => (route as AbstractRoute).fallback) as AbstractRoute | undefined
 
       if (fallbackSiblingRoute?.name != null) {
         fallback = `${key}.${fallbackSiblingRoute.name}`
@@ -61,7 +59,7 @@ function extractMapFromRoot(root?: AbstractRoute): RouteMap {
     map.set(key, value)
 
     if (route?.children != null) {
-      route.children.forEach((route) => recurse(route as AbstractRoute, key, fallback))
+      (route.children as AbstractRoute[]).forEach((route) => recurse(route as AbstractRoute, key, fallback))
     }
   }
 

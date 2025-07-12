@@ -1,1 +1,1 @@
-export * from './WithAfterUnmount'
+export * from './WithAfterUnmount.js'

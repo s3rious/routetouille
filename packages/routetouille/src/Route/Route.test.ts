@@ -1,4 +1,5 @@
-import { Route } from './Route'
+import { describe, it, expect, vi } from 'vitest'
+import { Route } from './Route.js'
 
 describe('Route', () => {
   it('can be created', async () => {

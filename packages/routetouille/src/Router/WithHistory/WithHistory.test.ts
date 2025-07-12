@@ -1,17 +1,18 @@
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { createNanoEvents } from 'nanoevents'
 
-import { WithHistory, WithHistoryInterface } from './WithHistory'
-import { WithGoTo, WithGoToInterface, WithGoToOptions } from '../WithGoTo'
-import { WithSet, WithSetInterface, WithSetOptions } from '../WithSet'
-import { WithParams, WithParamsInterface, WithParamsOptions } from '../WithParams'
-import { WithPathname, WithPathnameInterface, WithPathnameOptions } from '../WithPathname'
-import { WithActive, WithActiveInterface, WithActiveOptions } from '../WithActive'
-import { WithRoot, WithRootInterface, WithRootOptions } from '../WithRoot'
-import { WithMap, WithMapInterface, WithMapOptions } from '../WithMap'
+import { WithHistory, WithHistoryInterface } from './WithHistory.js'
+import { WithGoTo, WithGoToInterface, WithGoToOptions } from '../WithGoTo/index.js'
+import { WithSet, WithSetInterface, WithSetOptions } from '../WithSet/index.js'
+import { WithParams, WithParamsInterface, WithParamsOptions } from '../WithParams/index.js'
+import { WithPathname, WithPathnameInterface, WithPathnameOptions } from '../WithPathname/index.js'
+import { WithActive, WithActiveInterface, WithActiveOptions } from '../WithActive/index.js'
+import { WithRoot, WithRootInterface, WithRootOptions } from '../WithRoot/index.js'
+import { WithMap, WithMapInterface, WithMapOptions } from '../WithMap/index.js'
 
-import { FallbackRoute, ModuleRoute, Route, RouteInterface } from '../../Route'
+import { FallbackRoute, ModuleRoute, Route, RouteInterface } from '../../Route/index.js'
 
-import { HistoryInterface } from '../../History'
+import { HistoryInterface } from '../../History/index.js'
 
 type RouterComposedOptions = WithGoToOptions &
   WithSetOptions &
@@ -30,8 +31,8 @@ type RouterComposedInterface = WithGoToInterface &
 
 const createMockHistory = (pathname: string | null): HistoryInterface => ({
   pathname,
-  push: jest.fn(),
-  replace: jest.fn(),
+  push: vi.fn(),
+  replace: vi.fn(),
   emitter: createNanoEvents(),
 })
 

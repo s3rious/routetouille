@@ -1,9 +1,10 @@
-import { WithPathname } from './WithPathname'
-import { WithActive, WithActiveInterface, WithActiveOptions } from '../WithActive'
-import { WithRoot, WithRootInterface, WithRootOptions } from '../WithRoot'
-import { WithMap, WithMapInterface, WithMapOptions } from '../WithMap'
+import { describe, it, expect } from 'vitest'
+import { WithPathname } from './WithPathname.js'
+import { WithActive, WithActiveInterface, WithActiveOptions } from '../WithActive/index.js'
+import { WithRoot, WithRootInterface, WithRootOptions } from '../WithRoot/index.js'
+import { WithMap, WithMapInterface, WithMapOptions } from '../WithMap/index.js'
 
-import { ModuleRoute, Route } from '../../Route'
+import { ModuleRoute, Route } from '../../Route/index.js'
 
 describe('`WithPathname` router', () => {
   const Router = WithPathname<

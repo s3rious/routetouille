@@ -1,5 +1,6 @@
-import { WithAfterUnmount } from './WithAfterUnmount'
-import { Mountable, MountableInterface, MountableOptions } from '../Mountable'
+import { describe, it, expect, vi } from 'vitest'
+import { WithAfterUnmount } from './WithAfterUnmount.js'
+import { Mountable, MountableInterface, MountableOptions } from '../Mountable/index.js'
 
 describe('`WithAfterUnmount` route', () => {
   const Route = WithAfterUnmount<MountableOptions, MountableInterface>(Mountable())
@@ -27,10 +28,10 @@ describe('`WithAfterUnmount` route', () => {
 
     describe('`unmount` (with `afterUnmount`)', () => {
       it('calls `afterUnmount` after `unmount`', async () => {
-        jest.useFakeTimers()
+        vi.useFakeTimers()
 
-        const afterUnmountCallback = jest.fn()
-        const afterUnmount = jest.fn().mockImplementation(
+        const afterUnmountCallback = vi.fn()
+        const afterUnmount = vi.fn().mockImplementation(
           async () =>
             await new Promise((resolve) => {
               setTimeout(() => {
@@ -48,17 +49,17 @@ describe('`WithAfterUnmount` route', () => {
         expect(afterUnmount).toBeCalledTimes(0)
         expect(afterUnmountCallback).toBeCalledTimes(0)
 
-        jest.runAllTimers()
+        vi.runAllTimers()
 
         expect(afterUnmount).toBeCalledTimes(1)
         expect(afterUnmountCallback).toBeCalledTimes(1)
       })
 
       it('error in `afterUnmount` does not interfere with mount', async () => {
-        jest.useFakeTimers()
+        vi.useFakeTimers()
 
-        const afterUnmountErrorHandle = jest.fn()
-        const afterUnmount = jest.fn().mockImplementation(
+        const afterUnmountErrorHandle = vi.fn()
+        const afterUnmount = vi.fn().mockImplementation(
           async () =>
             await new Promise((resolve, reject) => {
               setTimeout(() => {
@@ -82,7 +83,7 @@ describe('`WithAfterUnmount` route', () => {
         expect(afterUnmount).toBeCalledTimes(0)
         expect(afterUnmountErrorHandle).toBeCalledTimes(0)
 
-        await jest.runAllTimers()
+        await vi.runAllTimers()
 
         expect(afterUnmount).toBeCalledTimes(1)
         expect(afterUnmountErrorHandle).toBeCalledTimes(1)

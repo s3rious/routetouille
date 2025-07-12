@@ -1,1 +1,1 @@
-export * from './WithHistory'
+export * from './WithHistory.js'

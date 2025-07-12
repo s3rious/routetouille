@@ -1,2 +1,2 @@
-export * from './hasParams'
-export * from './extractParams'
+export * from './hasParams.js'
+export * from './extractParams.js'

@@ -1,1 +1,1 @@
-export * from './WithSet'
+export * from './WithSet.js'

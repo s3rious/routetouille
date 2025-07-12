@@ -1,4 +1,5 @@
-import { WithChildren } from './WithChildren'
+import { describe, it, expect, vi } from 'vitest'
+import { WithChildren } from './WithChildren.js'
 
 describe('`WithChildren` route', () => {
   describe('extends', () => {

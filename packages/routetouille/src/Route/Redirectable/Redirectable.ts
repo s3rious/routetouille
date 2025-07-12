@@ -1,4 +1,4 @@
-import { MountableInterface, MountableOptions } from '../Mountable'
+import { MountableInterface, MountableOptions } from '../Mountable/index.js'
 
 type ShouldWe = () => Promise<boolean>
 type WhatTo = () => Promise<void>

@@ -1,10 +1,10 @@
 import { createNanoEvents } from 'nanoevents'
-import { HistoryInterface } from '../index'
+import { HistoryInterface } from '../index.js'
 
 function getPathName(): string {
-  const locationPathname: string = globalThis.location.pathname
-  const locationSearch: string = globalThis.location.search
-  const locationHash: string = globalThis.location.hash
+  const locationPathname: string = window.location.pathname
+  const locationSearch: string = window.location.search
+  const locationHash: string = window.location.hash
   return locationPathname + locationSearch + locationHash
 }
 
@@ -14,7 +14,7 @@ function BrowserHistory(): HistoryInterface {
 
   function push(this: HistoryInterface, pathname: string | null, state?: unknown): void {
     if (pathname != null) {
-      globalThis.history.pushState(state ?? null, '', pathname)
+      window.history.pushState(state ?? null, '', pathname)
       this.pathname = pathname
 
       emitter.emit('push', pathname, state)
@@ -24,7 +24,7 @@ function BrowserHistory(): HistoryInterface {
 
   function replace(this: HistoryInterface, pathname: string | null, state?: unknown): void {
     if (pathname != null) {
-      globalThis.history.replaceState(state ?? null, '', pathname)
+      window.history.replaceState(state ?? null, '', pathname)
       this.pathname = pathname
 
       emitter.emit('replace', pathname, state)
@@ -39,7 +39,7 @@ function BrowserHistory(): HistoryInterface {
     emitter.emit('change', pathname, event?.state)
   }
 
-  globalThis.addEventListener('popstate', onPopState)
+  window.addEventListener('popstate', onPopState)
 
   return { pathname, push, replace, emitter }
 }

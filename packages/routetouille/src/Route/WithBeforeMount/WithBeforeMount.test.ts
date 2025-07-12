@@ -1,7 +1,8 @@
-import { WithBeforeMount } from './WithBeforeMount'
-import { Mountable, MountableInterface, MountableOptions } from '../Mountable'
+import { describe, it, expect, vi } from 'vitest'
+import { WithBeforeMount } from './WithBeforeMount.js'
+import { Mountable, MountableInterface, MountableOptions } from '../Mountable/index.js'
 
-import { omitFunctions } from '../_tests-shared'
+import { omitFunctions } from '../_tests-shared/index.js'
 
 describe('`WithBeforeMount` route', () => {
   const Route = WithBeforeMount<MountableOptions, MountableInterface>(Mountable())
@@ -30,10 +31,10 @@ describe('`WithBeforeMount` route', () => {
 
     describe('mount (with redirects)', () => {
       it('calls `beforeMount` before mount', async () => {
-        jest.useFakeTimers()
+        vi.useFakeTimers()
 
-        const beforeMountCallback = jest.fn()
-        const beforeMount = jest.fn().mockImplementation(
+        const beforeMountCallback = vi.fn()
+        const beforeMount = vi.fn().mockImplementation(
           async () =>
             await new Promise((resolve) => {
               setTimeout(() => {
@@ -47,17 +48,17 @@ describe('`WithBeforeMount` route', () => {
 
         expect(route.mounted).toBe(false)
         expect(beforeMount).toBeCalledTimes(0)
-        await Promise.all([route.mount(), jest.runAllTimers()])
+        await Promise.all([route.mount(), vi.runAllTimers()])
         expect(beforeMount).toBeCalledTimes(1)
         expect(beforeMountCallback).toBeCalledTimes(1)
         expect(route.mounted).toBe(true)
       })
 
       it('error in `beforeMount` interferes with mount', async () => {
-        jest.useFakeTimers()
+        vi.useFakeTimers()
 
-        const beforeMountErrorHandle = jest.fn()
-        const beforeMount = jest.fn().mockImplementation(
+        const beforeMountErrorHandle = vi.fn()
+        const beforeMount = vi.fn().mockImplementation(
           async () =>
             await new Promise((resolve, reject) => {
               setTimeout(() => {
@@ -80,7 +81,7 @@ describe('`WithBeforeMount` route', () => {
           expect(route.mounted).toBe(false)
           expect(beforeMount).toBeCalledTimes(0)
 
-          await Promise.all([route.mount(), jest.runAllTimers()])
+          await Promise.all([route.mount(), vi.runAllTimers()])
         } catch (error) {
           expect(error).toBe('Error!')
         } finally {

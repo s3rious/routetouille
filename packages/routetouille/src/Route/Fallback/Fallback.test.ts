@@ -1,4 +1,5 @@
-import { Fallback } from './Fallback'
+import { describe, it, expect, vi } from 'vitest'
+import { Fallback } from './Fallback.js'
 
 describe('`Fallback` route', () => {
   describe('creation', () => {

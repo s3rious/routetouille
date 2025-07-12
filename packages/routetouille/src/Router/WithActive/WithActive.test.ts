@@ -1,8 +1,8 @@
-import Mock = jest.Mock
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 
-import { WithActive, WithActiveInterface } from './WithActive'
-import { WithRoot, WithRootInterface, WithRootOptions } from '../WithRoot'
-import { AbstractRoute, WithMap, WithMapInterface, WithMapOptions } from '../WithMap'
+import { WithActive, WithActiveInterface } from './WithActive.js'
+import { WithRoot, WithRootInterface, WithRootOptions } from '../WithRoot/index.js'
+import { AbstractRoute, WithMap, WithMapInterface, WithMapOptions } from '../WithMap/index.js'
 
 import {
   FallbackRoute,
@@ -11,7 +11,7 @@ import {
   ModuleRouteInterface,
   Route,
   RouteInterface,
-} from '../../Route'
+} from '../../Route/index.js'
 
 describe('`WithActive` router', () => {
   const Router = WithActive<WithMapOptions & WithRootOptions, WithMapInterface & WithRootInterface>(WithMap(WithRoot()))
@@ -31,11 +31,11 @@ describe('`WithActive` router', () => {
     const waitFor = async (time: number = 0): Promise<unknown> =>
       await new Promise((resolve) => setTimeout(() => resolve(null), time))
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const mockBefore = (): Mock<any, any> =>
-      jest.fn().mockImplementation(async () => await new Promise((resolve) => resolve(null)))
+    const mockBefore = (): ReturnType<typeof vi.fn> =>
+      vi.fn().mockImplementation(async () => await new Promise((resolve) => resolve(null)))
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const mockAfter = (): Mock<any, any> =>
-      jest.fn().mockImplementation(async () => await new Promise((resolve) => setTimeout(() => resolve(null), 1)))
+    const mockAfter = (): ReturnType<typeof vi.fn> =>
+      vi.fn().mockImplementation(async () => await new Promise((resolve) => setTimeout(() => resolve(null), 1)))
 
     let allowedToVisitAdmin = false
     let adminBeforeMount: () => Promise<void>
