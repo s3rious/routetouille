@@ -11,6 +11,7 @@
   - [6. Immutability & Logic](#6-immutability--logic)
   - [7. Testing](#7-testing)
   - [8. Comments & Documentation](#8-comments--documentation)
+  - [Contributing](#contributing)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
