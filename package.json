@@ -1,11 +1,17 @@
 {
   "name": "routetouille-root",
   "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "test": "lerna exec npm run test",
-    "publish": "lerna publish"
+    "format": "turbo run format",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck",
+    "build": "turbo run build"
   },
   "devDependencies": {
-    "lerna": "^4.0.0"
+    "turbo": "^1.13.0"
   }
 }
