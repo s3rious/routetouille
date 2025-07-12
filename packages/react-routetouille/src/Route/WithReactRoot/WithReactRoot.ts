@@ -1,5 +1,6 @@
 import { StrictMode, createElement, FunctionComponent } from 'react'
 import * as ReactDOM from 'react-dom'
+import { createRoot, Root } from 'react-dom/client'
 import {
   RouterInterface,
   WithAfterMountInterface,
@@ -67,24 +68,14 @@ function WithReactRoot<ComposedOptions extends ComposedRouteOptions, ComposedInt
       const reactApp = createElement(StrictMode, null, createElement(Component, { router: router }))
 
       // Try to import createRoot type from react-dom/client if available
-      let hasCreateRoot = false
-      let createRoot: ((container: Element | DocumentFragment) => { render: (node: React.ReactNode) => void }) | undefined
-      if (!(globalThis as any).__TEST_DISABLE_CREATE_ROOT__) {
-        try {
-          // eslint-disable-next-line @typescript-eslint/no-var-requires
-          createRoot = require('react-dom/client').createRoot
-          hasCreateRoot = typeof createRoot === 'function'
-        } catch {}
+      let root: Root;
+      if (!(container as any)._reactRootContainer) {
+        root = createRoot(container);
+        (container as any)._reactRoot = root;
+      } else {
+        root = (container as any)._reactRoot;
       }
-
-      if (hasCreateRoot && createRoot) {
-        const root = createRoot(container)
-        root.render(reactApp)
-        return
-      }
-
-      // Legacy ReactDOM.render fallback (only for React 17 and below)
-      ;(ReactDOM as any).render(reactApp, container)
+      root.render(reactApp);
     }
 
     async function afterMount(this: ComposedInterface & ComposedRouteInterface): Promise<void> {
@@ -106,13 +97,15 @@ function WithReactRoot<ComposedOptions extends ComposedRouteOptions, ComposedInt
     }
 
     async function afterUnmount(this: ComposedInterface & ComposedRouteInterface): Promise<void> {
-      const root = globalThis.document.getElementById(id)
-
-      if (root != null) {
-        const parent = root.parentNode as (Node & { removeChild(node: Node): void }) | null
-        (ReactDOM as any).unmountComponentAtNode(root)
+      const rootElem = globalThis.document.getElementById(id);
+      if (rootElem != null) {
+        const reactRoot = (rootElem as any)._reactRoot;
+        if (reactRoot && typeof reactRoot.unmount === 'function') {
+          reactRoot.unmount();
+        }
+        const parent = rootElem.parentNode as (Node & { removeChild(node: Node): void }) | null;
         if (parent != null) {
-          parent.removeChild(root)
+          parent.removeChild(rootElem);
         }
       }
 
