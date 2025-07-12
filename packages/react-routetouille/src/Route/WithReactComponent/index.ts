@@ -1,1 +1,1 @@
-export * from './WithReactComponent.js'
+export * from "./WithReactComponent.js";

@@ -1,63 +1,91 @@
-import { describe, it, expect } from 'vitest'
-import { WithSet } from './WithSet.js'
-import { WithParams, WithParamsInterface, WithParamsOptions } from '../WithParams/index.js'
-import { WithPathname, WithPathnameInterface, WithPathnameOptions } from '../WithPathname/index.js'
-import { WithActive, WithActiveInterface, WithActiveOptions } from '../WithActive/index.js'
-import { WithRoot, WithRootInterface, WithRootOptions } from '../WithRoot/index.js'
-import { WithMap, WithMapInterface, WithMapOptions } from '../WithMap/index.js'
+import { describe, it, expect } from "vitest";
+import { WithSet } from "./WithSet.js";
+import {
+  WithParams,
+  type WithParamsInterface,
+  type WithParamsOptions,
+} from "../WithParams/index.js";
+import {
+  WithPathname,
+  type WithPathnameInterface,
+  type WithPathnameOptions,
+} from "../WithPathname/index.js";
+import {
+  WithActive,
+  type WithActiveInterface,
+  type WithActiveOptions,
+} from "../WithActive/index.js";
+import {
+  WithRoot,
+  type WithRootInterface,
+  type WithRootOptions,
+} from "../WithRoot/index.js";
+import {
+  WithMap,
+  type WithMapInterface,
+  type WithMapOptions,
+} from "../WithMap/index.js";
 
-import { FallbackRoute, FallbackRouteInterface, ModuleRoute, Route, RouteInterface } from '../../Route/index.js'
+import {
+  FallbackRoute,
+  type FallbackRouteInterface,
+  ModuleRoute,
+  Route,
+  type RouteInterface,
+} from "../../Route/index.js";
 
 type RouterComposedOptions = WithParamsOptions &
   WithPathnameOptions &
   WithActiveOptions &
   WithMapOptions &
-  WithRootOptions
+  WithRootOptions;
 type RouterComposedInterface = WithParamsInterface &
   WithPathnameInterface &
   WithActiveInterface &
   WithMapInterface &
-  WithRootInterface
+  WithRootInterface;
 
-describe('`WithSet` router', () => {
+describe("`WithSet` router", () => {
   const Router = WithSet<RouterComposedOptions, RouterComposedInterface>(
     WithParams(WithPathname(WithActive(WithMap(WithRoot())))),
-  )
+  );
 
-  describe('creation', () => {
-    it('created with proper `active`', () => {
-      const root = Route({ name: 'root', path: '/' })
-      const router = Router({ root })
+  describe("creation", () => {
+    it("created with proper `active`", () => {
+      const root = Route({ name: "root", path: "/" });
+      const router = Router({ root });
 
-      expect(router.pathname).toEqual(null)
-    })
-  })
+      expect(router.pathname).toEqual(null);
+    });
+  });
 
-  describe('methods', () => {
-    const getPostsRoute = (additionalRoutes: Array<RouteInterface | FallbackRouteInterface> = []): RouteInterface =>
+  describe("methods", () => {
+    const getPostsRoute = (
+      additionalRoutes: Array<RouteInterface | FallbackRouteInterface> = [],
+    ): RouteInterface =>
       Route({
-        name: 'posts',
-        path: 'posts/',
+        name: "posts",
+        path: "posts/",
         children: [
           Route({
-            name: 'post',
-            path: ':id/',
+            name: "post",
+            path: ":id/",
             children: [
               Route({
-                name: 'comments',
-                path: 'comments/',
+                name: "comments",
+                path: "comments/",
                 children: [
                   Route({
-                    name: 'comment',
-                    path: ':id/',
+                    name: "comment",
+                    path: ":id/",
                     children: [
                       Route({
-                        name: 'mode',
-                        path: '?mode=:mode',
+                        name: "mode",
+                        path: "?mode=:mode",
                         children: [
                           Route({
-                            name: 'hash',
-                            path: '#hash',
+                            name: "hash",
+                            path: "#hash",
                           }),
                         ],
                       }),
@@ -69,549 +97,719 @@ describe('`WithSet` router', () => {
           }),
           ...additionalRoutes,
         ],
-      })
+      });
 
-    describe('`set`', () => {
-      it('with `Route` root, without fallback', async () => {
+    describe("`set`", () => {
+      it("with `Route` root, without fallback", async () => {
         const router = Router({
           root: Route({
-            name: 'root',
-            path: '/',
+            name: "root",
+            path: "/",
             children: [getPostsRoute()],
           }),
-        })
+        });
 
-        await router.set('/foo/')
-        expect(router.pathname).toEqual('/foo/')
-        expect(router.params).toEqual([])
-        expect(router.active.map((route) => route.name)).toEqual([])
+        await router.set("/foo/");
+        expect(router.pathname).toEqual("/foo/");
+        expect(router.params).toEqual([]);
+        expect(router.active.map((route) => route.name)).toEqual([]);
 
-        await router.set('/foo/bar/')
-        expect(router.pathname).toEqual('/foo/bar/')
-        expect(router.params).toEqual([])
-        expect(router.active.map((route) => route.name)).toEqual([])
+        await router.set("/foo/bar/");
+        expect(router.pathname).toEqual("/foo/bar/");
+        expect(router.params).toEqual([]);
+        expect(router.active.map((route) => route.name)).toEqual([]);
 
-        await router.set('/posts/1/foo/bar/')
-        expect(router.pathname).toEqual('/posts/1/foo/bar/')
-        expect(router.params).toEqual([{ id: '1' }])
-        expect(router.active.map((route) => route.name)).toEqual([])
+        await router.set("/posts/1/foo/bar/");
+        expect(router.pathname).toEqual("/posts/1/foo/bar/");
+        expect(router.params).toEqual([{ id: "1" }]);
+        expect(router.active.map((route) => route.name)).toEqual([]);
 
-        await router.set('/')
-        expect(router.pathname).toEqual('/')
-        expect(router.params).toEqual([])
-        expect(router.active.map((route) => route.name)).toEqual(['root'])
+        await router.set("/");
+        expect(router.pathname).toEqual("/");
+        expect(router.params).toEqual([]);
+        expect(router.active.map((route) => route.name)).toEqual(["root"]);
 
-        await router.set('/posts/')
-        expect(router.pathname).toEqual('/posts/')
-        expect(router.params).toEqual([])
-        expect(router.active.map((route) => route.name)).toEqual(['root', 'posts'])
-
-        await router.set('/posts/1/')
-        expect(router.pathname).toEqual('/posts/1/')
-        expect(router.params).toEqual([{ id: '1' }])
-        expect(router.active.map((route) => route.name)).toEqual(['root', 'posts', 'post'])
-
-        await router.set('/posts/1/comments/2/')
-        expect(router.pathname).toEqual('/posts/1/comments/2/')
-        expect(router.params).toEqual([{ id: '1' }, { id: '2' }])
-        expect(router.active.map((route) => route.name)).toEqual(['root', 'posts', 'post', 'comments', 'comment'])
-
-        await router.set('/posts/1/comments/2/?mode=edit')
-        expect(router.pathname).toEqual('/posts/1/comments/2/?mode=edit')
-        expect(router.params).toEqual([{ id: '1' }, { id: '2' }, { mode: 'edit' }])
+        await router.set("/posts/");
+        expect(router.pathname).toEqual("/posts/");
+        expect(router.params).toEqual([]);
         expect(router.active.map((route) => route.name)).toEqual([
-          'root',
-          'posts',
-          'post',
-          'comments',
-          'comment',
-          'mode',
-        ])
+          "root",
+          "posts",
+        ]);
 
-        await router.set('/posts/1/comments/2/?mode=edit#hash')
-        expect(router.pathname).toEqual('/posts/1/comments/2/?mode=edit#hash')
-        expect(router.params).toEqual([{ id: '1' }, { id: '2' }, { mode: 'edit' }])
+        await router.set("/posts/1/");
+        expect(router.pathname).toEqual("/posts/1/");
+        expect(router.params).toEqual([{ id: "1" }]);
         expect(router.active.map((route) => route.name)).toEqual([
-          'root',
-          'posts',
-          'post',
-          'comments',
-          'comment',
-          'mode',
-          'hash',
-        ])
-      })
+          "root",
+          "posts",
+          "post",
+        ]);
 
-      it('with `Route` root, with fallback', async () => {
+        await router.set("/posts/1/comments/2/");
+        expect(router.pathname).toEqual("/posts/1/comments/2/");
+        expect(router.params).toEqual([{ id: "1" }, { id: "2" }]);
+        expect(router.active.map((route) => route.name)).toEqual([
+          "root",
+          "posts",
+          "post",
+          "comments",
+          "comment",
+        ]);
+
+        await router.set("/posts/1/comments/2/?mode=edit");
+        expect(router.pathname).toEqual("/posts/1/comments/2/?mode=edit");
+        expect(router.params).toEqual([
+          { id: "1" },
+          { id: "2" },
+          { mode: "edit" },
+        ]);
+        expect(router.active.map((route) => route.name)).toEqual([
+          "root",
+          "posts",
+          "post",
+          "comments",
+          "comment",
+          "mode",
+        ]);
+
+        await router.set("/posts/1/comments/2/?mode=edit#hash");
+        expect(router.pathname).toEqual("/posts/1/comments/2/?mode=edit#hash");
+        expect(router.params).toEqual([
+          { id: "1" },
+          { id: "2" },
+          { mode: "edit" },
+        ]);
+        expect(router.active.map((route) => route.name)).toEqual([
+          "root",
+          "posts",
+          "post",
+          "comments",
+          "comment",
+          "mode",
+          "hash",
+        ]);
+      });
+
+      it("with `Route` root, with fallback", async () => {
         const router = Router({
           root: Route({
-            name: 'root',
-            path: '/',
+            name: "root",
+            path: "/",
             children: [
               getPostsRoute([
                 FallbackRoute({
-                  name: 'posts-404',
+                  name: "posts-404",
                 }),
               ]),
               FallbackRoute({
-                name: '404',
+                name: "404",
               }),
             ],
           }),
-        })
+        });
 
-        await router.set('/foo/')
-        expect(router.pathname).toEqual('/foo/')
-        expect(router.params).toEqual([])
-        expect(router.active.map((route) => route.name)).toEqual(['root', '404'])
-
-        await router.set('/foo/bar/')
-        expect(router.pathname).toEqual('/foo/bar/')
-        expect(router.params).toEqual([])
-        expect(router.active.map((route) => route.name)).toEqual(['root', '404'])
-
-        await router.set('/posts/1/foo/bar/')
-        expect(router.pathname).toEqual('/posts/1/foo/bar/')
-        expect(router.params).toEqual([{ id: '1' }])
-        expect(router.active.map((route) => route.name)).toEqual(['root', 'posts', 'posts-404'])
-
-        await router.set('/')
-        expect(router.pathname).toEqual('/')
-        expect(router.params).toEqual([])
-        expect(router.active.map((route) => route.name)).toEqual(['root'])
-
-        await router.set('/posts/')
-        expect(router.pathname).toEqual('/posts/')
-        expect(router.params).toEqual([])
-        expect(router.active.map((route) => route.name)).toEqual(['root', 'posts'])
-
-        await router.set('/posts/1/')
-        expect(router.pathname).toEqual('/posts/1/')
-        expect(router.params).toEqual([{ id: '1' }])
-        expect(router.active.map((route) => route.name)).toEqual(['root', 'posts', 'post'])
-
-        await router.set('/posts/1/comments/2/')
-        expect(router.pathname).toEqual('/posts/1/comments/2/')
-        expect(router.params).toEqual([{ id: '1' }, { id: '2' }])
-        expect(router.active.map((route) => route.name)).toEqual(['root', 'posts', 'post', 'comments', 'comment'])
-
-        await router.set('/posts/1/comments/2/?mode=edit')
-        expect(router.pathname).toEqual('/posts/1/comments/2/?mode=edit')
-        expect(router.params).toEqual([{ id: '1' }, { id: '2' }, { mode: 'edit' }])
+        await router.set("/foo/");
+        expect(router.pathname).toEqual("/foo/");
+        expect(router.params).toEqual([]);
         expect(router.active.map((route) => route.name)).toEqual([
-          'root',
-          'posts',
-          'post',
-          'comments',
-          'comment',
-          'mode',
-        ])
+          "root",
+          "404",
+        ]);
 
-        await router.set('/posts/1/comments/2/?mode=edit#hash')
-        expect(router.pathname).toEqual('/posts/1/comments/2/?mode=edit#hash')
-        expect(router.params).toEqual([{ id: '1' }, { id: '2' }, { mode: 'edit' }])
+        await router.set("/foo/bar/");
+        expect(router.pathname).toEqual("/foo/bar/");
+        expect(router.params).toEqual([]);
         expect(router.active.map((route) => route.name)).toEqual([
-          'root',
-          'posts',
-          'post',
-          'comments',
-          'comment',
-          'mode',
-          'hash',
-        ])
-      })
+          "root",
+          "404",
+        ]);
 
-      it('with `ModuleRoute` root, without fallback', async () => {
+        await router.set("/posts/1/foo/bar/");
+        expect(router.pathname).toEqual("/posts/1/foo/bar/");
+        expect(router.params).toEqual([{ id: "1" }]);
+        expect(router.active.map((route) => route.name)).toEqual([
+          "root",
+          "posts",
+          "posts-404",
+        ]);
+
+        await router.set("/");
+        expect(router.pathname).toEqual("/");
+        expect(router.params).toEqual([]);
+        expect(router.active.map((route) => route.name)).toEqual(["root"]);
+
+        await router.set("/posts/");
+        expect(router.pathname).toEqual("/posts/");
+        expect(router.params).toEqual([]);
+        expect(router.active.map((route) => route.name)).toEqual([
+          "root",
+          "posts",
+        ]);
+
+        await router.set("/posts/1/");
+        expect(router.pathname).toEqual("/posts/1/");
+        expect(router.params).toEqual([{ id: "1" }]);
+        expect(router.active.map((route) => route.name)).toEqual([
+          "root",
+          "posts",
+          "post",
+        ]);
+
+        await router.set("/posts/1/comments/2/");
+        expect(router.pathname).toEqual("/posts/1/comments/2/");
+        expect(router.params).toEqual([{ id: "1" }, { id: "2" }]);
+        expect(router.active.map((route) => route.name)).toEqual([
+          "root",
+          "posts",
+          "post",
+          "comments",
+          "comment",
+        ]);
+
+        await router.set("/posts/1/comments/2/?mode=edit");
+        expect(router.pathname).toEqual("/posts/1/comments/2/?mode=edit");
+        expect(router.params).toEqual([
+          { id: "1" },
+          { id: "2" },
+          { mode: "edit" },
+        ]);
+        expect(router.active.map((route) => route.name)).toEqual([
+          "root",
+          "posts",
+          "post",
+          "comments",
+          "comment",
+          "mode",
+        ]);
+
+        await router.set("/posts/1/comments/2/?mode=edit#hash");
+        expect(router.pathname).toEqual("/posts/1/comments/2/?mode=edit#hash");
+        expect(router.params).toEqual([
+          { id: "1" },
+          { id: "2" },
+          { mode: "edit" },
+        ]);
+        expect(router.active.map((route) => route.name)).toEqual([
+          "root",
+          "posts",
+          "post",
+          "comments",
+          "comment",
+          "mode",
+          "hash",
+        ]);
+      });
+
+      it("with `ModuleRoute` root, without fallback", async () => {
         const router = Router({
           root: ModuleRoute({
-            name: 'root',
+            name: "root",
             children: [
               Route({
-                name: 'main',
-                path: '/',
+                name: "main",
+                path: "/",
                 children: [getPostsRoute()],
               }),
             ],
           }),
-        })
+        });
 
-        await router.set('/foo/')
-        expect(router.pathname).toEqual('/foo/')
-        expect(router.params).toEqual([])
-        expect(router.active.map((route) => route.name)).toEqual([])
+        await router.set("/foo/");
+        expect(router.pathname).toEqual("/foo/");
+        expect(router.params).toEqual([]);
+        expect(router.active.map((route) => route.name)).toEqual([]);
 
-        await router.set('/foo/bar/')
-        expect(router.pathname).toEqual('/foo/bar/')
-        expect(router.params).toEqual([])
-        expect(router.active.map((route) => route.name)).toEqual([])
+        await router.set("/foo/bar/");
+        expect(router.pathname).toEqual("/foo/bar/");
+        expect(router.params).toEqual([]);
+        expect(router.active.map((route) => route.name)).toEqual([]);
 
-        await router.set('/posts/1/foo/bar/')
-        expect(router.pathname).toEqual('/posts/1/foo/bar/')
-        expect(router.params).toEqual([{ id: '1' }])
-        expect(router.active.map((route) => route.name)).toEqual([])
+        await router.set("/posts/1/foo/bar/");
+        expect(router.pathname).toEqual("/posts/1/foo/bar/");
+        expect(router.params).toEqual([{ id: "1" }]);
+        expect(router.active.map((route) => route.name)).toEqual([]);
 
-        await router.set('/')
-        expect(router.pathname).toEqual('/')
-        expect(router.params).toEqual([])
-        expect(router.active.map((route) => route.name)).toEqual(['root', 'main'])
-
-        await router.set('/posts/')
-        expect(router.pathname).toEqual('/posts/')
-        expect(router.params).toEqual([])
-        expect(router.active.map((route) => route.name)).toEqual(['root', 'main', 'posts'])
-
-        await router.set('/posts/1/')
-        expect(router.pathname).toEqual('/posts/1/')
-        expect(router.params).toEqual([{ id: '1' }])
-        expect(router.active.map((route) => route.name)).toEqual(['root', 'main', 'posts', 'post'])
-
-        await router.set('/posts/1/comments/2/')
-        expect(router.pathname).toEqual('/posts/1/comments/2/')
-        expect(router.params).toEqual([{ id: '1' }, { id: '2' }])
+        await router.set("/");
+        expect(router.pathname).toEqual("/");
+        expect(router.params).toEqual([]);
         expect(router.active.map((route) => route.name)).toEqual([
-          'root',
-          'main',
-          'posts',
-          'post',
-          'comments',
-          'comment',
-        ])
+          "root",
+          "main",
+        ]);
 
-        await router.set('/posts/1/comments/2/?mode=edit')
-        expect(router.pathname).toEqual('/posts/1/comments/2/?mode=edit')
-        expect(router.params).toEqual([{ id: '1' }, { id: '2' }, { mode: 'edit' }])
+        await router.set("/posts/");
+        expect(router.pathname).toEqual("/posts/");
+        expect(router.params).toEqual([]);
         expect(router.active.map((route) => route.name)).toEqual([
-          'root',
-          'main',
-          'posts',
-          'post',
-          'comments',
-          'comment',
-          'mode',
-        ])
+          "root",
+          "main",
+          "posts",
+        ]);
 
-        await router.set('/posts/1/comments/2/?mode=edit#hash')
-        expect(router.pathname).toEqual('/posts/1/comments/2/?mode=edit#hash')
-        expect(router.params).toEqual([{ id: '1' }, { id: '2' }, { mode: 'edit' }])
+        await router.set("/posts/1/");
+        expect(router.pathname).toEqual("/posts/1/");
+        expect(router.params).toEqual([{ id: "1" }]);
         expect(router.active.map((route) => route.name)).toEqual([
-          'root',
-          'main',
-          'posts',
-          'post',
-          'comments',
-          'comment',
-          'mode',
-          'hash',
-        ])
-      })
+          "root",
+          "main",
+          "posts",
+          "post",
+        ]);
 
-      it('with `ModuleRoute` root, with fallback', async () => {
+        await router.set("/posts/1/comments/2/");
+        expect(router.pathname).toEqual("/posts/1/comments/2/");
+        expect(router.params).toEqual([{ id: "1" }, { id: "2" }]);
+        expect(router.active.map((route) => route.name)).toEqual([
+          "root",
+          "main",
+          "posts",
+          "post",
+          "comments",
+          "comment",
+        ]);
+
+        await router.set("/posts/1/comments/2/?mode=edit");
+        expect(router.pathname).toEqual("/posts/1/comments/2/?mode=edit");
+        expect(router.params).toEqual([
+          { id: "1" },
+          { id: "2" },
+          { mode: "edit" },
+        ]);
+        expect(router.active.map((route) => route.name)).toEqual([
+          "root",
+          "main",
+          "posts",
+          "post",
+          "comments",
+          "comment",
+          "mode",
+        ]);
+
+        await router.set("/posts/1/comments/2/?mode=edit#hash");
+        expect(router.pathname).toEqual("/posts/1/comments/2/?mode=edit#hash");
+        expect(router.params).toEqual([
+          { id: "1" },
+          { id: "2" },
+          { mode: "edit" },
+        ]);
+        expect(router.active.map((route) => route.name)).toEqual([
+          "root",
+          "main",
+          "posts",
+          "post",
+          "comments",
+          "comment",
+          "mode",
+          "hash",
+        ]);
+      });
+
+      it("with `ModuleRoute` root, with fallback", async () => {
         const router = Router({
           root: ModuleRoute({
-            name: 'root',
+            name: "root",
             children: [
               Route({
-                name: 'main',
-                path: '/',
+                name: "main",
+                path: "/",
                 children: [
                   getPostsRoute([
                     FallbackRoute({
-                      name: 'posts-404',
+                      name: "posts-404",
                     }),
                   ]),
                   FallbackRoute({
-                    name: '404',
+                    name: "404",
                   }),
                 ],
               }),
             ],
           }),
-        })
+        });
 
-        await router.set('/foo/')
-        expect(router.pathname).toEqual('/foo/')
-        expect(router.params).toEqual([])
-        expect(router.active.map((route) => route.name)).toEqual(['root', 'main', '404'])
-
-        await router.set('/foo/bar/')
-        expect(router.pathname).toEqual('/foo/bar/')
-        expect(router.params).toEqual([])
-        expect(router.active.map((route) => route.name)).toEqual(['root', 'main', '404'])
-
-        await router.set('/posts/1/foo/bar/')
-        expect(router.pathname).toEqual('/posts/1/foo/bar/')
-        expect(router.params).toEqual([{ id: '1' }])
-        expect(router.active.map((route) => route.name)).toEqual(['root', 'main', 'posts', 'posts-404'])
-
-        await router.set('/')
-        expect(router.pathname).toEqual('/')
-        expect(router.params).toEqual([])
-        expect(router.active.map((route) => route.name)).toEqual(['root', 'main'])
-
-        await router.set('/posts/')
-        expect(router.pathname).toEqual('/posts/')
-        expect(router.params).toEqual([])
-        expect(router.active.map((route) => route.name)).toEqual(['root', 'main', 'posts'])
-
-        await router.set('/posts/1/')
-        expect(router.pathname).toEqual('/posts/1/')
-        expect(router.params).toEqual([{ id: '1' }])
-        expect(router.active.map((route) => route.name)).toEqual(['root', 'main', 'posts', 'post'])
-
-        await router.set('/posts/1/comments/2/')
-        expect(router.pathname).toEqual('/posts/1/comments/2/')
-        expect(router.params).toEqual([{ id: '1' }, { id: '2' }])
+        await router.set("/foo/");
+        expect(router.pathname).toEqual("/foo/");
+        expect(router.params).toEqual([]);
         expect(router.active.map((route) => route.name)).toEqual([
-          'root',
-          'main',
-          'posts',
-          'post',
-          'comments',
-          'comment',
-        ])
+          "root",
+          "main",
+          "404",
+        ]);
 
-        await router.set('/posts/1/comments/2/?mode=edit')
-        expect(router.pathname).toEqual('/posts/1/comments/2/?mode=edit')
-        expect(router.params).toEqual([{ id: '1' }, { id: '2' }, { mode: 'edit' }])
+        await router.set("/foo/bar/");
+        expect(router.pathname).toEqual("/foo/bar/");
+        expect(router.params).toEqual([]);
         expect(router.active.map((route) => route.name)).toEqual([
-          'root',
-          'main',
-          'posts',
-          'post',
-          'comments',
-          'comment',
-          'mode',
-        ])
+          "root",
+          "main",
+          "404",
+        ]);
 
-        await router.set('/posts/1/comments/2/?mode=edit#hash')
-        expect(router.pathname).toEqual('/posts/1/comments/2/?mode=edit#hash')
-        expect(router.params).toEqual([{ id: '1' }, { id: '2' }, { mode: 'edit' }])
+        await router.set("/posts/1/foo/bar/");
+        expect(router.pathname).toEqual("/posts/1/foo/bar/");
+        expect(router.params).toEqual([{ id: "1" }]);
         expect(router.active.map((route) => route.name)).toEqual([
-          'root',
-          'main',
-          'posts',
-          'post',
-          'comments',
-          'comment',
-          'mode',
-          'hash',
-        ])
-      })
+          "root",
+          "main",
+          "posts",
+          "posts-404",
+        ]);
 
-      it('without `/` route, without fallback', async () => {
+        await router.set("/");
+        expect(router.pathname).toEqual("/");
+        expect(router.params).toEqual([]);
+        expect(router.active.map((route) => route.name)).toEqual([
+          "root",
+          "main",
+        ]);
+
+        await router.set("/posts/");
+        expect(router.pathname).toEqual("/posts/");
+        expect(router.params).toEqual([]);
+        expect(router.active.map((route) => route.name)).toEqual([
+          "root",
+          "main",
+          "posts",
+        ]);
+
+        await router.set("/posts/1/");
+        expect(router.pathname).toEqual("/posts/1/");
+        expect(router.params).toEqual([{ id: "1" }]);
+        expect(router.active.map((route) => route.name)).toEqual([
+          "root",
+          "main",
+          "posts",
+          "post",
+        ]);
+
+        await router.set("/posts/1/comments/2/");
+        expect(router.pathname).toEqual("/posts/1/comments/2/");
+        expect(router.params).toEqual([{ id: "1" }, { id: "2" }]);
+        expect(router.active.map((route) => route.name)).toEqual([
+          "root",
+          "main",
+          "posts",
+          "post",
+          "comments",
+          "comment",
+        ]);
+
+        await router.set("/posts/1/comments/2/?mode=edit");
+        expect(router.pathname).toEqual("/posts/1/comments/2/?mode=edit");
+        expect(router.params).toEqual([
+          { id: "1" },
+          { id: "2" },
+          { mode: "edit" },
+        ]);
+        expect(router.active.map((route) => route.name)).toEqual([
+          "root",
+          "main",
+          "posts",
+          "post",
+          "comments",
+          "comment",
+          "mode",
+        ]);
+
+        await router.set("/posts/1/comments/2/?mode=edit#hash");
+        expect(router.pathname).toEqual("/posts/1/comments/2/?mode=edit#hash");
+        expect(router.params).toEqual([
+          { id: "1" },
+          { id: "2" },
+          { mode: "edit" },
+        ]);
+        expect(router.active.map((route) => route.name)).toEqual([
+          "root",
+          "main",
+          "posts",
+          "post",
+          "comments",
+          "comment",
+          "mode",
+          "hash",
+        ]);
+      });
+
+      it("without `/` route, without fallback", async () => {
         const router = Router({
           root: ModuleRoute({
-            name: 'root',
+            name: "root",
             children: [getPostsRoute()],
           }),
-        })
+        });
 
-        await router.set('/foo/')
-        expect(router.pathname).toEqual('/foo/')
-        expect(router.params).toEqual([])
-        expect(router.active.map((route) => route.name)).toEqual([])
+        await router.set("/foo/");
+        expect(router.pathname).toEqual("/foo/");
+        expect(router.params).toEqual([]);
+        expect(router.active.map((route) => route.name)).toEqual([]);
 
-        await router.set('/foo/bar/')
-        expect(router.pathname).toEqual('/foo/bar/')
-        expect(router.params).toEqual([])
-        expect(router.active.map((route) => route.name)).toEqual([])
+        await router.set("/foo/bar/");
+        expect(router.pathname).toEqual("/foo/bar/");
+        expect(router.params).toEqual([]);
+        expect(router.active.map((route) => route.name)).toEqual([]);
 
-        await router.set('/posts/1/foo/bar/')
-        expect(router.pathname).toEqual('/posts/1/foo/bar/')
-        expect(router.params).toEqual([{ id: '1' }])
-        expect(router.active.map((route) => route.name)).toEqual([])
+        await router.set("/posts/1/foo/bar/");
+        expect(router.pathname).toEqual("/posts/1/foo/bar/");
+        expect(router.params).toEqual([{ id: "1" }]);
+        expect(router.active.map((route) => route.name)).toEqual([]);
 
-        await router.set('/')
-        expect(router.pathname).toEqual('/')
-        expect(router.params).toEqual([])
-        expect(router.active.map((route) => route.name)).toEqual([])
+        await router.set("/");
+        expect(router.pathname).toEqual("/");
+        expect(router.params).toEqual([]);
+        expect(router.active.map((route) => route.name)).toEqual([]);
 
-        await router.set('/posts/')
-        expect(router.pathname).toEqual('/posts/')
-        expect(router.params).toEqual([])
-        expect(router.active.map((route) => route.name)).toEqual(['root', 'posts'])
-
-        await router.set('/posts/1/')
-        expect(router.pathname).toEqual('/posts/1/')
-        expect(router.params).toEqual([{ id: '1' }])
-        expect(router.active.map((route) => route.name)).toEqual(['root', 'posts', 'post'])
-
-        await router.set('/posts/1/comments/2/')
-        expect(router.pathname).toEqual('/posts/1/comments/2/')
-        expect(router.params).toEqual([{ id: '1' }, { id: '2' }])
-        expect(router.active.map((route) => route.name)).toEqual(['root', 'posts', 'post', 'comments', 'comment'])
-
-        await router.set('/posts/1/comments/2/?mode=edit')
-        expect(router.pathname).toEqual('/posts/1/comments/2/?mode=edit')
-        expect(router.params).toEqual([{ id: '1' }, { id: '2' }, { mode: 'edit' }])
+        await router.set("/posts/");
+        expect(router.pathname).toEqual("/posts/");
+        expect(router.params).toEqual([]);
         expect(router.active.map((route) => route.name)).toEqual([
-          'root',
-          'posts',
-          'post',
-          'comments',
-          'comment',
-          'mode',
-        ])
+          "root",
+          "posts",
+        ]);
 
-        await router.set('/posts/1/comments/2/?mode=edit#hash')
-        expect(router.pathname).toEqual('/posts/1/comments/2/?mode=edit#hash')
-        expect(router.params).toEqual([{ id: '1' }, { id: '2' }, { mode: 'edit' }])
+        await router.set("/posts/1/");
+        expect(router.pathname).toEqual("/posts/1/");
+        expect(router.params).toEqual([{ id: "1" }]);
         expect(router.active.map((route) => route.name)).toEqual([
-          'root',
-          'posts',
-          'post',
-          'comments',
-          'comment',
-          'mode',
-          'hash',
-        ])
-      })
+          "root",
+          "posts",
+          "post",
+        ]);
 
-      it('without `/` route, with fallback', async () => {
+        await router.set("/posts/1/comments/2/");
+        expect(router.pathname).toEqual("/posts/1/comments/2/");
+        expect(router.params).toEqual([{ id: "1" }, { id: "2" }]);
+        expect(router.active.map((route) => route.name)).toEqual([
+          "root",
+          "posts",
+          "post",
+          "comments",
+          "comment",
+        ]);
+
+        await router.set("/posts/1/comments/2/?mode=edit");
+        expect(router.pathname).toEqual("/posts/1/comments/2/?mode=edit");
+        expect(router.params).toEqual([
+          { id: "1" },
+          { id: "2" },
+          { mode: "edit" },
+        ]);
+        expect(router.active.map((route) => route.name)).toEqual([
+          "root",
+          "posts",
+          "post",
+          "comments",
+          "comment",
+          "mode",
+        ]);
+
+        await router.set("/posts/1/comments/2/?mode=edit#hash");
+        expect(router.pathname).toEqual("/posts/1/comments/2/?mode=edit#hash");
+        expect(router.params).toEqual([
+          { id: "1" },
+          { id: "2" },
+          { mode: "edit" },
+        ]);
+        expect(router.active.map((route) => route.name)).toEqual([
+          "root",
+          "posts",
+          "post",
+          "comments",
+          "comment",
+          "mode",
+          "hash",
+        ]);
+      });
+
+      it("without `/` route, with fallback", async () => {
         const router = Router({
           root: ModuleRoute({
-            name: 'root',
+            name: "root",
             children: [
               getPostsRoute([
                 FallbackRoute({
-                  name: 'posts-404',
+                  name: "posts-404",
                 }),
               ]),
               FallbackRoute({
-                name: '404',
+                name: "404",
               }),
             ],
           }),
-        })
+        });
 
-        await router.set('/foo/')
-        expect(router.pathname).toEqual('/foo/')
-        expect(router.params).toEqual([])
-        expect(router.active.map((route) => route.name)).toEqual(['root', '404'])
-
-        await router.set('/foo/bar/')
-        expect(router.pathname).toEqual('/foo/bar/')
-        expect(router.params).toEqual([])
-        expect(router.active.map((route) => route.name)).toEqual(['root', '404'])
-
-        await router.set('/posts/1/foo/bar/')
-        expect(router.pathname).toEqual('/posts/1/foo/bar/')
-        expect(router.params).toEqual([{ id: '1' }])
-        expect(router.active.map((route) => route.name)).toEqual(['root', 'posts', 'posts-404'])
-
-        await router.set('/')
-        expect(router.pathname).toEqual('/')
-        expect(router.params).toEqual([])
-        expect(router.active.map((route) => route.name)).toEqual(['root', '404'])
-
-        await router.set('/posts/')
-        expect(router.pathname).toEqual('/posts/')
-        expect(router.params).toEqual([])
-        expect(router.active.map((route) => route.name)).toEqual(['root', 'posts'])
-
-        await router.set('/posts/1/')
-        expect(router.pathname).toEqual('/posts/1/')
-        expect(router.params).toEqual([{ id: '1' }])
-        expect(router.active.map((route) => route.name)).toEqual(['root', 'posts', 'post'])
-
-        await router.set('/posts/1/comments/2/')
-        expect(router.pathname).toEqual('/posts/1/comments/2/')
-        expect(router.params).toEqual([{ id: '1' }, { id: '2' }])
-        expect(router.active.map((route) => route.name)).toEqual(['root', 'posts', 'post', 'comments', 'comment'])
-
-        await router.set('/posts/1/comments/2/?mode=edit')
-        expect(router.pathname).toEqual('/posts/1/comments/2/?mode=edit')
-        expect(router.params).toEqual([{ id: '1' }, { id: '2' }, { mode: 'edit' }])
+        await router.set("/foo/");
+        expect(router.pathname).toEqual("/foo/");
+        expect(router.params).toEqual([]);
         expect(router.active.map((route) => route.name)).toEqual([
-          'root',
-          'posts',
-          'post',
-          'comments',
-          'comment',
-          'mode',
-        ])
+          "root",
+          "404",
+        ]);
 
-        await router.set('/posts/1/comments/2/?mode=edit#hash')
-        expect(router.pathname).toEqual('/posts/1/comments/2/?mode=edit#hash')
-        expect(router.params).toEqual([{ id: '1' }, { id: '2' }, { mode: 'edit' }])
+        await router.set("/foo/bar/");
+        expect(router.pathname).toEqual("/foo/bar/");
+        expect(router.params).toEqual([]);
         expect(router.active.map((route) => route.name)).toEqual([
-          'root',
-          'posts',
-          'post',
-          'comments',
-          'comment',
-          'mode',
-          'hash',
-        ])
-      })
+          "root",
+          "404",
+        ]);
 
-      it('handles multiple module routes with deep nesting', async () => {
+        await router.set("/posts/1/foo/bar/");
+        expect(router.pathname).toEqual("/posts/1/foo/bar/");
+        expect(router.params).toEqual([{ id: "1" }]);
+        expect(router.active.map((route) => route.name)).toEqual([
+          "root",
+          "posts",
+          "posts-404",
+        ]);
+
+        await router.set("/");
+        expect(router.pathname).toEqual("/");
+        expect(router.params).toEqual([]);
+        expect(router.active.map((route) => route.name)).toEqual([
+          "root",
+          "404",
+        ]);
+
+        await router.set("/posts/");
+        expect(router.pathname).toEqual("/posts/");
+        expect(router.params).toEqual([]);
+        expect(router.active.map((route) => route.name)).toEqual([
+          "root",
+          "posts",
+        ]);
+
+        await router.set("/posts/1/");
+        expect(router.pathname).toEqual("/posts/1/");
+        expect(router.params).toEqual([{ id: "1" }]);
+        expect(router.active.map((route) => route.name)).toEqual([
+          "root",
+          "posts",
+          "post",
+        ]);
+
+        await router.set("/posts/1/comments/2/");
+        expect(router.pathname).toEqual("/posts/1/comments/2/");
+        expect(router.params).toEqual([{ id: "1" }, { id: "2" }]);
+        expect(router.active.map((route) => route.name)).toEqual([
+          "root",
+          "posts",
+          "post",
+          "comments",
+          "comment",
+        ]);
+
+        await router.set("/posts/1/comments/2/?mode=edit");
+        expect(router.pathname).toEqual("/posts/1/comments/2/?mode=edit");
+        expect(router.params).toEqual([
+          { id: "1" },
+          { id: "2" },
+          { mode: "edit" },
+        ]);
+        expect(router.active.map((route) => route.name)).toEqual([
+          "root",
+          "posts",
+          "post",
+          "comments",
+          "comment",
+          "mode",
+        ]);
+
+        await router.set("/posts/1/comments/2/?mode=edit#hash");
+        expect(router.pathname).toEqual("/posts/1/comments/2/?mode=edit#hash");
+        expect(router.params).toEqual([
+          { id: "1" },
+          { id: "2" },
+          { mode: "edit" },
+        ]);
+        expect(router.active.map((route) => route.name)).toEqual([
+          "root",
+          "posts",
+          "post",
+          "comments",
+          "comment",
+          "mode",
+          "hash",
+        ]);
+      });
+
+      it("handles multiple module routes with deep nesting", async () => {
         const router = Router({
           optimistic: true,
           root: ModuleRoute({
-            name: 'root',
+            name: "root",
             children: [
               ModuleRoute({
-                name: 'client',
+                name: "client",
                 children: [
                   ModuleRoute({
-                    name: 'non-auth',
+                    name: "non-auth",
                     children: [
                       Route({
-                        name: 'login',
-                        path: 'login/',
+                        name: "login",
+                        path: "login/",
                         children: [
                           Route({
-                            name: 'reset-success',
-                            path: '?resetSuccess',
+                            name: "reset-success",
+                            path: "?resetSuccess",
                           }),
                           Route({
-                            name: 'forgot-password',
-                            path: 'forgot-password/',
+                            name: "forgot-password",
+                            path: "forgot-password/",
                           }),
                         ],
                       }),
                     ],
                   }),
                   ModuleRoute({
-                    name: 'auth',
+                    name: "auth",
                     children: [
                       Route({
-                        name: 'dashboard',
-                        path: 'dashboard/',
+                        name: "dashboard",
+                        path: "dashboard/",
                       }),
                     ],
                   }),
                 ],
               }),
               FallbackRoute({
-                name: '404',
+                name: "404",
               }),
             ],
           }),
-        })
+        });
 
-        await router.set('/login/')
-        expect(router.pathname).toEqual('/login/')
-        expect(router.params).toEqual([])
-        expect(router.active.map((route) => route.name)).toEqual(['root', 'client', 'non-auth', 'login'])
-
-        await router.set('/login/?resetSuccess')
-        expect(router.pathname).toEqual('/login/?resetSuccess')
-        expect(router.params).toEqual([])
+        await router.set("/login/");
+        expect(router.pathname).toEqual("/login/");
+        expect(router.params).toEqual([]);
         expect(router.active.map((route) => route.name)).toEqual([
-          'root',
-          'client',
-          'non-auth',
-          'login',
-          'reset-success',
-        ])
+          "root",
+          "client",
+          "non-auth",
+          "login",
+        ]);
 
-        await router.set('/dashboard/')
-        expect(router.pathname).toEqual('/dashboard/')
-        expect(router.params).toEqual([])
-        expect(router.active.map((route) => route.name)).toEqual(['root', 'client', 'auth', 'dashboard'])
-      })
-    })
-  })
-})
+        await router.set("/login/?resetSuccess");
+        expect(router.pathname).toEqual("/login/?resetSuccess");
+        expect(router.params).toEqual([]);
+        expect(router.active.map((route) => route.name)).toEqual([
+          "root",
+          "client",
+          "non-auth",
+          "login",
+          "reset-success",
+        ]);
+
+        await router.set("/dashboard/");
+        expect(router.pathname).toEqual("/dashboard/");
+        expect(router.params).toEqual([]);
+        expect(router.active.map((route) => route.name)).toEqual([
+          "root",
+          "client",
+          "auth",
+          "dashboard",
+        ]);
+      });
+    });
+  });
+});

@@ -1,1 +1,1 @@
-export * from './WithMap.js'
+export * from "./WithMap.js";

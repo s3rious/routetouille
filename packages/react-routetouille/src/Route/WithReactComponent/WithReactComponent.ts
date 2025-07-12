@@ -1,49 +1,59 @@
-import { FunctionComponent } from 'react'
-import { RouterInterface } from 'routetouille'
+import type { FunctionComponent } from "react";
+import type { RouterInterface } from "routetouille";
 
 type WithReactComponentProps = {
-  route: WithReactComponentInterface
-  router: RouterInterface
-  children?: React.ReactNode
-}
+  route: WithReactComponentInterface;
+  router: RouterInterface;
+  children?: React.ReactNode;
+};
 
 type WithReactComponentOptions = {
-  component: FunctionComponent<WithReactComponentProps>
-  exclusive?: boolean
+  component: FunctionComponent<WithReactComponentProps>;
+  exclusive?: boolean;
+};
+
+type WithReactComponentInterface = {} & WithReactComponentOptions;
+
+function inOperator<K extends string, T extends object>(
+  k: K,
+  o: T,
+): o is T & Record<K, unknown> {
+  return k in o;
 }
 
-type WithReactComponentInterface = {} & WithReactComponentOptions
-
-function inOperator<K extends string, T extends object>(k: K, o: T): o is T & Record<K, unknown> {
-  return k in o
-}
-
-function isWithReactComponent(route: unknown): route is WithReactComponentInterface {
-  if (typeof route === 'object' && route) {
-    if (inOperator('component', route)) {
-      return Boolean(route?.component)
+function isWithReactComponent(
+  route: unknown,
+): route is WithReactComponentInterface {
+  if (typeof route === "object" && route) {
+    if (inOperator("component", route)) {
+      return Boolean(route?.component);
     }
   }
 
-  return false
+  return false;
 }
 
-function WithReactComponent<ComposedOptions extends {}, ComposedInterface extends {}>(
-  createRoute: (options: ComposedOptions) => ComposedInterface,
-) {
-  return function (
+function WithReactComponent<
+  ComposedOptions extends {},
+  ComposedInterface extends {},
+>(createRoute: (options: ComposedOptions) => ComposedInterface) {
+  return (
     options: WithReactComponentOptions & ComposedOptions,
-  ): WithReactComponentInterface & ComposedInterface {
-    const composed: ComposedInterface = createRoute(options)
+  ): WithReactComponentInterface & ComposedInterface => {
+    const composed: ComposedInterface = createRoute(options);
 
-    return { ...composed, component: options.component, exclusive: options.exclusive }
-  }
+    return {
+      ...composed,
+      component: options.component,
+      exclusive: options.exclusive,
+    };
+  };
 }
 
 export {
   WithReactComponent,
-  WithReactComponentOptions,
-  WithReactComponentInterface,
-  WithReactComponentProps,
+  type WithReactComponentOptions,
+  type WithReactComponentInterface,
+  type WithReactComponentProps,
   isWithReactComponent,
-}
+};

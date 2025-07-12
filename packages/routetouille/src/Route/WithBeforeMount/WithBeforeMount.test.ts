@@ -1,95 +1,101 @@
-import { describe, it, expect, vi } from 'vitest'
-import { WithBeforeMount } from './WithBeforeMount.js'
-import { Mountable, MountableInterface, MountableOptions } from '../Mountable/index.js'
+import { describe, it, expect, vi } from "vitest";
+import { WithBeforeMount } from "./WithBeforeMount.js";
+import {
+  Mountable,
+  type MountableInterface,
+  type MountableOptions,
+} from "../Mountable/index.js";
 
-import { omitFunctions } from '../_tests-shared/index.js'
+import { omitFunctions } from "../_tests-shared/index.js";
 
-describe('`WithBeforeMount` route', () => {
-  const Route = WithBeforeMount<MountableOptions, MountableInterface>(Mountable())
+describe("`WithBeforeMount` route", () => {
+  const Route = WithBeforeMount<MountableOptions, MountableInterface>(
+    Mountable(),
+  );
 
-  describe('extends `Mountable`', () => {
-    it('extends', () => {
-      const mounted = false
-      const expected = { mounted }
+  describe("extends `Mountable`", () => {
+    it("extends", () => {
+      const mounted = false;
+      const expected = { mounted };
 
-      const route = Route({})
+      const route = Route({});
 
-      expect(omitFunctions(route)).toEqual(expected)
-    })
-  })
+      expect(omitFunctions(route)).toEqual(expected);
+    });
+  });
 
-  describe('methods', () => {
-    describe('mount (without before)', () => {
-      const route = Route({})
+  describe("methods", () => {
+    describe("mount (without before)", () => {
+      const route = Route({});
 
-      it('mounts', async () => {
-        expect(route.mounted).toBe(false)
-        await route.mount()
-        expect(route.mounted).toBe(true)
-      })
-    })
+      it("mounts", async () => {
+        expect(route.mounted).toBe(false);
+        await route.mount();
+        expect(route.mounted).toBe(true);
+      });
+    });
 
-    describe('mount (with redirects)', () => {
-      it('calls `beforeMount` before mount', async () => {
-        vi.useFakeTimers()
+    describe("mount (with redirects)", () => {
+      it("calls `beforeMount` before mount", async () => {
+        vi.useFakeTimers();
 
-        const beforeMountCallback = vi.fn()
+        const beforeMountCallback = vi.fn();
         const beforeMount = vi.fn().mockImplementation(
           async () =>
             await new Promise((resolve) => {
               setTimeout(() => {
-                beforeMountCallback()
-                resolve(null)
-              }, 1000)
+                beforeMountCallback();
+                resolve(null);
+              }, 1000);
             }),
-        )
+        );
 
-        const route = Route({ beforeMount })
+        const route = Route({ beforeMount });
 
-        expect(route.mounted).toBe(false)
-        expect(beforeMount).toBeCalledTimes(0)
-        await Promise.all([route.mount(), vi.runAllTimers()])
-        expect(beforeMount).toBeCalledTimes(1)
-        expect(beforeMountCallback).toBeCalledTimes(1)
-        expect(route.mounted).toBe(true)
-      })
+        expect(route.mounted).toBe(false);
+        expect(beforeMount).toBeCalledTimes(0);
+        await Promise.all([route.mount(), vi.runAllTimers()]);
+        expect(beforeMount).toBeCalledTimes(1);
+        expect(beforeMountCallback).toBeCalledTimes(1);
+        expect(route.mounted).toBe(true);
+      });
 
-      it('error in `beforeMount` interferes with mount', async () => {
-        vi.useFakeTimers()
+      it("error in `beforeMount` interferes with mount", async () => {
+        vi.useFakeTimers();
 
-        const beforeMountErrorHandle = vi.fn()
+        const beforeMountErrorHandle = vi.fn();
         const beforeMount = vi.fn().mockImplementation(
           async () =>
-            await new Promise((resolve, reject) => {
+            await new Promise((_resolve, reject) => {
               setTimeout(() => {
-                reject(new Error('error'))
-              }, 1000)
+                reject(new Error("error"));
+              }, 1000);
             }).then(
               () => {},
               async () => {
-                beforeMountErrorHandle()
+                beforeMountErrorHandle();
 
                 // eslint-disable-next-line @typescript-eslint/no-throw-literal
-                throw 'Error!'
+                throw "Error!";
               },
             ),
-        )
+        );
 
-        const route = Route({ beforeMount })
+        const route = Route({ beforeMount });
 
         try {
-          expect(route.mounted).toBe(false)
-          expect(beforeMount).toBeCalledTimes(0)
+          expect(route.mounted).toBe(false);
+          expect(beforeMount).toBeCalledTimes(0);
 
-          await Promise.all([route.mount(), vi.runAllTimers()])
+          await Promise.all([route.mount(), vi.runAllTimers()]);
         } catch (error) {
-          expect(error).toBe('Error!')
+          expect(error).toBe("Error!");
         } finally {
-          expect(route.mounted).toBe(false)
-          expect(beforeMount).toBeCalledTimes(1)
-          expect(beforeMountErrorHandle).toBeCalledTimes(1)
+          expect(route.mounted).toBe(false);
+          expect(beforeMount).toBeCalledTimes(1);
+          expect(beforeMountErrorHandle).toBeCalledTimes(1);
         }
-      })
-    })
-  })
-})
+      });
+    });
+  });
+});

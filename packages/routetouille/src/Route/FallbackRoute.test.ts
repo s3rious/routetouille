@@ -1,22 +1,22 @@
-import { describe, it, expect, vi } from 'vitest'
-import { FallbackRoute } from './FallbackRoute.js'
+import { describe, it, expect } from "vitest";
+import { FallbackRoute } from "./FallbackRoute.js";
 
-describe('FallbackRoute', () => {
-  it('can be created', async () => {
+describe("FallbackRoute", () => {
+  it("can be created", async () => {
     const route = FallbackRoute({
-      name: 'fallback',
+      name: "fallback",
       beforeMount: async () => {},
       afterMount: async () => {},
       redirects: [[async () => false, async () => undefined]],
-    })
+    });
     const expected = {
-      name: 'fallback',
+      name: "fallback",
       fallback: true,
       mounted: false,
-    }
+    };
 
-    expect(JSON.stringify(route)).toEqual(JSON.stringify(expected))
-    expect(route.mount).toBeTruthy()
-    expect(route.unmount).toBeTruthy()
-  })
-})
+    expect(JSON.stringify(route)).toEqual(JSON.stringify(expected));
+    expect(route.mount).toBeTruthy();
+    expect(route.unmount).toBeTruthy();
+  });
+});

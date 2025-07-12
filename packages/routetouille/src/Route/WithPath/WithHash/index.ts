@@ -1,1 +1,1 @@
-export * from './WithHash.js'
+export * from "./WithHash.js";

@@ -1,76 +1,100 @@
-import { describe, it, expect, vi } from 'vitest'
-import { WithGoTo } from './WithGoTo.js'
-import { WithSet, WithSetInterface, WithSetOptions } from '../WithSet/index.js'
-import { WithParams, WithParamsInterface, WithParamsOptions } from '../WithParams/index.js'
-import { WithPathname, WithPathnameInterface, WithPathnameOptions } from '../WithPathname/index.js'
-import { WithActive, WithActiveInterface, WithActiveOptions } from '../WithActive/index.js'
-import { WithRoot, WithRootInterface, WithRootOptions } from '../WithRoot/index.js'
-import { WithMap, WithMapInterface, WithMapOptions } from '../WithMap/index.js'
+import { describe, it, expect } from "vitest";
+import { WithGoTo } from "./WithGoTo.js";
+import {
+  WithSet,
+  type WithSetInterface,
+  type WithSetOptions,
+} from "../WithSet/index.js";
+import {
+  WithParams,
+  type WithParamsInterface,
+  type WithParamsOptions,
+} from "../WithParams/index.js";
+import {
+  WithPathname,
+  type WithPathnameInterface,
+  type WithPathnameOptions,
+} from "../WithPathname/index.js";
+import {
+  WithActive,
+  type WithActiveInterface,
+  type WithActiveOptions,
+} from "../WithActive/index.js";
+import {
+  WithRoot,
+  type WithRootInterface,
+  type WithRootOptions,
+} from "../WithRoot/index.js";
+import {
+  WithMap,
+  type WithMapInterface,
+  type WithMapOptions,
+} from "../WithMap/index.js";
 
-import { FallbackRoute, Route } from '../../Route/index.js'
+import { FallbackRoute, Route } from "../../Route/index.js";
 
 type RouterComposedOptions = WithSetOptions &
   WithParamsOptions &
   WithPathnameOptions &
   WithActiveOptions &
   WithMapOptions &
-  WithRootOptions
+  WithRootOptions;
 type RouterComposedInterface = WithSetInterface &
   WithParamsInterface &
   WithPathnameInterface &
   WithActiveInterface &
   WithMapInterface &
-  WithRootInterface
+  WithRootInterface;
 
-describe('`WithGoTo` router', () => {
+describe("`WithGoTo` router", () => {
   const Router = WithGoTo<RouterComposedOptions, RouterComposedInterface>(
     WithSet(WithParams(WithPathname(WithActive(WithMap(WithRoot()))))),
-  )
+  );
 
-  describe('creation', () => {
-    it('created with proper `active`', () => {
-      const root = Route({ name: 'root', path: '/' })
-      const router = Router({ root })
+  describe("creation", () => {
+    it("created with proper `active`", () => {
+      const root = Route({ name: "root", path: "/" });
+      const router = Router({ root });
 
-      expect(router.pathname).toEqual(null)
-    })
-  })
+      expect(router.pathname).toEqual(null);
+    });
+  });
 
-  describe('methods', () => {
+  describe("methods", () => {
     const router = Router({
       root: Route({
-        name: 'root',
-        path: '/',
+        name: "root",
+        path: "/",
         children: [
           FallbackRoute({
-            name: '404',
+            name: "404",
           }),
           Route({
-            name: 'posts',
-            path: 'posts/',
+            name: "posts",
+            path: "posts/",
             children: [
               Route({
-                name: 'post',
-                path: ':id/',
+                name: "post",
+                path: ":id/",
                 children: [
                   FallbackRoute({
-                    name: 'post-404',
+                    name: "post-404",
                   }),
                   Route({
-                    name: 'comments',
-                    path: 'comments/',
+                    name: "comments",
+                    path: "comments/",
                     children: [
                       Route({
-                        name: 'comment',
-                        path: ':id/',
+                        name: "comment",
+                        path: ":id/",
                         children: [
                           Route({
-                            name: 'mode',
-                            path: '?mode=:mode',
+                            name: "mode",
+                            path: "?mode=:mode",
                             children: [
                               Route({
-                                name: 'hash',
-                                path: '#hash',
+                                name: "hash",
+                                path: "#hash",
                               }),
                             ],
                           }),
@@ -84,59 +108,105 @@ describe('`WithGoTo` router', () => {
           }),
         ],
       }),
-    })
+    });
 
-    it('`goTo`', async () => {
-      await router.goTo(`/posts/1/`)
-      expect(router.pathname).toEqual('/posts/1/')
-      expect(router.params).toEqual([{ id: '1' }])
-      expect(router.active.map((route) => route.name)).toEqual(['root', 'posts', 'post'])
+    it("`goTo`", async () => {
+      await router.goTo(`/posts/1/`);
+      expect(router.pathname).toEqual("/posts/1/");
+      expect(router.params).toEqual([{ id: "1" }]);
+      expect(router.active.map((route) => route.name)).toEqual([
+        "root",
+        "posts",
+        "post",
+      ]);
 
-      await router.goTo(`/posts/42/`, { optimistic: true })
-      expect(router.pathname).toEqual('/posts/42/')
-      expect(router.params).toEqual([{ id: '42' }])
-      expect(router.active.map((route) => route.name)).toEqual(['root', 'posts', 'post'])
+      await router.goTo(`/posts/42/`, { optimistic: true });
+      expect(router.pathname).toEqual("/posts/42/");
+      expect(router.params).toEqual([{ id: "42" }]);
+      expect(router.active.map((route) => route.name)).toEqual([
+        "root",
+        "posts",
+        "post",
+      ]);
 
-      await router.goTo(`/posts/1337/`, { optimistic: false })
-      expect(router.pathname).toEqual('/posts/1337/')
-      expect(router.params).toEqual([{ id: '1337' }])
-      expect(router.active.map((route) => route.name)).toEqual(['root', 'posts', 'post'])
+      await router.goTo(`/posts/1337/`, { optimistic: false });
+      expect(router.pathname).toEqual("/posts/1337/");
+      expect(router.params).toEqual([{ id: "1337" }]);
+      expect(router.active.map((route) => route.name)).toEqual([
+        "root",
+        "posts",
+        "post",
+      ]);
 
-      await router.goTo(['posts'])
-      expect(router.pathname).toEqual('/posts/')
-      expect(router.params).toEqual([])
-      expect(router.active.map((route) => route.name)).toEqual(['root', 'posts'])
+      await router.goTo(["posts"]);
+      expect(router.pathname).toEqual("/posts/");
+      expect(router.params).toEqual([]);
+      expect(router.active.map((route) => route.name)).toEqual([
+        "root",
+        "posts",
+      ]);
 
-      await router.goTo(['posts', 'post', 'comments', 'comment'], { params: [{ id: '1' }, { id: '2' }] })
-      expect(router.pathname).toEqual('/posts/1/comments/2/')
-      expect(router.params).toEqual([{ id: '1' }, { id: '2' }])
-      expect(router.active.map((route) => route.name)).toEqual(['root', 'posts', 'post', 'comments', 'comment'])
+      await router.goTo(["posts", "post", "comments", "comment"], {
+        params: [{ id: "1" }, { id: "2" }],
+      });
+      expect(router.pathname).toEqual("/posts/1/comments/2/");
+      expect(router.params).toEqual([{ id: "1" }, { id: "2" }]);
+      expect(router.active.map((route) => route.name)).toEqual([
+        "root",
+        "posts",
+        "post",
+        "comments",
+        "comment",
+      ]);
 
-      await router.goTo(['posts', 'post', 'comments', 'comment'], {
-        params: [{ id: '2' }, { id: '34' }],
+      await router.goTo(["posts", "post", "comments", "comment"], {
+        params: [{ id: "2" }, { id: "34" }],
         optimistic: true,
-      })
-      expect(router.pathname).toEqual('/posts/2/comments/34/')
-      expect(router.params).toEqual([{ id: '2' }, { id: '34' }])
-      expect(router.active.map((route) => route.name)).toEqual(['root', 'posts', 'post', 'comments', 'comment'])
+      });
+      expect(router.pathname).toEqual("/posts/2/comments/34/");
+      expect(router.params).toEqual([{ id: "2" }, { id: "34" }]);
+      expect(router.active.map((route) => route.name)).toEqual([
+        "root",
+        "posts",
+        "post",
+        "comments",
+        "comment",
+      ]);
 
-      await router.goTo(['posts', 'post', 'comments', 'comment'], {
-        params: [{ id: '2' }, { id: '69' }],
+      await router.goTo(["posts", "post", "comments", "comment"], {
+        params: [{ id: "2" }, { id: "69" }],
         optimistic: false,
-      })
-      expect(router.pathname).toEqual('/posts/2/comments/69/')
-      expect(router.params).toEqual([{ id: '2' }, { id: '69' }])
-      expect(router.active.map((route) => route.name)).toEqual(['root', 'posts', 'post', 'comments', 'comment'])
+      });
+      expect(router.pathname).toEqual("/posts/2/comments/69/");
+      expect(router.params).toEqual([{ id: "2" }, { id: "69" }]);
+      expect(router.active.map((route) => route.name)).toEqual([
+        "root",
+        "posts",
+        "post",
+        "comments",
+        "comment",
+      ]);
 
-      await router.goTo('root.posts')
-      expect(router.pathname).toEqual('/posts/')
-      expect(router.params).toEqual([])
-      expect(router.active.map((route) => route.name)).toEqual(['root', 'posts'])
+      await router.goTo("root.posts");
+      expect(router.pathname).toEqual("/posts/");
+      expect(router.params).toEqual([]);
+      expect(router.active.map((route) => route.name)).toEqual([
+        "root",
+        "posts",
+      ]);
 
-      await router.goTo('posts.post.comments.comment', { params: [{ id: '13' }, { id: '37' }] })
-      expect(router.pathname).toEqual('/posts/13/comments/37/')
-      expect(router.params).toEqual([{ id: '13' }, { id: '37' }])
-      expect(router.active.map((route) => route.name)).toEqual(['root', 'posts', 'post', 'comments', 'comment'])
-    })
-  })
-})
+      await router.goTo("posts.post.comments.comment", {
+        params: [{ id: "13" }, { id: "37" }],
+      });
+      expect(router.pathname).toEqual("/posts/13/comments/37/");
+      expect(router.params).toEqual([{ id: "13" }, { id: "37" }]);
+      expect(router.active.map((route) => route.name)).toEqual([
+        "root",
+        "posts",
+        "post",
+        "comments",
+        "comment",
+      ]);
+    });
+  });
+});

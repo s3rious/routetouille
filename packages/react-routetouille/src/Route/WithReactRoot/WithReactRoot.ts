@@ -1,43 +1,54 @@
-import { StrictMode, createElement, FunctionComponent } from 'react'
-import * as ReactDOM from 'react-dom'
-import { createRoot, Root } from 'react-dom/client'
-import {
+import { StrictMode, createElement, type FunctionComponent } from "react";
+import { createRoot, type Root } from "react-dom/client";
+import type {
   RouterInterface,
   WithAfterMountInterface,
   WithAfterMountOptions,
   WithAfterUnmountInterface,
   WithAfterUnmountOptions,
-} from 'routetouille'
+} from "routetouille";
 
-type ComposedRouteOptions = WithAfterMountOptions & WithAfterUnmountOptions
-type ComposedRouteInterface = WithAfterMountInterface & WithAfterUnmountInterface
+type ComposedRouteOptions = WithAfterMountOptions & WithAfterUnmountOptions;
+type ComposedRouteInterface = WithAfterMountInterface &
+  WithAfterUnmountInterface;
 
 type WithReactRootComponentProps = {
-  router: RouterInterface
-}
+  router: RouterInterface;
+};
 
 type WithReactRootOptions = {
-  beforeMount?: () => Promise<void>
-  afterMount?: () => Promise<void>
-  afterUnmount?: () => Promise<void>
-  id: string
-  preloaderId?: string
-  router: RouterInterface
-  component: FunctionComponent<WithReactRootComponentProps>
-}
+  beforeMount?: () => Promise<void>;
+  afterMount?: () => Promise<void>;
+  afterUnmount?: () => Promise<void>;
+  id: string;
+  preloaderId?: string;
+  router: RouterInterface;
+  component: FunctionComponent<WithReactRootComponentProps>;
+};
 
-type WithReactRootInterface = {}
+type WithReactRootInterface = Record<string, unknown>;
 
 async function waitATick(): Promise<void> {
-  return await new Promise(function (resolve) {
-    setTimeout(resolve, 0)
-  })
+  return await new Promise((resolve) => {
+    setTimeout(resolve, 0);
+  });
 }
 
-function WithReactRoot<ComposedOptions extends ComposedRouteOptions, ComposedInterface extends ComposedRouteInterface>(
-  createRoute: (options: ComposedOptions) => ComposedInterface,
-) {
-  return function (options: WithReactRootOptions & ComposedOptions): WithReactRootInterface & ComposedInterface {
+function hasUnmount(obj: unknown): obj is { unmount: () => void } {
+  return (
+    typeof obj === "object" &&
+    obj !== null &&
+    typeof (obj as { unmount?: unknown }).unmount === "function"
+  );
+}
+
+function WithReactRoot<
+  ComposedOptions extends ComposedRouteOptions,
+  ComposedInterface extends ComposedRouteInterface,
+>(createRoute: (options: ComposedOptions) => ComposedInterface) {
+  return (
+    options: WithReactRootOptions & ComposedOptions,
+  ): WithReactRootInterface & ComposedInterface => {
     const {
       id,
       preloaderId,
@@ -46,78 +57,102 @@ function WithReactRoot<ComposedOptions extends ComposedRouteOptions, ComposedInt
       afterMount: composedAfterMount,
       afterUnmount: composedAfterUnmount,
       component: Component,
-    } = options
+    } = options;
 
-    async function beforeMount(this: ComposedInterface & ComposedRouteInterface): Promise<void> {
+    async function beforeMount(
+      this: ComposedInterface & ComposedRouteInterface,
+    ): Promise<void> {
       if (composedBeforeMount) {
-        await composedBeforeMount()
+        await composedBeforeMount();
       }
 
-      await waitATick()
+      await waitATick();
 
-      let container = globalThis.document.getElementById(id)
+      let container = globalThis.document.getElementById(id);
 
       if (container == null) {
-        const createdRoot = globalThis.document.createElement('div')
-        createdRoot.id = id
-        globalThis.document.body.append(createdRoot)
+        const createdRoot = globalThis.document.createElement("div");
+        createdRoot.id = id;
+        globalThis.document.body.append(createdRoot);
 
-        container = createdRoot
+        container = createdRoot;
       }
 
-      const reactApp = createElement(StrictMode, null, createElement(Component, { router: router }))
+      const reactApp = createElement(
+        StrictMode,
+        null,
+        createElement(Component, { router: router }),
+      );
 
       // Try to import createRoot type from react-dom/client if available
       let root: Root;
-      if (!(container as any)._reactRootContainer) {
+      if (
+        !(container as { _reactRootContainer?: unknown })._reactRootContainer
+      ) {
         root = createRoot(container);
-        (container as any)._reactRoot = root;
+        (container as { _reactRoot?: unknown })._reactRoot = root;
       } else {
-        root = (container as any)._reactRoot;
+        root = (container as { _reactRoot?: unknown })._reactRoot as Root;
       }
       root.render(reactApp);
     }
 
-    async function afterMount(this: ComposedInterface & ComposedRouteInterface): Promise<void> {
+    async function afterMount(
+      this: ComposedInterface & ComposedRouteInterface,
+    ): Promise<void> {
       if (preloaderId) {
-        const preloader = globalThis.document.getElementById(preloaderId)
+        const preloader = globalThis.document.getElementById(preloaderId);
 
         if (preloader != null) {
-          const parent = preloader.parentNode
+          const parent = preloader.parentNode;
 
           if (parent != null) {
-            parent.removeChild(preloader)
+            parent.removeChild(preloader);
           }
         }
       }
 
       if (composedAfterMount) {
-        await composedAfterMount()
+        await composedAfterMount();
       }
     }
 
-    async function afterUnmount(this: ComposedInterface & ComposedRouteInterface): Promise<void> {
+    async function afterUnmount(
+      this: ComposedInterface & ComposedRouteInterface,
+    ): Promise<void> {
       const rootElem = globalThis.document.getElementById(id);
       if (rootElem != null) {
-        const reactRoot = (rootElem as any)._reactRoot;
-        if (reactRoot && typeof reactRoot.unmount === 'function') {
+        const reactRoot = (rootElem as { _reactRoot?: unknown })._reactRoot;
+        if (hasUnmount(reactRoot)) {
           reactRoot.unmount();
         }
-        const parent = rootElem.parentNode as (Node & { removeChild(node: Node): void }) | null;
+        const parent = rootElem.parentNode as
+          | (Node & { removeChild(node: Node): void })
+          | null;
         if (parent != null) {
           parent.removeChild(rootElem);
         }
       }
 
       if (composedAfterUnmount) {
-        await composedAfterUnmount()
+        await composedAfterUnmount();
       }
     }
 
-    const composed: ComposedInterface = createRoute({ ...options, beforeMount, afterMount, afterUnmount })
+    const composed: ComposedInterface = createRoute({
+      ...options,
+      beforeMount,
+      afterMount,
+      afterUnmount,
+    });
 
-    return { ...composed }
-  }
+    return { ...composed };
+  };
 }
 
-export { WithReactRoot, WithReactRootOptions, WithReactRootInterface, WithReactRootComponentProps }
+export {
+  WithReactRoot,
+  type WithReactRootOptions,
+  type WithReactRootInterface,
+  type WithReactRootComponentProps,
+};

@@ -1,39 +1,47 @@
-import { createNanoEvents, Emitter } from 'nanoevents'
-import { Activator, WithActiveInterface, WithActiveOptions } from '../WithActive/index.js'
-import { AbstractRoute } from '../WithMap/index.js'
+import { createNanoEvents, type Emitter } from "nanoevents";
+import type {
+  Activator,
+  WithActiveInterface,
+  WithActiveOptions,
+} from "../WithActive/index.js";
+import type { AbstractRoute } from "../WithMap/index.js";
 
 type Events = {
-  beforeActivate: (routes: AbstractRoute[]) => void
-  afterActivate: (routes: AbstractRoute[]) => void
-}
+  beforeActivate: (routes: AbstractRoute[]) => void;
+  afterActivate: (routes: AbstractRoute[]) => void;
+};
 
-type SubscribableOptions = {}
+type SubscribableOptions = Record<string, unknown>;
 
 type SubscribableInterface = Emitter<Events> & {
-  activate: (activator: Activator, optimistic?: boolean) => Promise<void>
-}
+  activate: (activator: Activator, optimistic?: boolean) => Promise<void>;
+};
 
-function Subscribable<ComposedOptions extends WithActiveOptions, ComposedInterface extends WithActiveInterface>(
-  createRouter?: (options: ComposedOptions) => ComposedInterface,
-) {
-  return function (options: SubscribableOptions & ComposedOptions): SubscribableInterface & ComposedInterface {
-    const emitter: Emitter<Events> = createNanoEvents()
-    const composed: ComposedInterface = createRouter?.(options) ?? ({} as ComposedInterface)
+function Subscribable<
+  ComposedOptions extends WithActiveOptions,
+  ComposedInterface extends WithActiveInterface,
+>(createRouter?: (options: ComposedOptions) => ComposedInterface) {
+  return (
+    options: SubscribableOptions & ComposedOptions,
+  ): SubscribableInterface & ComposedInterface => {
+    const emitter: Emitter<Events> = createNanoEvents();
+    const composed: ComposedInterface =
+      createRouter?.(options) ?? ({} as ComposedInterface);
 
     async function activate(
       this: SubscribableInterface & ComposedInterface,
       activator: Activator,
       optimistic?: boolean,
     ): Promise<void> {
-      emitter.emit('beforeActivate', this.active)
+      emitter.emit("beforeActivate", this.active);
 
-      await composed.activate.bind(this)(activator, optimistic)
+      await composed.activate.bind(this)(activator, optimistic);
 
-      emitter.emit('afterActivate', this.active)
+      emitter.emit("afterActivate", this.active);
     }
 
-    return Object.assign(emitter, composed, { activate })
-  }
+    return Object.assign(emitter, composed, { activate });
+  };
 }
 
-export { Subscribable, SubscribableOptions, SubscribableInterface }
+export { Subscribable, type SubscribableOptions, type SubscribableInterface };

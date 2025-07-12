@@ -1,1 +1,1 @@
-export * from './WithBeforeUnmount.js'
+export * from "./WithBeforeUnmount.js";

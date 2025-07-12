@@ -1,23 +1,23 @@
-export * from './Route.js'
-export * from './ModuleRoute.js'
-export * from './FallbackRoute.js'
-export * from './Mountable/index.js'
-export * from './Redirectable/index.js'
-export * from './WithAfterMount/index.js'
-export * from './WithBeforeMount/index.js'
-export * from './WithAfterUnmount/index.js'
-export * from './WithBeforeUnmount/index.js'
-export * from './WithChildren/index.js'
-export * from './WithName/index.js'
-export * from './Fallback/index.js'
-export * from './WithPath/WithSlug/index.js'
-export * from './WithPath/WithSearch/index.js'
-export * from './WithPath/WithHash/index.js'
-export * from './WithPath/index.js'
+export * from "./Route.js";
+export * from "./ModuleRoute.js";
+export * from "./FallbackRoute.js";
+export * from "./Mountable/index.js";
+export * from "./Redirectable/index.js";
+export * from "./WithAfterMount/index.js";
+export * from "./WithBeforeMount/index.js";
+export * from "./WithAfterUnmount/index.js";
+export * from "./WithBeforeUnmount/index.js";
+export * from "./WithChildren/index.js";
+export * from "./WithName/index.js";
+export * from "./Fallback/index.js";
+export * from "./WithPath/WithSlug/index.js";
+export * from "./WithPath/WithSearch/index.js";
+export * from "./WithPath/WithHash/index.js";
+export * from "./WithPath/index.js";
 // Explicitly export interfaces/types for NodeNext consumers
-export type { MountableInterface } from './Mountable/index.js'
-export type { WithChildrenInterface } from './WithChildren/index.js'
-export type { WithNameInterface } from './WithName/index.js'
-export type { WithPathInterface } from './WithPath/index.js'
-export type { FallbackRouteInterface } from './FallbackRoute.js'
-export type { RouteInterface } from './Route.js'
+export type { MountableInterface } from "./Mountable/index.js";
+export type { WithChildrenInterface } from "./WithChildren/index.js";
+export type { WithNameInterface } from "./WithName/index.js";
+export type { WithPathInterface } from "./WithPath/index.js";
+export type { FallbackRouteInterface } from "./FallbackRoute.js";
+export type { RouteInterface } from "./Route.js";

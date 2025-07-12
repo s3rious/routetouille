@@ -1,1 +1,1 @@
-export * from './WithFallback.js'
+export * from "./WithFallback.js";

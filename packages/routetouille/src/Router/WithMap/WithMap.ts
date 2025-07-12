@@ -1,98 +1,122 @@
-import { WithRootInterface, WithRootOptions } from '../WithRoot/index.js'
-import {
+import type { WithRootInterface, WithRootOptions } from "../WithRoot/index.js";
+import type {
   FallbackRouteInterface,
   MountableInterface,
   WithChildrenInterface,
   WithNameInterface,
   WithPathInterface,
-} from '../../Route/index.js'
+} from "../../Route/index.js";
 
 type AbstractRoute = WithNameInterface &
   FallbackRouteInterface &
   WithChildrenInterface &
   MountableInterface &
-  WithPathInterface
+  WithPathInterface;
 
-type WithMapOptions = {}
+type WithMapOptions = Record<string, unknown>;
 
-type RouteMapKey = string
+type RouteMapKey = string;
 
 type RouteMapRoute = {
-  route: AbstractRoute
-  parent?: RouteMapKey
-  children?: RouteMapKey[]
-  fallback?: RouteMapKey
-}
-type RouteMap = Map<RouteMapKey, RouteMapRoute>
+  route: AbstractRoute;
+  parent?: RouteMapKey;
+  children?: RouteMapKey[];
+  fallback?: RouteMapKey;
+};
+type RouteMap = Map<RouteMapKey, RouteMapRoute>;
 
 type WithMapInterface = WithMapOptions & {
-  getMap: () => RouteMap
-}
+  getMap: () => RouteMap;
+};
 
 function extractMapFromRoot(root?: AbstractRoute): RouteMap {
-  const map: RouteMap = new Map()
+  const map: RouteMap = new Map();
 
-  const recurse = (route: AbstractRoute, parent?: RouteMapKey, fallback?: RouteMapKey): void => {
-    const key: RouteMapKey = (parent != null ? [parent, route.name] : [route.name]).join('.')
+  const recurse = (
+    route: AbstractRoute,
+    parent?: RouteMapKey,
+    fallback?: RouteMapKey,
+  ): void => {
+    const key: RouteMapKey = (
+      parent != null ? [parent, route.name] : [route.name]
+    ).join(".");
     const value: RouteMapRoute = {
       route,
-    }
+    };
 
     if (parent != null) {
-      value.parent = parent
+      value.parent = parent;
     }
 
     if (route?.children != null) {
-      value.children = (route.children as AbstractRoute[]).map((route) => (route as AbstractRoute).name).map((name: string) => `${key}.${name}`)
+      value.children = (route.children as AbstractRoute[])
+        .map((route) => (route as AbstractRoute).name)
+        .map((name: string) => `${key}.${name}`);
 
-      const fallbackSiblingRoute = (route.children as AbstractRoute[]).find((route) => (route as AbstractRoute).fallback) as AbstractRoute | undefined
+      const fallbackSiblingRoute = (route.children as AbstractRoute[]).find(
+        (route) => (route as AbstractRoute).fallback,
+      ) as AbstractRoute | undefined;
 
       if (fallbackSiblingRoute?.name != null) {
-        fallback = `${key}.${fallbackSiblingRoute.name}`
+        fallback = `${key}.${fallbackSiblingRoute.name}`;
       }
     }
 
     if (fallback != null && route.fallback === undefined) {
-      value.fallback = fallback
+      value.fallback = fallback;
     }
 
-    map.set(key, value)
+    map.set(key, value);
 
     if (route?.children != null) {
-      (route.children as AbstractRoute[]).forEach((route) => recurse(route as AbstractRoute, key, fallback))
+      (route.children as AbstractRoute[]).forEach((route) =>
+        recurse(route as AbstractRoute, key, fallback),
+      );
     }
-  }
+  };
 
   if (root != null) {
-    recurse(root)
+    recurse(root);
   }
 
-  return map
+  return map;
 }
 
-function WithMap<ComposedOptions extends WithRootOptions, ComposedInterface extends WithRootInterface>(
-  createRouter?: (options: ComposedOptions) => ComposedInterface,
-) {
-  return function (options: WithMapOptions & ComposedOptions): WithMapInterface & ComposedInterface {
-    const composed: ComposedInterface = createRouter?.(options) ?? ({} as ComposedInterface)
-    const cache = new Map()
+function WithMap<
+  ComposedOptions extends WithRootOptions,
+  ComposedInterface extends WithRootInterface,
+>(createRouter?: (options: ComposedOptions) => ComposedInterface) {
+  return (
+    options: WithMapOptions & ComposedOptions,
+  ): WithMapInterface & ComposedInterface => {
+    const composed: ComposedInterface =
+      createRouter?.(options) ?? ({} as ComposedInterface);
+    const cache = new Map();
 
     function getMap(this: WithMapInterface & ComposedInterface): RouteMap {
-      const root = this.root
-      const cached = cache.get(root)
+      const root = this.root;
+      const cached = cache.get(root);
 
-      if (Boolean(cached)) {
-        return cached
+      if (cached) {
+        return cached;
       }
 
-      const map = extractMapFromRoot(root as AbstractRoute)
-      cache.set(root, map)
+      const map = extractMapFromRoot(root as AbstractRoute);
+      cache.set(root, map);
 
-      return map
+      return map;
     }
 
-    return { ...composed, getMap }
-  }
+    return { ...composed, getMap };
+  };
 }
 
-export { WithMap, WithMapOptions, WithMapInterface, AbstractRoute, RouteMap, RouteMapRoute, RouteMapKey }
+export {
+  WithMap,
+  type WithMapOptions,
+  type WithMapInterface,
+  type AbstractRoute,
+  type RouteMap,
+  type RouteMapRoute,
+  type RouteMapKey,
+};

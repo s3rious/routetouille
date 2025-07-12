@@ -1,1 +1,1 @@
-export * from './BrowserHistory.js'
+export * from "./BrowserHistory.js";

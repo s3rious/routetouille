@@ -1,11 +1,11 @@
-import { defineConfig } from 'vitest/config';
+import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   test: {
-    environment: 'jsdom',
+    environment: "jsdom",
     coverage: {
-      provider: 'v8',
+      provider: "v8",
       experimentalAstAwareRemapping: true,
     },
   },
-}); 
+});

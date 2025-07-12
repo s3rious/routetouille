@@ -1,58 +1,56 @@
-import { describe, it, expect, vi } from 'vitest'
-import { Mountable } from './Mountable.js'
+import { describe, it, expect } from "vitest";
+import { Mountable } from "./Mountable.js";
 
-import { omitFunctions } from '../_tests-shared/index.js'
+import { omitFunctions } from "../_tests-shared/index.js";
 
-describe('`Mountable` route', () => {
-  describe('extends', () => {
-    const extend = { foo: 'bar' }
+describe("`Mountable` route", () => {
+  describe("extends", () => {
+    const extend = { foo: "bar" };
 
     function Extendable() {
-      return function () {
-        return extend
-      }
+      return () => extend;
     }
 
-    it('extends parent', () => {
-      const mounted = false
-      const options = {}
-      const expected = { mounted, ...extend }
+    it("extends parent", () => {
+      const mounted = false;
+      const options = {};
+      const expected = { mounted, ...extend };
 
-      const route = Mountable(Extendable())(options)
+      const route = Mountable(Extendable())(options);
 
-      expect(route).not.toBe(extend)
-      expect(route).not.toEqual(extend)
-      expect(omitFunctions(route)).toEqual(expected)
-    })
-  })
+      expect(route).not.toBe(extend);
+      expect(route).not.toEqual(extend);
+      expect(omitFunctions(route)).toEqual(expected);
+    });
+  });
 
-  describe('options', () => {
-    it('immutable and created by options', () => {
-      const mounted = false
-      const options = {}
-      const expected = { mounted }
+  describe("options", () => {
+    it("immutable and created by options", () => {
+      const mounted = false;
+      const options = {};
+      const expected = { mounted };
 
-      const route = Mountable()(options)
+      const route = Mountable()(options);
 
-      expect(omitFunctions(route)).toEqual(expected)
-    })
-  })
+      expect(omitFunctions(route)).toEqual(expected);
+    });
+  });
 
-  describe('methods', () => {
-    describe('mount', () => {
-      const route = Mountable()({})
+  describe("methods", () => {
+    describe("mount", () => {
+      const route = Mountable()({});
 
-      it('mount', async () => {
-        expect(route.mounted).toBe(false)
-        await route.mount()
-        expect(route.mounted).toBe(true)
-      })
+      it("mount", async () => {
+        expect(route.mounted).toBe(false);
+        await route.mount();
+        expect(route.mounted).toBe(true);
+      });
 
-      it('unmount', async () => {
-        expect(route.mounted).toBe(true)
-        await route.unmount()
-        expect(route.mounted).toBe(false)
-      })
-    })
-  })
-})
+      it("unmount", async () => {
+        expect(route.mounted).toBe(true);
+        await route.unmount();
+        expect(route.mounted).toBe(false);
+      });
+    });
+  });
+});

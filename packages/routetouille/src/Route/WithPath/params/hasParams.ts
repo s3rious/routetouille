@@ -1,5 +1,5 @@
 function hasParams(path: string): boolean {
-  return /:\w*/.test(path)
+  return /:\w*/.test(path);
 }
 
-export { hasParams }
+export { hasParams };
