@@ -1,3 +1,19 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table of contents
+
+- [Development Guidelines](#development-guidelines)
+  - [1. Formatting & Linting](#1-formatting--linting)
+  - [2. TypeScript](#2-typescript)
+  - [3. File & Directory Structure](#3-file--directory-structure)
+  - [4. Naming Conventions](#4-naming-conventions)
+  - [5. Exports](#5-exports)
+  - [6. Immutability & Logic](#6-immutability--logic)
+  - [7. Testing](#7-testing)
+  - [8. Comments & Documentation](#8-comments--documentation)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Development Guidelines
 
 These guidelines are derived strictly from the actual conventions and practices in the `routetouille` and `react-routetouille` packages. Follow these to ensure consistency and maintainability.

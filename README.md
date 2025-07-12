@@ -1,3 +1,23 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table of contents
+
+- [Routetouille Monorepo](#routetouille-monorepo)
+  - [What is "Routetouille"?](#what-is-routetouille)
+  - [Vision & Philosophy](#vision--philosophy)
+  - [Monorepo Structure](#monorepo-structure)
+  - [Packages](#packages)
+    - [routetouille](#routetouille)
+      - [Quickstart](#quickstart)
+    - [react-routetouille](#react-routetouille)
+      - [Quickstart](#quickstart-1)
+  - [Examples](#examples)
+  - [Development & Contribution](#development--contribution)
+  - [Community & Support](#community--support)
+  - [License](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Routetouille Monorepo
 
 > **A modern, extensible, and lifecycle-driven routing ecosystem for JavaScript and TypeScript.**
