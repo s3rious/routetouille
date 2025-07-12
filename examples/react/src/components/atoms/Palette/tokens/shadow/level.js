@@ -29,6 +29,6 @@ const level = {
     0  6.7px 33.4px rgba(0, 0, 0, 0.072),
     0 16px   80px   rgba(0, 0, 0, 0.1)
   `,
-}
+};
 
-module.exports = level
+module.exports = level;

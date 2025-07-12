@@ -1,39 +1,43 @@
 import {
-  redirect,
-  activateFirstChildOf,
+  type AnyRouteInterface,
   ModuleRoute,
-  ModuleRouteInterface,
-  AnyRouteInterface,
-  RouterInterface,
-} from 'services/router'
+  type ModuleRouteInterface,
+  type RouterInterface,
+  activateFirstChildOf,
+  redirect,
+} from "services/router/index.js";
 
-import { $accessToken, $client, effects as clientEffects } from 'domains/client'
+import { $accessToken, $client } from "domains/client/index.js";
+import * as clientEffects from "domains/client/store/effects";
 
-function getRoute(router: RouterInterface, children: AnyRouteInterface[] = []): ModuleRouteInterface {
+function getRoute(
+  router: RouterInterface,
+  children: AnyRouteInterface[] = [],
+): ModuleRouteInterface {
   return ModuleRoute({
-    name: 'auth',
-    beforeMount: async () => activateFirstChildOf(router, 'auth'),
+    name: "auth",
+    beforeMount: async () => activateFirstChildOf(router, "auth"),
     afterMount: async () => {
-      const isClientFetched = $client.getState().isFetched()
-      const accessToken = $accessToken.getState()
+      const isClientFetched = $client.getState().isFetched();
+      const accessToken = $accessToken.getState();
 
       if (!isClientFetched && accessToken) {
-        await clientEffects.fetchClient({ accessToken })
+        await clientEffects.fetchClient({ accessToken });
       }
     },
     redirects: [
       redirect(
         router,
         async () => {
-          const accessToken = $accessToken.getState()
+          const accessToken = $accessToken.getState();
 
-          return !Boolean(accessToken)
+          return !accessToken;
         },
-        'non-auth',
+        "non-auth",
       ),
     ],
     children,
-  })
+  });
 }
 
-export { getRoute }
+export { getRoute };

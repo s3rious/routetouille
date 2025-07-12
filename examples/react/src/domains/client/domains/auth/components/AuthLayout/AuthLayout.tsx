@@ -1,25 +1,28 @@
-import * as React from 'react'
-import { Fragment, ReactElement, ReactNode } from 'react'
-import { useStore } from 'effector-react'
+import { useUnit } from "effector-react";
+import { Fragment, type ReactElement, type ReactNode } from "react";
 
-import { $isClientLoading } from 'domains/client'
+import { $isClientLoading } from "domains/client";
 
-import { Layout } from 'components/atoms/Layout'
-import { Inner } from 'components/atoms/Inner'
-import { Spacing } from 'components/atoms/Spacing'
-import { Footer } from 'components/molecules/Footer'
-import { Preloader } from 'components/atoms/Preloader'
+import { Inner } from "components/atoms/Inner";
+import { Layout } from "components/atoms/Layout";
+import { Preloader } from "components/atoms/Preloader";
+import { Spacing } from "components/atoms/Spacing";
+import { Footer } from "components/molecules/Footer";
 
-import { DefaultAuthHeader } from '../DefaultAuthHeader'
+import { DefaultAuthHeader } from "../DefaultAuthHeader/index.js";
 
 type AuthLayoutProps = {
-  header?: ReactNode
-  content: ReactNode
-  footer?: ReactNode
-}
+  header?: ReactNode;
+  content: ReactNode;
+  footer?: ReactNode;
+};
 
-function AuthLayout({ header = <DefaultAuthHeader />, content, footer = <Footer /> }: AuthLayoutProps): ReactElement {
-  const loading = useStore($isClientLoading)
+function AuthLayout({
+  header = <DefaultAuthHeader />,
+  content,
+  footer = <Footer />,
+}: AuthLayoutProps): ReactElement {
+  const loading = useUnit($isClientLoading);
 
   return (
     <Fragment>
@@ -36,7 +39,7 @@ function AuthLayout({ header = <DefaultAuthHeader />, content, footer = <Footer 
         footer={footer}
       />
     </Fragment>
-  )
+  );
 }
 
-export { AuthLayout }
+export { AuthLayout };

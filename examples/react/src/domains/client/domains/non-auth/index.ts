@@ -1,30 +1,34 @@
 import {
-  redirect,
-  activateFirstChildOf,
+  type AnyRouteInterface,
   ModuleRoute,
-  ModuleRouteInterface,
-  AnyRouteInterface,
-  RouterInterface,
-} from 'services/router'
-import { $accessToken } from 'domains/client'
+  type ModuleRouteInterface,
+  type RouterInterface,
+  activateFirstChildOf,
+  redirect,
+} from "services/router/index.js";
 
-function getRoute(router: RouterInterface, children: AnyRouteInterface[] = []): ModuleRouteInterface {
+import { $accessToken } from "domains/client/index.js";
+
+function getRoute(
+  router: RouterInterface,
+  children: AnyRouteInterface[] = [],
+): ModuleRouteInterface {
   return ModuleRoute({
-    name: 'non-auth',
-    beforeMount: async () => activateFirstChildOf(router, 'non-auth'),
+    name: "non-auth",
+    beforeMount: async () => activateFirstChildOf(router, "non-auth"),
     redirects: [
       redirect(
         router,
         async () => {
-          const accessToken = $accessToken.getState()
+          const accessToken = $accessToken.getState();
 
-          return Boolean(accessToken)
+          return Boolean(accessToken);
         },
-        'auth',
+        "auth",
       ),
     ],
     children,
-  })
+  });
 }
 
-export { getRoute }
+export { getRoute };

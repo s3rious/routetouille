@@ -1,20 +1,20 @@
-import { ReactElement } from 'react'
+import type { ReactElement } from "react";
 
-import { RouterInterface } from 'services/router'
+import type { RouterInterface } from "services/router";
 
-import { useRoot } from 'domains/root/hooks/useRoot'
+import { useRoot } from "domains/root/hooks/useRoot";
 
-import './Root.css'
-import 'components/atoms/Palette/Palette.css'
+import "./Root.css";
+import "components/atoms/Palette/Palette.css";
 
 type RootProps = {
-  router: RouterInterface
-}
+  router: RouterInterface;
+};
 
 function Root(props: RootProps): ReactElement | null {
-  const { render } = useRoot(props.router)
+  const { render } = useRoot(props.router);
 
-  return render()
+  return render();
 }
 
-export { Root }
+export { Root };

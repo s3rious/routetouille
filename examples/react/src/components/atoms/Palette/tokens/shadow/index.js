@@ -1,5 +1,5 @@
-const level = require('./level.js')
+const level = require("./level.js");
 
 module.exports = {
   level,
-}
+};

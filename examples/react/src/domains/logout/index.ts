@@ -1,34 +1,36 @@
+import to from "await-to-js";
 import {
   Route,
+  type RouteInterface,
+  type RouterInterface,
   WithReactComponent,
-  RouteInterface,
-  WithReactComponentInterface,
-  RouterInterface,
-} from 'services/router'
-import to from 'await-to-js'
+  type WithReactComponentInterface,
+} from "services/router";
 
-import { effects as clientEffects } from 'domains/client'
+import { effects as clientEffects } from "domains/client";
 
-import { LogOut } from './components/LogOut'
+import { LogOut } from "./components/LogOut/index.js";
 
-function getRoute(router: RouterInterface): WithReactComponentInterface & RouteInterface {
+function getRoute(
+  router: RouterInterface,
+): WithReactComponentInterface & RouteInterface {
   return WithReactComponent(Route)({
-    name: 'logout',
-    path: 'logout/',
+    name: "logout",
+    path: "logout/",
     afterMount: async () => {
-      const [error] = await to(clientEffects.logOut())
+      const [error] = await to(clientEffects.logOut({}));
 
       if (error) {
-        globalThis.localStorage.removeItem('CLIENT_ACCESS_TOKEN')
-        globalThis.location.href = '/'
-        return
+        globalThis.localStorage.removeItem("CLIENT_ACCESS_TOKEN");
+        globalThis.location.href = "/";
+        return;
       }
 
-      await router.goTo('non-auth.login')
+      await router.goTo("non-auth.login");
     },
     component: LogOut,
     exclusive: true,
-  })
+  });
 }
 
-export { getRoute }
+export { getRoute };

@@ -1,17 +1,16 @@
-import { createStore, Store, combine } from 'effector'
+import { type Store, combine, createStore } from "effector";
 
-import { PostsModel, PostModel } from './model'
-import * as effects from './effects'
+import * as effects from "./effects.js";
+import { PostModel, PostsModel } from "./model/index.js";
 
-const $posts = createStore(new PostsModel(), { name: `posts/$posts` }).on(
+const $posts = createStore(new PostsModel(), { name: "posts/$posts" }).on(
   effects.fetchPosts.doneData,
-  (state, posts) => new PostsModel(...posts),
-)
+  (_state, posts) => new PostsModel(...posts),
+);
 
-const $isPostsLoading: Store<boolean> = combine(
-  // @ts-expect-error feels like effector’s typing error
-  ...Object.values(effects).map((effect) => effect.pending),
-  (...pendings: boolean[]) => pendings.some((pending) => pending),
-)
+const $isPostsLoading = combine(
+  Object.values(effects).map((effect) => effect.pending),
+  (pendings: boolean[]) => pendings.some(Boolean),
+) as Store<boolean>;
 
-export { $posts, $isPostsLoading, effects, PostsModel, PostModel }
+export { $posts, $isPostsLoading, effects, PostsModel, PostModel };

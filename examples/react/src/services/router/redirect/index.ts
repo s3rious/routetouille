@@ -1,4 +1,4 @@
-import { Activator, Params, RouterInterface } from 'routetouille'
+import type { Activator, Params, RouterInterface } from "routetouille";
 
 function redirect(
   router: RouterInterface,
@@ -6,7 +6,11 @@ function redirect(
   to: Activator,
   params?: Params,
 ): [() => Promise<boolean>, () => Promise<void>] {
-  return [shouldWe, async () => await router.goTo(to, { method: 'replace', optimistic: false, params })]
+  return [
+    shouldWe,
+    async () =>
+      await router.goTo(to, { method: "replace", optimistic: false, params }),
+  ];
 }
 
-export { redirect }
+export { redirect };

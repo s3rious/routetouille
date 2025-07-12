@@ -1,62 +1,65 @@
-import * as React from 'react'
-import { useCallback, useMemo, useState } from 'react'
-import { useStore } from 'effector-react'
+import { useUnit } from "effector-react";
+import type * as React from "react";
+import { useCallback, useMemo, useState } from "react";
 
-import { RouterInterface } from 'services/router'
-import { effects as clientEffects } from 'domains/client'
+import { effects as clientEffects } from "domains/client";
+import type { RouterInterface } from "services/router";
 
 type UseSignUpInterface = {
-  loading: boolean
-  email: string
-  password: string
-  error: Error | null
-  disabled: boolean
-  handleEmail: (event: React.FormEvent<HTMLInputElement>) => void
-  handlePassword: (event: React.FormEvent<HTMLInputElement>) => void
-  handleSignUp: (event: React.FormEvent<HTMLFormElement>) => Promise<void>
-}
+  loading: boolean;
+  email: string;
+  password: string;
+  error: Error | null;
+  disabled: boolean;
+  handleEmail: (event: React.FormEvent<HTMLInputElement>) => void;
+  handlePassword: (event: React.FormEvent<HTMLInputElement>) => void;
+  handleSignUp: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
+};
 
 function useSignUp(router: RouterInterface): UseSignUpInterface {
-  const loading = useStore(clientEffects.signUp.pending)
-  const [error, setError] = useState<Error | null>(null)
+  const loading = useUnit(clientEffects.signUp.pending);
+  const [error, setError] = useState<Error | null>(null);
 
-  const [email, setEmail] = useState<string>('')
-  const [password, setPassword] = useState<string>('')
-  const disabled = useMemo<boolean>(() => email.length <= 0 || password.length <= 0, [email, password])
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const disabled = useMemo<boolean>(
+    () => email.length <= 0 || password.length <= 0,
+    [email, password],
+  );
 
   const handleEmail = useCallback(
     (event: React.FormEvent<HTMLInputElement>): void => {
       if (event.target instanceof HTMLInputElement) {
-        setEmail(event.target.value)
+        setEmail(event.target.value);
       }
     },
-    [setEmail],
-  )
+    [],
+  );
 
   const handlePassword = useCallback(
     (event: React.FormEvent<HTMLInputElement>): void => {
       if (event.target instanceof HTMLInputElement) {
-        setPassword(event.target.value)
+        setPassword(event.target.value);
       }
     },
-    [setPassword],
-  )
+    [],
+  );
 
   const handleSignUp = useCallback(
     async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
-      event.preventDefault()
+      event.preventDefault();
 
       try {
-        await clientEffects.signUp({ email, password })
-        await router.goTo('auth', { optimistic: true })
+        await clientEffects.signUp({ email, password });
+        await router.goTo("auth", { optimistic: true });
       } catch (error) {
         if (error instanceof Error) {
-          setError(error)
+          setError(error);
         }
       }
     },
-    [router, error, email, password],
-  )
+    [router, email, password],
+  );
 
   return {
     loading,
@@ -67,7 +70,7 @@ function useSignUp(router: RouterInterface): UseSignUpInterface {
     handleEmail,
     handlePassword,
     handleSignUp,
-  }
+  };
 }
 
-export { useSignUp }
+export { useSignUp };

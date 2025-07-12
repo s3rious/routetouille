@@ -1,17 +1,16 @@
-import * as React from 'react'
-import { ReactElement, ReactNode } from 'react'
+import type { ReactElement, ReactNode } from "react";
 
-import { Inner } from 'components/atoms/Inner'
-import { Spacing } from 'components/atoms/Spacing'
-import { Stack } from 'components/atoms/Stack'
-import { Typography } from 'components/atoms/Typography'
-import { Link } from 'components/atoms/Link'
+import { Inner } from "components/atoms/Inner";
+import { Link } from "components/atoms/Link";
+import { Spacing } from "components/atoms/Spacing";
+import { Stack } from "components/atoms/Stack";
+import { Typography } from "components/atoms/Typography";
 
-import styles from './Footer.module.css'
+import styles from "./Footer.module.css";
 
 type FooterProps = {
-  children?: ReactNode
-}
+  children?: ReactNode;
+};
 
 function Footer({ children }: FooterProps): ReactElement {
   return (
@@ -24,7 +23,9 @@ function Footer({ children }: FooterProps): ReactElement {
           </Stack>
         </Inner>
       </Spacing>
-      {Boolean(children) && <Inner className={styles.FooterContent}>{children}</Inner>}
+      {Boolean(children) && (
+        <Inner className={styles.FooterContent}>{children}</Inner>
+      )}
       <Spacing className={styles.FooterCopyright} bottom={16}>
         <Inner>
           <Typography size={14} align="center" color="muted">
@@ -33,7 +34,7 @@ function Footer({ children }: FooterProps): ReactElement {
         </Inner>
       </Spacing>
     </Stack>
-  )
+  );
 }
 
-export { Footer, FooterProps }
+export { Footer, type FooterProps };

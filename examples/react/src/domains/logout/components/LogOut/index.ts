@@ -1,1 +1,1 @@
-export * from './LogOut'
+export * from "./LogOut.js";

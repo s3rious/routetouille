@@ -1,21 +1,23 @@
-import * as React from 'react'
-import { ReactElement, ReactNode } from 'react'
+import type { ReactElement, ReactNode } from "react";
 
-import { Layout } from 'components/atoms/Layout'
-import { Inner } from 'components/atoms/Inner'
-import { Header } from 'components/molecules/Header'
-import { AllCenter } from 'components/atoms/AllCenter'
-import { Width } from 'components/atoms/Width'
-import { Footer } from 'components/molecules/Footer'
+import { AllCenter } from "components/atoms/AllCenter";
+import { Inner } from "components/atoms/Inner";
+import { Layout } from "components/atoms/Layout";
+import { Width } from "components/atoms/Width";
+import { Footer } from "components/molecules/Footer";
+import { Header } from "components/molecules/Header";
 
-import { Background } from '../Background'
+import { Background } from "../Background/index.js";
 
 type NonAuthLayoutProps = {
-  headerRight: ReactNode
-  content: ReactNode
-}
+  headerRight: ReactNode;
+  content: ReactNode;
+};
 
-function NonAuthLayout({ headerRight, content }: NonAuthLayoutProps): ReactElement {
+function NonAuthLayout({
+  headerRight,
+  content,
+}: NonAuthLayoutProps): ReactElement {
   return (
     <Layout
       header={<Header right={headerRight} />}
@@ -30,7 +32,7 @@ function NonAuthLayout({ headerRight, content }: NonAuthLayoutProps): ReactEleme
       }
       footer={<Footer />}
     />
-  )
+  );
 }
 
-export { NonAuthLayout }
+export { NonAuthLayout };

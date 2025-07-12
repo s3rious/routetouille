@@ -3,7 +3,8 @@
   border: 0;
   border-radius: 4px;
   box-shadow: 0 0 0 1px inset var(--color-background-border);
-  transition: box-shadow var(--animation-speed-default) var(--animation-transition-default);
+  transition: box-shadow var(--animation-speed-default)
+    var(--animation-transition-default);
 }
 
 .Input:focus {

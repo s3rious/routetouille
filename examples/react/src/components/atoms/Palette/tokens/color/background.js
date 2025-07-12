@@ -1,8 +1,8 @@
-const tinycolor = require('tinycolor2')
+const tinycolor = require("tinycolor2");
 
-const main = '#FFFFFF'
-const accent = '#F4F4F4'
-const alternative = '#000000'
+const main = "#FFFFFF";
+const accent = "#F4F4F4";
+const alternative = "#000000";
 
 const background = {
   default: tinycolor(main).toRgbString(),
@@ -10,6 +10,6 @@ const background = {
   muted: tinycolor(accent).setAlpha(0.85).toRgbString(),
   minor: tinycolor(alternative).setAlpha(0.05).toRgbString(),
   border: tinycolor(alternative).setAlpha(0.1).toRgbString(),
-}
+};
 
-module.exports = background
+module.exports = background;

@@ -1,13 +1,13 @@
 import {
+  type AnyRouteInterface,
   ModuleRoute,
+  type ModuleRouteInterface,
+  type RouterInterface,
   WithReactRoot,
-  ModuleRouteInterface,
-  WithReactRootInterface,
-  AnyRouteInterface,
-  RouterInterface,
-} from 'services/router'
+  type WithReactRootInterface,
+} from "services/router/index.js";
 
-import { Root } from './components/Root'
+import { Root } from "./components/Root/index.js";
 
 function getRoute(
   router: RouterInterface,
@@ -15,18 +15,21 @@ function getRoute(
 ): WithReactRootInterface & ModuleRouteInterface {
   return WithReactRoot(ModuleRoute)({
     router,
-    name: 'root',
-    id: 'root',
-    preloaderId: 'preloader',
+    name: "root",
+    id: "root",
+    preloaderId: "preloader",
     component: Root,
     beforeMount: async () => {
-      if (router.pathname === '/' && router.active[router.active.length - 1].fallback) {
-        await router.goTo('non-auth', { method: 'replace', optimistic: true })
+      if (
+        router.pathname === "/" &&
+        router.active[router.active.length - 1].fallback
+      ) {
+        await router.goTo("non-auth", { method: "replace", optimistic: true });
       }
     },
     children,
-  })
+  });
 }
 
-export * from './store'
-export { getRoute }
+export { getRoute };
+export { $hideGui } from "./store/index.js";

@@ -1,22 +1,30 @@
-import * as React from 'react'
-import { ReactElement } from 'react'
+import type { ReactElement } from "react";
 
-import { WithReactComponentProps } from 'services/router/routes'
+import type { WithReactComponentProps } from "services/router/routes";
 
-import { useSignUp } from 'domains/signUp/hooks/useSignUp'
+import { useSignUp } from "domains/signUp/hooks/useSignUp";
 
-import { Relative } from 'components/atoms/Relative'
-import { Card } from 'components/atoms/Card/Card'
-import { Stack } from 'components/atoms/Stack'
-import { Spacing } from 'components/atoms/Spacing'
-import { Typography } from 'components/atoms/Typography'
-import { Toast } from 'components/molecules/Toast'
-import { Input } from 'components/atoms/Input'
-import { RegularButton } from 'components/molecules/RegularButton'
-import { Preloader } from 'components/atoms/Preloader'
+import { Card } from "components/atoms/Card/Card";
+import { Input } from "components/atoms/Input";
+import { Preloader } from "components/atoms/Preloader";
+import { Relative } from "components/atoms/Relative";
+import { Spacing } from "components/atoms/Spacing";
+import { Stack } from "components/atoms/Stack";
+import { Typography } from "components/atoms/Typography";
+import { RegularButton } from "components/molecules/RegularButton";
+import { Toast } from "components/molecules/Toast";
 
 function SignUp({ router }: WithReactComponentProps): ReactElement {
-  const { loading, email, password, error, disabled, handleEmail, handlePassword, handleSignUp } = useSignUp(router)
+  const {
+    loading,
+    email,
+    password,
+    error,
+    disabled,
+    handleEmail,
+    handlePassword,
+    handleSignUp,
+  } = useSignUp(router);
 
   return (
     <Relative mix>
@@ -29,25 +37,43 @@ function SignUp({ router }: WithReactComponentProps): ReactElement {
           <Spacing top={16} mix>
             <form onSubmit={handleSignUp}>
               <Stack vertical={24}>
-                {error?.message && <Toast status="error">{error?.message}</Toast>}
-                <label>
+                {error?.message && (
+                  <Toast status="error">{error?.message}</Toast>
+                )}
+                <label htmlFor="signup-email">
                   <Stack vertical={4}>
                     <Typography size={12}>Your email</Typography>
-                    <Input type="email" autoComplete="username" onChange={handleEmail} block>
+                    <Input
+                      id="signup-email"
+                      type="email"
+                      autoComplete="username"
+                      onChange={handleEmail}
+                      block
+                    >
                       {email}
                     </Input>
                   </Stack>
                 </label>
-                <label>
+                <label htmlFor="signup-password">
                   <Stack vertical={4}>
                     <Typography size={12}>Password</Typography>
-                    <Input type="password" autoComplete="current-password" onChange={handlePassword} block>
+                    <Input
+                      id="signup-password"
+                      type="password"
+                      autoComplete="current-password"
+                      onChange={handlePassword}
+                      block
+                    >
                       {password}
                     </Input>
                   </Stack>
                 </label>
-                <RegularButton type="submit" disabled={disabled || loading} block>
-                  {loading ? 'Signing up...' : 'Sign up'}
+                <RegularButton
+                  type="submit"
+                  disabled={disabled || loading}
+                  block
+                >
+                  {loading ? "Signing up..." : "Sign up"}
                 </RegularButton>
               </Stack>
             </form>
@@ -55,7 +81,7 @@ function SignUp({ router }: WithReactComponentProps): ReactElement {
         </Spacing>
       </Card>
     </Relative>
-  )
+  );
 }
 
-export { SignUp }
+export { SignUp };

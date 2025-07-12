@@ -1,11 +1,25 @@
-import { ModuleRoute, ModuleRouteInterface, AnyRouteInterface, RouterInterface } from 'services/router'
+import {
+  type AnyRouteInterface,
+  ModuleRoute,
+  type ModuleRouteInterface,
+  type RouterInterface,
+} from "services/router/index.js";
 
-function getRoute(router: RouterInterface, children: AnyRouteInterface[] = []): ModuleRouteInterface {
+import { getRoute as getAuthRoute } from "./domains/auth/index.js";
+import { getRoute as getNonAuthRoute } from "./domains/non-auth/index.js";
+
+function getRoute(
+  _router: RouterInterface,
+  children: AnyRouteInterface[] = [],
+): ModuleRouteInterface {
   return ModuleRoute({
-    name: 'client',
+    name: "client",
+    beforeMount: async () => {},
     children,
-  })
+  });
 }
 
-export { getRoute }
-export * from './store'
+export { getRoute };
+export * from "./store/index.js";
+export { getAuthRoute, getNonAuthRoute };
+export { effects } from "./store/index.js";

@@ -1,1 +1,1 @@
-export * from './RegularButton'
+export * from "./RegularButton.js";

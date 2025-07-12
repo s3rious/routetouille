@@ -1,35 +1,38 @@
-import {
-  RouteInterface,
-  RouteOptions,
-  ModuleRouteInterface,
-  ModuleRouteOptions,
-  FallbackRouteInterface,
-  FallbackRouteOptions,
-} from 'routetouille/lib/Route'
-import {
-  WithReactRootInterface,
-  WithReactRootOptions,
+import type {
   WithReactComponentInterface,
   WithReactComponentOptions,
-} from 'react-routetouille/lib/Route'
+  WithReactRootInterface,
+  WithReactRootOptions,
+} from "react-routetouille/lib/Route";
+import type {
+  FallbackRouteInterface,
+  FallbackRouteOptions,
+  ModuleRouteInterface,
+  ModuleRouteOptions,
+  RouteInterface,
+  RouteOptions,
+} from "routetouille/lib/Route";
 
 type GenericRouteInterface<Interface> =
   | Interface
   | (WithReactRootInterface & Interface)
-  | (WithReactComponentInterface & Interface)
+  | (WithReactComponentInterface & Interface);
 
-type GenericRouteOptions<Options> = Options | (WithReactRootOptions & Options) | (WithReactComponentOptions & Options)
+type GenericRouteOptions<Options> =
+  | Options
+  | (WithReactRootOptions & Options)
+  | (WithReactComponentOptions & Options);
 
 type AnyRouteInterface =
   | GenericRouteInterface<RouteInterface>
   | GenericRouteInterface<ModuleRouteInterface>
-  | GenericRouteInterface<FallbackRouteInterface>
+  | GenericRouteInterface<FallbackRouteInterface>;
 
 type AnyRouteOptions =
   | GenericRouteOptions<RouteOptions>
   | GenericRouteOptions<ModuleRouteOptions>
-  | GenericRouteOptions<FallbackRouteOptions>
+  | GenericRouteOptions<FallbackRouteOptions>;
 
-export * from 'routetouille/lib/Route'
-export * from 'react-routetouille/lib/Route'
-export { AnyRouteInterface, AnyRouteOptions }
+export * from "routetouille/lib/Route";
+export * from "react-routetouille/lib/Route";
+export type { AnyRouteInterface, AnyRouteOptions };

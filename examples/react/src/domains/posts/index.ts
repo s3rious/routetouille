@@ -1,23 +1,26 @@
 import {
+  type AnyRouteInterface,
   ModuleRoute,
-  ModuleRouteInterface,
-  AnyRouteInterface,
-  RouterInterface,
+  type ModuleRouteInterface,
+  type RouterInterface,
   activateFirstChildOf,
-} from 'services/router'
+} from "services/router/index.js";
 
-import { effects } from './store'
+import { effects } from "./store/index.js";
 
-function getRoute(router: RouterInterface, children: AnyRouteInterface[] = []): ModuleRouteInterface {
+function getRoute(
+  router: RouterInterface,
+  children: AnyRouteInterface[] = [],
+): ModuleRouteInterface {
   return ModuleRoute({
-    name: 'posts',
-    beforeMount: async () => activateFirstChildOf(router, 'posts'),
+    name: "posts",
+    beforeMount: async () => activateFirstChildOf(router, "posts"),
     afterMount: async () => {
-      await effects.fetchPosts()
+      await effects.fetchPosts();
     },
     children,
-  })
+  });
 }
 
-export { getRoute }
-export * from './store'
+export { getRoute };
+export * from "./store/index.js";

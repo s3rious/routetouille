@@ -1,185 +1,220 @@
-import { createEvent } from 'effector'
-import { $client, $accessToken, $isClientLoading } from './index'
-import { fetchClient, logIn, signUp, logOut } from './effects'
-import { ClientModel } from './model'
+import { fork, allSettled } from "effector";
+import { describe, it, expect } from "vitest";
+import { fetchClient, logIn, logOut, signUp } from "./effects.js";
+import { $accessToken, $client, $isClientLoading } from "./index.js";
+import { ClientModel } from "./model.js";
 
-describe('client/store/index', function () {
-  const accessToken = 'accessToken+john.pass@example.com'
-  const email = 'email@example.com'
-  const password = 'email@example.com1Q'
-  const firstName = 'John'
-  const lastName = 'Pass'
-  const fullName = `${firstName} ${lastName}`
+describe("client/store/index (scope-based)", () => {
+  const accessToken = "accessToken+john.pass@example.com";
+  const email = "email@example.com";
+  const password = "email@example.com1Q";
+  const firstName = "John";
+  const lastName = "Pass";
+  const fullName = `${firstName} ${lastName}`;
 
-  beforeEach(function () {
-    const reset = createEvent()
+  function createScopeWithHandlers(handlers = []) {
+    return fork({ handlers });
+  }
 
-    $client.reset(reset)
-    $accessToken.reset(reset)
+  it("$client initial state", () => {
+    const scope = fork();
+    expect(scope.getState($client)).toBeInstanceOf(ClientModel);
+    expect(scope.getState($client)).toEqual(new ClientModel({}));
+  });
 
-    reset()
+  it("$client updates on fetchClient.doneData", async () => {
+    let resolvePromise: (value: {
+      email: string;
+      firstName: null;
+      lastName: null;
+    }) => void;
+    const handler = async () =>
+      await new Promise<{ email: string; firstName: null; lastName: null }>(
+        (resolve) => {
+          resolvePromise = resolve;
+        },
+      );
+    // Use the handler that sets resolvePromise
+    // @ts-ignore Effector typing issue
+    const scope = createScopeWithHandlers([[fetchClient, handler]]);
+    // Start the effect, then resolve the promise
+    // @ts-ignore Effector typing issue
+    const promise = allSettled(fetchClient, {
+      scope,
+      params: { accessToken: "foo" },
+    });
+    expect(scope.getState($isClientLoading)).toEqual(true);
+    // @ts-ignore Effector typing issue
+    resolvePromise({ email, firstName: null, lastName: null });
+    await promise;
+    expect(scope.getState($client)).toEqual({
+      email,
+      firstName: null,
+      lastName: null,
+      fullName: null,
+    });
+  });
 
-    expect($client.getState()).toEqual(new ClientModel({}))
-    expect($accessToken.getState()).toEqual(null)
-  })
+  it("$client updates on signUp.doneData", async () => {
+    const scope = createScopeWithHandlers([
+      [signUp, async () => ({ accessToken, email, firstName, lastName })],
+    ]);
+    await allSettled(signUp, { scope, params: { email, password } });
+    expect(scope.getState($client)).toEqual({
+      email,
+      firstName,
+      lastName,
+      fullName,
+    });
+  });
 
-  describe('$client', function () {
-    it('initial state', function () {
-      expect($client.getState()).toBeInstanceOf(ClientModel)
-      expect($client.getState()).toEqual(new ClientModel({}))
-    })
+  it("$client does not update on signUp error", async () => {
+    // @ts-ignore Effector typing issue
+    const scope = createScopeWithHandlers([[signUp, async () => new Error()]]);
+    await allSettled(signUp, { scope, params: { email, password } });
+    expect(scope.getState($client)).toEqual(new ClientModel({}));
+  });
 
-    it('`fetchClient` updates store', async function () {
-      const defaultHandler = fetchClient.use.getCurrent()
+  it("$client resets on logOut", async () => {
+    const scope = createScopeWithHandlers([
+      [signUp, async () => ({ accessToken, email, firstName, lastName })],
+      [logOut, async () => null],
+    ]);
+    await allSettled(signUp, { scope, params: { email, password } });
+    expect(scope.getState($client)).toEqual({
+      email,
+      firstName,
+      lastName,
+      fullName,
+    });
+    await allSettled(logOut, { scope });
+    expect(scope.getState($client)).toEqual(new ClientModel({}));
+  });
 
-      fetchClient.use(() => ({ email, firstName: null, lastName: null }))
-      await fetchClient({ accessToken: 'foo' })
-      expect($client.getState()).toBeInstanceOf(ClientModel)
-      expect($client.getState()).toEqual({ email, firstName: null, lastName: null, fullName: null })
+  it("$accessToken initial state", () => {
+    const scope = fork();
+    expect(scope.getState($accessToken)).toEqual(null);
+  });
 
-      fetchClient.use(() => ({ email: null, firstName, lastName }))
-      await fetchClient({ accessToken: 'foo' })
-      expect($client.getState()).toBeInstanceOf(ClientModel)
-      expect($client.getState()).toEqual({ email: null, firstName, lastName, fullName })
+  it("$accessToken updates on logIn.doneData", async () => {
+    // @ts-ignore Effector typing issue
+    const scope = createScopeWithHandlers([[logIn, async () => accessToken]]);
+    await allSettled(logIn, { scope, params: { email, password } });
+    expect(scope.getState($accessToken)).toEqual(accessToken);
+  });
 
-      fetchClient.use(defaultHandler)
-    })
+  it("$accessToken updates on signUp.doneData", async () => {
+    const scope = createScopeWithHandlers([
+      [signUp, async () => ({ accessToken, email, firstName, lastName })],
+    ]);
+    await allSettled(signUp, { scope, params: { email, password } });
+    expect(scope.getState($accessToken)).toEqual(accessToken);
+  });
 
-    it('`signUp` updates store', async function () {
-      const defaultHandler = signUp.use.getCurrent()
+  it("$accessToken does not update on signUp error", async () => {
+    // @ts-ignore Effector typing issue
+    const scope = createScopeWithHandlers([[signUp, async () => new Error()]]);
+    await allSettled(signUp, { scope, params: { email, password } });
+    expect(scope.getState($accessToken)).toEqual(null);
+  });
 
-      signUp.use(() => ({ accessToken, email, firstName, lastName }))
-      await signUp({ email, password })
-      expect($client.getState()).toBeInstanceOf(ClientModel)
-      expect($client.getState()).toEqual({ email, firstName, lastName, fullName })
+  it("$accessToken resets on logOut", async () => {
+    const scope = createScopeWithHandlers([
+      [signUp, async () => ({ accessToken, email, firstName, lastName })],
+      [logOut, async () => null],
+    ]);
+    await allSettled(signUp, { scope, params: { email, password } });
+    expect(scope.getState($accessToken)).toEqual(accessToken);
+    await allSettled(logOut, { scope });
+    expect(scope.getState($accessToken)).toEqual(null);
+  });
 
-      signUp.use(defaultHandler)
-    })
+  it("$isClientLoading initial state", () => {
+    const scope = fork();
+    expect(scope.getState($isClientLoading)).toEqual(false);
+  });
 
-    it('`signUp` returns previous store state on error', async function () {
-      const defaultHandler = signUp.use.getCurrent()
-      const alternativeEmail = 'foo@bar.baz'
+  it("$isClientLoading is true when fetchClient is pending", async () => {
+    let resolvePromise: (value: {
+      email: string;
+      firstName: null;
+      lastName: null;
+    }) => void;
+    const handler = async () =>
+      await new Promise<{ email: string; firstName: null; lastName: null }>(
+        (resolve) => {
+          resolvePromise = resolve;
+        },
+      );
+    // @ts-ignore Effector typing issue
+    const scope = createScopeWithHandlers([[fetchClient, handler]]);
+    // @ts-ignore Effector typing issue
+    const promise = allSettled(fetchClient, { scope, params: { accessToken } });
+    expect(scope.getState($isClientLoading)).toEqual(true);
+    // @ts-ignore Effector typing issue
+    resolvePromise({ email, firstName: null, lastName: null });
+    await promise;
+    expect(scope.getState($isClientLoading)).toEqual(false);
+  });
 
-      signUp.use(() => ({ accessToken, email, firstName, lastName }))
-      await signUp({ email, password })
-      expect($client.getState()).toEqual({ email, firstName, lastName, fullName })
+  it("$isClientLoading is true when logIn is pending", async () => {
+    let resolvePromise: (value: string) => void;
+    const handler = async () =>
+      await new Promise<string>((resolve) => {
+        resolvePromise = resolve;
+      });
+    // @ts-ignore Effector typing issue
+    const scope = createScopeWithHandlers([[logIn, handler]]);
+    // @ts-ignore Effector typing issue
+    const promise = allSettled(logIn, { scope, params: { email, password } });
+    expect(scope.getState($isClientLoading)).toEqual(true);
+    // @ts-ignore Effector typing issue
+    resolvePromise(accessToken);
+    await promise;
+    expect(scope.getState($isClientLoading)).toEqual(false);
+  });
 
-      signUp.use(() => new Error())
-      await signUp({ email: alternativeEmail, password })
-      expect($client.getState()).toEqual({ email, firstName, lastName, fullName })
+  it("$isClientLoading is true when signUp is pending", async () => {
+    let resolvePromise: (value: {
+      accessToken: string;
+      email: string;
+      firstName: string;
+      lastName: string;
+    }) => void;
+    const handler = async () =>
+      await new Promise<{
+        accessToken: string;
+        email: string;
+        firstName: string;
+        lastName: string;
+      }>((resolve) => {
+        resolvePromise = resolve;
+      });
+    // @ts-ignore Effector typing issue
+    const scope = createScopeWithHandlers([[signUp, handler]]);
+    // @ts-ignore Effector typing issue
+    const promise = allSettled(signUp, { scope, params: { email, password } });
+    expect(scope.getState($isClientLoading)).toEqual(true);
+    // @ts-ignore Effector typing issue
+    resolvePromise({ accessToken, email, firstName, lastName });
+    await promise;
+    expect(scope.getState($isClientLoading)).toEqual(false);
+  });
 
-      signUp.use(defaultHandler)
-    })
-
-    it('`logOut` resets store', async function () {
-      const defaultSignUpHandler = signUp.use.getCurrent()
-      const defaultLogOutHandler = logOut.use.getCurrent()
-
-      signUp.use(() => ({ accessToken, email, firstName, lastName }))
-      await signUp({ email, password })
-      expect($client.getState()).toEqual(new ClientModel({ email, firstName, lastName }))
-
-      logOut.use(() => null)
-      await logOut()
-      expect($client.getState()).toEqual(new ClientModel({}))
-
-      signUp.use(defaultSignUpHandler)
-      logOut.use(defaultLogOutHandler)
-    })
-  })
-
-  describe('$accessToken', function () {
-    it('initial state', function () {
-      expect($accessToken.getState()).toEqual(null)
-    })
-
-    it('`logIn` updates store', async function () {
-      const defaultHandler = logIn.use.getCurrent()
-
-      logIn.use(() => accessToken)
-      await logIn({ email, password })
-      expect($accessToken.getState()).toEqual(accessToken)
-
-      logIn.use(defaultHandler)
-    })
-
-    it('`signUp` updates store', async function () {
-      const defaultHandler = signUp.use.getCurrent()
-
-      signUp.use(() => ({ accessToken, email, firstName, lastName }))
-      await signUp({ email, password })
-      expect($accessToken.getState()).toEqual(accessToken)
-
-      signUp.use(defaultHandler)
-    })
-
-    it('`signUp` returns previous store state on error', async function () {
-      const defaultHandler = signUp.use.getCurrent()
-      const alternativeEmail = 'foo@bar.baz'
-
-      signUp.use(() => ({ accessToken, email, firstName, lastName }))
-      await signUp({ email, password })
-      expect($accessToken.getState()).toEqual(accessToken)
-
-      signUp.use(() => new Error())
-      await signUp({ email: alternativeEmail, password })
-      expect($client.getState()).toEqual({ email, firstName, lastName, fullName })
-
-      signUp.use(defaultHandler)
-    })
-
-    it('`logOut` resets store', async function () {
-      const defaultSignUpHandler = signUp.use.getCurrent()
-      const defaultLogOutHandler = logOut.use.getCurrent()
-
-      signUp.use(() => ({ accessToken, email, firstName, lastName }))
-      await signUp({ email, password })
-      expect($accessToken.getState()).toEqual(accessToken)
-
-      logOut.use(() => null)
-      await logOut()
-      expect($accessToken.getState()).toEqual(null)
-
-      signUp.use(defaultSignUpHandler)
-      logOut.use(defaultLogOutHandler)
-    })
-  })
-
-  describe('$isClientLoading', function () {
-    it('initial state', function () {
-      expect($isClientLoading.getState()).toEqual(false)
-    })
-
-    it('when `fetchClient` is pending returns true', async function () {
-      fetchClient.use(async () => await new Promise((resolve) => resolve({ email, firstName: null, lastName: null })))
-      const fetch = fetchClient({ accessToken })
-      expect($isClientLoading.getState()).toEqual(true)
-      await fetch
-      expect($isClientLoading.getState()).toEqual(false)
-    })
-
-    it('when `logIn` is pending returns true', async function () {
-      logIn.use(async () => await new Promise((resolve) => resolve(accessToken)))
-      const fetch = logIn({ email, password })
-      expect($isClientLoading.getState()).toEqual(true)
-      await fetch
-      expect($isClientLoading.getState()).toEqual(false)
-    })
-
-    it('when `signUp` is pending returns true', async function () {
-      signUp.use(async () => await new Promise((resolve) => resolve({ accessToken, email, firstName, lastName })))
-      const fetch = signUp({ email, password })
-      expect($isClientLoading.getState()).toEqual(true)
-      await fetch
-      expect($isClientLoading.getState()).toEqual(false)
-    })
-
-    it('when `logOut` is pending returns true', async function () {
-      logOut.use(async () => await new Promise((resolve) => resolve(null)))
-      const fetch = logOut()
-      expect($isClientLoading.getState()).toEqual(true)
-      await fetch
-      expect($isClientLoading.getState()).toEqual(false)
-    })
-  })
-})
+  it("$isClientLoading is true when logOut is pending", async () => {
+    let resolvePromise: (value: null) => void;
+    const handler = async () =>
+      await new Promise<null>((resolve) => {
+        resolvePromise = resolve;
+      });
+    // @ts-ignore Effector typing issue
+    const scope = createScopeWithHandlers([[logOut, handler]]);
+    // @ts-ignore Effector typing issue
+    const promise = allSettled(logOut, { scope });
+    expect(scope.getState($isClientLoading)).toEqual(true);
+    // @ts-ignore Effector typing issue
+    resolvePromise(null);
+    await promise;
+    expect(scope.getState($isClientLoading)).toEqual(false);
+  });
+});

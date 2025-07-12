@@ -1,2 +1,2 @@
-export * from './email'
-export * from './capitalizedString'
+export * from "./email.js";
+export * from "./capitalizedString.js";

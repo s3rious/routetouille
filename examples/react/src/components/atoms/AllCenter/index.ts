@@ -1,1 +1,1 @@
-export * from './AllCenter'
+export * from "./AllCenter.js";

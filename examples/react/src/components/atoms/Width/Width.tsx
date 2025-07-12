@@ -1,22 +1,31 @@
-import * as React from 'react'
-import { ReactElement, ReactNode } from 'react'
-import classNames from 'classnames/dedupe'
+import classNames from "classnames/dedupe";
+import type { ReactElement, ReactNode } from "react";
 
-import styles from './Width.module.css'
+import styles from "./Width.module.css";
 
 type WidthProps = {
-  children: ReactNode
-  className?: string
-  size: number
-  center?: boolean
-}
+  children: ReactNode;
+  className?: string;
+  size: number;
+  center?: boolean;
+};
 
-function Width({ children, className, size, center = false }: WidthProps): ReactElement {
+function Width({
+  children,
+  className,
+  size,
+  center = false,
+}: WidthProps): ReactElement {
   return (
-    <div className={classNames(className, styles.Width, { [styles.Width_center]: center })} style={{ width: size }}>
+    <div
+      className={classNames(className, styles.Width, {
+        [styles.Width_center]: center,
+      })}
+      style={{ width: size }}
+    >
       {children}
     </div>
-  )
+  );
 }
 
-export { Width }
+export { Width };

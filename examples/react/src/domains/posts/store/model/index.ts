@@ -1,2 +1,2 @@
-export * from './Posts'
-export * from './Post'
+export * from "./Posts.js";
+export * from "./Post.js";

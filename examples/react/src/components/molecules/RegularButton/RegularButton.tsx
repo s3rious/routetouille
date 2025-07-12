@@ -1,26 +1,29 @@
-import * as React from 'react'
-import { ReactElement } from 'react'
+import type { ReactElement } from "react";
 
-import { Activator } from 'services/router'
+import type { Activator } from "services/router";
 
-import { Button, ButtonProps } from 'components/atoms/Button'
-import { Spacing, SpacingSize } from 'components/atoms/Spacing'
-import { Typography, TypographySize } from 'components/atoms/Typography'
-import { Link } from 'components/atoms/Link'
+import { Button, type ButtonProps } from "components/atoms/Button";
+import { Link } from "components/atoms/Link";
+import { Spacing, type SpacingSize } from "components/atoms/Spacing";
+import { Typography, type TypographySize } from "components/atoms/Typography";
 
-type RegularButtonSize = 'small' | 'default'
+type RegularButtonSize = "small" | "default";
 
 type RegularButtonProps = {
-  size?: RegularButtonSize
-  to?: Activator
-} & Omit<ButtonProps, 'size'>
+  size?: RegularButtonSize;
+  to?: Activator;
+} & Omit<ButtonProps, "size">;
 
-function RegularButton({ size = 'default', to, ...rest }: RegularButtonProps): ReactElement {
+function RegularButton({
+  size = "default",
+  to,
+  ...rest
+}: RegularButtonProps): ReactElement {
   type RegularButtonMetrics = {
-    vertical: SpacingSize
-    horizontal: SpacingSize
-    typography: TypographySize
-  }
+    vertical: SpacingSize;
+    horizontal: SpacingSize;
+    typography: TypographySize;
+  };
 
   const metrics: RegularButtonMetrics = {
     small: {
@@ -33,7 +36,7 @@ function RegularButton({ size = 'default', to, ...rest }: RegularButtonProps): R
       horizontal: 24 as SpacingSize,
       typography: 16 as TypographySize,
     },
-  }[size]
+  }[size];
 
   const button = (
     <Typography size={metrics.typography} lineHeight="small" align="center" mix>
@@ -41,17 +44,17 @@ function RegularButton({ size = 'default', to, ...rest }: RegularButtonProps): R
         <Button {...rest} />
       </Spacing>
     </Typography>
-  )
+  );
 
   if (to != null) {
     return (
       <Link to={to} tabIndex={-1}>
         {button}
       </Link>
-    )
+    );
   }
 
-  return button
+  return button;
 }
 
-export { RegularButton, RegularButtonSize }
+export { RegularButton, type RegularButtonSize };

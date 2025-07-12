@@ -1,25 +1,25 @@
 import {
-  Route,
-  WithReactComponent,
-  RouteInterface,
-  WithReactComponentInterface,
-  AnyRouteInterface,
-  RouterInterface,
-} from 'services/router'
+  type AnyRouteInterface,
+  ModuleRoute,
+  type ModuleRouteInterface,
+  type RouterInterface,
+  activateFirstChildOf,
+} from "services/router/index.js";
 
-import { Dashboard } from './components/Dashboard'
+import { effects } from "./store/index.js";
 
 function getRoute(
-  _router: RouterInterface,
+  router: RouterInterface,
   children: AnyRouteInterface[] = [],
-): WithReactComponentInterface & RouteInterface {
-  return WithReactComponent(Route)({
-    name: 'dashboard',
-    path: 'dashboard/',
-    component: Dashboard,
-    exclusive: true,
+): ModuleRouteInterface {
+  return ModuleRoute({
+    name: "dashboard",
+    beforeMount: async () => activateFirstChildOf(router, "dashboard"),
+    afterMount: async () => {
+      await effects.fetchDashboard();
+    },
     children,
-  })
+  });
 }
 
-export { getRoute }
+export { getRoute };

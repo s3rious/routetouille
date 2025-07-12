@@ -18,7 +18,7 @@
 }
 
 .Spinner::after {
-  content: '';
+  content: "";
   box-sizing: border-box;
   position: absolute;
   left: 0;
@@ -28,5 +28,6 @@
   border-radius: 50%;
   border-left: 4px solid var(--color-secondary-45);
   border-bottom: 4px solid transparent;
-  animation: rotation calc(var(--animation-speed-slow) / 2) linear infinite reverse;
+  animation: rotation calc(var(--animation-speed-slow) / 2) linear infinite
+    reverse;
 }

@@ -1,30 +1,37 @@
-import * as React from 'react'
-import { Fragment, ReactElement, ReactNode } from 'react'
+import * as React from "react";
+import type { ReactElement, ReactNode } from "react";
 
-import styles from './Skeleton.module.css'
-import classNames from 'classnames/dedupe'
+import classNames from "classnames/dedupe";
+import styles from "./Skeleton.module.css";
 
 type SkeletonProps = {
-  children: ReactNode
-  shown?: boolean
-  background?: boolean
-  mix?: boolean
-}
+  children: ReactNode;
+  shown?: boolean;
+  background?: boolean;
+  mix?: boolean;
+};
 
-function Skeleton({ children, shown = true, background = true, mix = false }: SkeletonProps): ReactElement {
+function Skeleton({
+  children,
+  shown = true,
+  background = true,
+  mix = false,
+}: SkeletonProps): ReactElement {
   if (!shown) {
-    return <Fragment>{children}</Fragment>
+    return <>{children}</>;
   }
 
   const classes = classNames(styles.Skeleton, {
     [styles.Skeleton_background]: background,
-  })
+  });
 
   if (mix && React.isValidElement(children)) {
-    return React.cloneElement(children, { className: classes })
+    return React.cloneElement(children as React.ReactElement<unknown>, {
+      className: classes,
+    });
   }
 
-  return <div className={classes}>{children}</div>
+  return <div className={classes}>{children}</div>;
 }
 
-export { Skeleton, SkeletonProps }
+export { Skeleton, type SkeletonProps };

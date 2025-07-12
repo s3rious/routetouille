@@ -1,10 +1,9 @@
-import * as React from 'react'
-import { ReactElement } from 'react'
+import type { ReactElement } from "react";
 
-import { Layout } from 'components/atoms/Layout'
-import { AllCenter } from 'components/atoms/AllCenter'
-import { Stack } from 'components/atoms/Stack'
-import { Typography } from 'components/atoms/Typography'
+import { AllCenter } from "components/atoms/AllCenter";
+import { Layout } from "components/atoms/Layout";
+import { Stack } from "components/atoms/Stack";
+import { Typography } from "components/atoms/Typography";
 
 function Fallback(): ReactElement {
   return (
@@ -12,7 +11,12 @@ function Fallback(): ReactElement {
       content={
         <AllCenter>
           <Stack vertical={4}>
-            <Typography size={128} lineHeight="small" weight="black" align="center">
+            <Typography
+              size={128}
+              lineHeight="small"
+              weight="black"
+              align="center"
+            >
               404
             </Typography>
             <Typography size={20} lineHeight="small" align="center">
@@ -22,7 +26,7 @@ function Fallback(): ReactElement {
         </AllCenter>
       }
     />
-  )
+  );
 }
 
-export { Fallback }
+export { Fallback };

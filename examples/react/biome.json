@@ -1,0 +1,33 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.1.1/schema.json",
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "correctness": {
+        "useImportExtensions": "error",
+        "noUnusedImports": "error"
+      }
+    }
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
+  },
+  "files": {
+    "includes": ["**", "!dist/**"]
+  },
+  "css": {
+    "parser": {
+      "cssModules": true
+    }
+  }
+}

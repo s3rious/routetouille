@@ -1,1 +1,1 @@
-export * from './DefaultAuthHeader'
+export * from "./DefaultAuthHeader.js";

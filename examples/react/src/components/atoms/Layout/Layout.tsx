@@ -1,13 +1,12 @@
-import * as React from 'react'
-import { ReactElement, ReactNode } from 'react'
+import type { ReactElement, ReactNode } from "react";
 
-import styles from './Layout.module.css'
+import styles from "./Layout.module.css";
 
 type LayoutProps = {
-  header?: ReactNode
-  content?: ReactNode
-  footer?: ReactNode
-}
+  header?: ReactNode;
+  content?: ReactNode;
+  footer?: ReactNode;
+};
 
 function Layout({ header, content, footer }: LayoutProps): ReactElement {
   return (
@@ -16,7 +15,7 @@ function Layout({ header, content, footer }: LayoutProps): ReactElement {
       {content ?? <div />}
       {footer ?? <div />}
     </div>
-  )
+  );
 }
 
-export { Layout, LayoutProps }
+export { Layout, type LayoutProps };

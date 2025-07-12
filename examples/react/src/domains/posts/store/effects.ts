@@ -1,12 +1,12 @@
-import { createEffect } from 'effector'
+import { createEffect } from "effector";
 
-import * as api from './api'
+import * as api from "./api.js";
 
 const fetchPosts = createEffect({
-  name: 'posts/fetchPosts',
+  name: "posts/fetchPosts",
   async handler() {
-    return await api.fetchPosts()
+    return await api.fetchPosts();
   },
-})
+});
 
-export { fetchPosts }
+export { fetchPosts };

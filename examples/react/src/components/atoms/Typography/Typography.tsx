@@ -1,58 +1,70 @@
-import * as React from 'react'
-import { ReactElement, ReactHTML, ReactNode } from 'react'
-import classNames from 'classnames/dedupe'
+import classNames from "classnames/dedupe";
+import * as React from "react";
+import type { ReactElement, ReactNode } from "react";
 
-import styles from './Typography.module.css'
+import styles from "./Typography.module.css";
 
-type TypographyTag = keyof ReactHTML
+type TypographyTag = keyof HTMLElementTagNameMap;
 type TypographyColor =
-  | 'inherit'
-  | 'default'
-  | 'additional'
-  | 'minor'
-  | 'muted'
-  | 'on-color-default'
-  | 'warning'
-  | 'error'
-type TypographySize = 10 | 12 | 14 | 16 | 18 | 20 | 24 | 32 | 48 | 54 | 64 | 128
+  | "inherit"
+  | "default"
+  | "additional"
+  | "minor"
+  | "muted"
+  | "on-color-default"
+  | "warning"
+  | "error";
+type TypographySize =
+  | 10
+  | 12
+  | 14
+  | 16
+  | 18
+  | 20
+  | 24
+  | 32
+  | 48
+  | 54
+  | 64
+  | 128;
 type TypographyWeight =
-  | 'thin'
-  | 'extra-light'
-  | 'light'
-  | 'regular'
-  | 'medium'
-  | 'semi-bold'
-  | 'bold'
-  | 'extra-bold'
-  | 'black'
-type TypographyLineHeight = 'small' | 'medium'
-type TypographyAligns = 'left' | 'center' | 'right'
-type TypographyNumerics = 'tabular'
-type TypographyWordBreaks = 'break-all'
+  | "thin"
+  | "extra-light"
+  | "light"
+  | "regular"
+  | "medium"
+  | "semi-bold"
+  | "bold"
+  | "extra-bold"
+  | "black";
+type TypographyLineHeight = "small" | "medium";
+type TypographyAligns = "left" | "center" | "right";
+type TypographyNumerics = "tabular";
+type TypographyWordBreaks = "break-all";
 
 type TypographyProps = {
-  children?: ReactNode
-  tag?: TypographyTag
-  className?: string
-  color?: TypographyColor
-  size?: TypographySize
-  weight?: TypographyWeight
-  lineHeight?: TypographyLineHeight
-  align?: TypographyAligns
-  numeric?: TypographyNumerics
-  wordBreak?: TypographyWordBreaks
-  mix?: boolean
-}
+  children?: ReactNode;
+  tag?: TypographyTag;
+  className?: string;
+  color?: TypographyColor;
+  size?: TypographySize;
+  weight?: TypographyWeight;
+  lineHeight?: TypographyLineHeight;
+  align?: TypographyAligns;
+  numeric?: TypographyNumerics;
+  wordBreak?: TypographyWordBreaks;
+  mix?: boolean;
+};
 
 function Typography({
   children,
-  tag = 'div',
+  tag = "div",
   className,
-  color = 'inherit',
+  color = "inherit",
   size = 16,
-  weight = 'regular',
-  lineHeight = 'medium',
-  align = 'left',
+  weight = "regular",
+  lineHeight = "medium",
+  align = "left",
   numeric,
   wordBreak,
   mix = false,
@@ -66,28 +78,32 @@ function Typography({
     [styles[`Typography_align_${align}`]]: align,
     [styles[`Typography_numeric_${numeric}`]]: numeric,
     [styles[`Typography_wordBreak_${wordBreak}`]]: wordBreak,
-  })
+  });
   /* eslint-enable @typescript-eslint/restrict-template-expressions */
 
   if (mix && React.isValidElement(children)) {
-    return React.cloneElement(children, { className: classes })
+    return React.cloneElement(children as React.ReactElement<unknown>, {
+      className: classes,
+    });
   }
 
-  if (Boolean(children)) {
-    return React.createElement(tag, { className: classes }, children)
+  if (children) {
+    if (typeof tag === "string" || typeof tag === "function") {
+      return React.createElement(tag, { className: classes }, children);
+    }
   }
 
-  return null
+  return null;
 }
 
 export {
   Typography,
-  TypographyProps,
-  TypographyTag,
-  TypographyColor,
-  TypographySize,
-  TypographyWeight,
-  TypographyLineHeight,
-  TypographyAligns,
-  TypographyNumerics,
-}
+  type TypographyProps,
+  type TypographyTag,
+  type TypographyColor,
+  type TypographySize,
+  type TypographyWeight,
+  type TypographyLineHeight,
+  type TypographyAligns,
+  type TypographyNumerics,
+};

@@ -1,10 +1,9 @@
-import * as React from 'react'
-import { ReactElement } from 'react'
+import type { ReactElement } from "react";
 
-import { Preloader } from 'components/atoms/Preloader'
+import { Preloader } from "components/atoms/Preloader";
 
 function LogOut(): ReactElement {
-  return <Preloader shown />
+  return <Preloader shown />;
 }
 
-export { LogOut }
+export { LogOut };

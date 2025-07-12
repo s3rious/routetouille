@@ -19,7 +19,8 @@
 .Button_theme_primary,
 .Button_theme_secondary {
   color: var(--color-typography-on-color-default);
-  transition: background-color var(--animation-speed-default) var(--animation-transition-default);
+  transition: background-color var(--animation-speed-default)
+    var(--animation-transition-default);
 }
 
 .Button_theme_primary:hover,
@@ -63,9 +64,12 @@
   background-color: transparent;
   color: var(--color-primary-default);
   box-shadow: 0 0 0 1px inset var(--color-primary-default);
-  transition: background-color var(--animation-speed-default) var(--animation-transition-default),
+  transition:
+    background-color var(--animation-speed-default)
+    var(--animation-transition-default),
     color var(--animation-speed-default) var(--animation-transition-default),
-    box-shadow var(--animation-speed-default) var(--animation-transition-default);
+    box-shadow var(--animation-speed-default)
+    var(--animation-transition-default);
 }
 
 .Button_theme_outline:hover,

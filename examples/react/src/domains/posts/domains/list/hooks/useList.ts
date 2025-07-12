@@ -1,21 +1,23 @@
-import { useStore } from 'effector-react'
+import { useUnit } from "effector-react";
 
-import { $posts, $isPostsLoading, PostsModel } from 'domains/posts'
+import { $isPostsLoading, $posts, PostsModel } from "domains/posts";
 
 type UseListInterface = {
-  loading: boolean
-  posts: PostsModel
-}
+  loading: boolean;
+  posts: PostsModel;
+};
 
-function useList(loadingLength: number = 10): UseListInterface {
-  const loading = useStore($isPostsLoading)
-  let posts: PostsModel = useStore($posts)
+function useList(loadingLength = 10): UseListInterface {
+  const loading = useUnit($isPostsLoading);
+  let posts: PostsModel = useUnit($posts);
 
   if (posts.length < 1 && loading) {
-    posts = new PostsModel(...Array.from({ length: loadingLength }).map(() => ({})))
+    posts = new PostsModel(
+      ...Array.from({ length: loadingLength }).map(() => ({})),
+    );
   }
 
-  return { loading, posts }
+  return { loading, posts };
 }
 
-export { useList, UseListInterface }
+export { useList, type UseListInterface };

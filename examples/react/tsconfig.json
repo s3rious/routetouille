@@ -2,17 +2,18 @@
   "compilerOptions": {
     "strict": true,
     "lib": ["ESNext", "DOM"],
-    "jsx": "preserve",
+    "jsx": "react-jsx",
 
     "baseUrl": "./src",
 
-    "module": "ESNext",
-    "moduleResolution": "Node",
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
 
     "outDir": "./dist",
-    "target": "ES2019", // node 12 → https://github.com/microsoft/TypeScript/wiki/Node-Target-Mapping
+    "target": "ES2022",
 
-    "types": ["jest", "react/experimental", "react-dom/experimental"]
+    "types": []
   },
   "include": ["src"],
+  "exclude": ["src/**/*.test.ts", "src/**/*.test.tsx"]
 }

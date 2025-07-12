@@ -1,15 +1,15 @@
-type Email = `${string}@${string}`
+type Email = `${string}@${string}`;
 
 function isEmail(string: string): string is Email {
-  return /^.*@.*$/.test(string)
+  return /^.*@.*$/.test(string);
 }
 
 function email(unknown: unknown): Email | null {
-  if (typeof unknown === 'string' && isEmail(unknown)) {
-    return unknown
+  if (typeof unknown === "string" && isEmail(unknown)) {
+    return unknown;
   }
 
-  return null
+  return null;
 }
 
-export { email, isEmail, Email }
+export { email, isEmail, type Email };

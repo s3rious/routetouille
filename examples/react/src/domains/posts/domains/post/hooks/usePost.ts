@@ -1,21 +1,33 @@
-import { useStore } from 'effector-react'
+import { useUnit } from "effector-react";
 
-import { RouterInterface } from 'services/router'
+import type { RouterInterface } from "services/router";
 
-import { $posts, $isPostsLoading, PostModel } from 'domains/posts'
+import { $isPostsLoading, $posts, type PostModel } from "domains/posts";
 
 type UseListInterface = {
-  loading: boolean
-  post: PostModel | undefined
-}
+  loading: boolean;
+  post: PostModel | undefined;
+};
 
 function usePost(router: RouterInterface): UseListInterface {
-  const params = router.params.reduce((params, param) => ({ ...params, ...param }), {})
-  const postId = parseInt(params.postId, 10)
-  const loading = useStore($isPostsLoading)
-  const post = useStore($posts).getById(postId)
+  const params: Record<string, unknown> = {};
+  for (const param of router.params) {
+    Object.assign(params, param);
+  }
+  const postId =
+    typeof params.postId === "string"
+      ? Number.parseInt(params.postId, 10)
+      : undefined;
+  const loading = Boolean(useUnit($isPostsLoading));
+  const postsStore = useUnit($posts) as {
+    getById: (id: number) => PostModel | undefined;
+  };
+  const post =
+    typeof postId === "number" && !Number.isNaN(postId)
+      ? postsStore.getById(postId)
+      : undefined;
 
-  return { loading, post }
+  return { loading, post };
 }
 
-export { usePost, UseListInterface }
+export { usePost, type UseListInterface };

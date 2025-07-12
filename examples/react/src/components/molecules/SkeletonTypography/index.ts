@@ -1,1 +1,1 @@
-export * from './SkeletonTypography'
+export * from "./SkeletonTypography.js";

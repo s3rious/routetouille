@@ -1,25 +1,24 @@
-import * as React from 'react'
-import { HTMLProps, ReactElement, ReactNode } from 'react'
-import classNames from 'classnames/dedupe'
+import classNames from "classnames/dedupe";
+import type { HTMLProps, ReactElement, ReactNode } from "react";
 
-import styles from './Button.module.css'
+import styles from "./Button.module.css";
 
-type ButtonTheme = 'primary' | 'secondary' | 'outline'
+type ButtonTheme = "primary" | "secondary" | "outline";
 
 type ButtonProps = {
-  children: ReactNode
-  className?: string
-  type?: 'button' | 'submit' | 'reset'
-  theme?: ButtonTheme
-  disabled?: boolean
-  block?: boolean
-} & HTMLProps<HTMLButtonElement>
+  children: ReactNode;
+  className?: string;
+  type?: "button" | "submit" | "reset";
+  theme?: ButtonTheme;
+  disabled?: boolean;
+  block?: boolean;
+} & HTMLProps<HTMLButtonElement>;
 
 function Button({
   children,
   className,
-  type = 'button',
-  theme = 'primary',
+  type = "button",
+  theme = "primary",
   disabled = false,
   block = false,
   ...rest
@@ -28,13 +27,13 @@ function Button({
     [styles.Button_block]: block,
     [styles.Button_disabled]: disabled,
     [styles[`Button_theme_${theme}`]]: theme,
-  })
+  });
 
   return (
     <button className={classes} type={type} disabled={disabled} {...rest}>
       {children}
     </button>
-  )
+  );
 }
 
-export { Button, ButtonProps, ButtonTheme }
+export { Button, type ButtonProps, type ButtonTheme };
