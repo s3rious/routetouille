@@ -153,12 +153,7 @@ function MainView() {
 
 ## Contributing
 
-We welcome contributions! Please:
-- Follow the [Development Guidelines](../../DEVELOPMENT_GUIDELINES.md)
-- Use Biome for linting and formatting (`npm run lint`, `npm run format`)
-- Write and colocate tests with Vitest (`*.test.ts`, `*.test.tsx`)
-- Write clear, focused commit messages
-- See [CONTRIBUTING.md](../../CONTRIBUTING.md) if available
+For contribution guidelines, see the [CONTRIBUTING.md](../../CONTRIBUTING.md) in the repository root.
 
 ---
 

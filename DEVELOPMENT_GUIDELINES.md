@@ -68,3 +68,7 @@ These guidelines are derived strictly from the actual conventions and practices 
 - No comments about code history or changes.
 - No unnecessary comments; code should be self-explanatory.
 - Use JSDoc/TSDoc for exported functions and types.
+
+## Contributing
+
+For information on how to contribute, please see [CONTRIBUTING.md](./CONTRIBUTING.md).

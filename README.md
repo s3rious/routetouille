@@ -135,6 +135,10 @@ We welcome contributions! To keep the codebase consistent and maintainable:
 
 ---
 
+## Contributing
+
+We welcome contributions! Please read our [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines before submitting issues or pull requests. 
+
 ## License
 
 MIT 
