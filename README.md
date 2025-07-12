@@ -92,6 +92,7 @@ import { RoutetouilleProvider, useRoute, useGoTo } from 'react-routetouille';
 
 ## Examples
 
+- [No-Framework Example](./examples/no-framework) — Minimal vanilla JS usage as an npm package. Demonstrates Routetouille routing and DOM manipulation without any frontend framework.
 - [React Example App](./examples/react) — See Routetouille in action with React, including route trees, navigation, and lifecycle hooks.
 
 ---
