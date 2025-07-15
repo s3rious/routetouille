@@ -26,6 +26,7 @@ Commands can be run in either `/packages/routetouille` or `/packages/react-route
 - Uses Vitest testing framework
 - React tests use `@testing-library/react`
 - Coverage reports generated in `coverage/` directory
+- **Wallaby.js**: Live testing across all packages and examples (`wallaby.config.js`)
 
 ## Architecture Overview
 
