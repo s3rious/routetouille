@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "strict": true,
+    "lib": ["ES2024", "DOM"],
+    "baseUrl": "./src",
+    "module": "nodenext",
+    "outDir": "./lib",
+    "declaration": true,
+    "target": "ES2024",
+    "types": ["node"]
+  },
+  "include": ["src"],
+  "exclude": [
+    "node_modules",
+    "lib",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.test.js"
+  ]
+}
