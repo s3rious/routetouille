@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__wallaby__wallaby_allTests",
+      "mcp__wallaby__wallaby_failingTests",
+      "Bash(npm install:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm run dev:*)",
+      "Bash(npm run lint)",
+      "Bash(npm run test:*)",
+      "Bash(npx vitest run:*)",
+      "Bash(npx biome lint:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npm test)"
+    ],
+    "deny": []
+  }
+}
