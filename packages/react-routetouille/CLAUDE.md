@@ -10,16 +10,17 @@ This file provides guidance for working with the React bindings package at `/pac
 - `npm run test:coverage` - Run tests with coverage reporting
 - `npm run build` - TypeScript compilation to `lib/` directory
 - `npm run publish` - Publish to npm with public access
+- `npx vitest run src/hooks/useLink.test.ts` - Run single test file
 
 ## Package Overview
 
 React-Routetouille provides idiomatic React hooks, components, and context for seamless integration with the core Routetouille router. Built as a lightweight wrapper focusing on React-specific patterns and lifecycle integration.
 
-## Core Architecture
+## Core Architecture Deep Dive
 
 ### Context System (`src/Context/`)
 
-Simple React Context for router state management:
+Simple yet powerful React Context for router state management:
 
 ```typescript
 type ContextValue = { router: RouterInterface | undefined };
@@ -28,19 +29,17 @@ const Context: ReactContext<ContextValue> = createContext<ContextValue>({
 });
 ```
 
-**Key Features:**
-- Single context for router instance
-- Graceful undefined handling
-- DisplayName set for debugging
-- Type-safe context value
+**Key Design Decisions:**
+- Single context for router instance (no context splitting)
+- Graceful undefined handling for SSR compatibility
+- DisplayName set for React DevTools debugging
+- Type-safe context value with proper generics
 
-### Hook System (`src/hooks/`)
+### Hook System Architecture
 
-#### `useRouter()`
-Base hook that returns the router instance from context with graceful undefined handling.
+#### `useRouterRoot()` - **The Heart of React Integration**
 
-#### `useRouterRoot()` - **Primary Integration Hook**
-**Critical for root-level router integration**:
+This is the most critical hook that bridges Routetouille's event-driven architecture with React's state management:
 
 ```typescript
 function useRouterRoot<Route extends {}, Router extends AbstractRouter<Route>>(
@@ -52,14 +51,23 @@ function useRouterRoot<Route extends {}, Router extends AbstractRouter<Route>>(
 }
 ```
 
-**Key Features:**
-- Subscribes to `afterActivate` events to sync React state
-- Handles scroll position restoration on navigation
-- Optional verbose logging for development
-- Generic type support for custom route types
+**Deep Implementation Details:**
 
-#### `useLink()` - **Sophisticated Link Handling**
-Advanced hook for generating href URLs and click handlers:
+1. **State Synchronization**: Uses `afterActivate` events to sync router state with React
+2. **Scroll Restoration**: Implements dual-tick scroll restoration for reliable positioning
+   ```typescript
+   if (isGoToState(state)) {
+     globalThis.scrollTo(0, state.scrollTop);
+     // Second tick ensures scroll after render
+     setTimeout(() => globalThis.scrollTo(0, state.scrollTop), 0);
+   }
+   ```
+3. **Dependency Management**: Carefully managed effect dependencies prevent memory leaks
+4. **Performance**: Only triggers re-renders on actual route changes
+
+#### `useLink()` - **Advanced Navigation Hook**
+
+Sophisticated hook that handles all navigation edge cases:
 
 ```typescript
 function useLink<LinkActivator extends Activator, LinkParams extends Params>({
@@ -71,249 +79,574 @@ function useLink<LinkActivator extends Activator, LinkParams extends Params>({
 }: UseLinkProps<LinkActivator, LinkParams>): UseLink
 ```
 
-**Advanced Features:**
-- Fallback to `hrefProp` when router unavailable
-- Scroll position preservation before navigation
-- Event prevention for SPA navigation
-- Generic type constraints for type safety
+**Advanced Features Explained:**
 
-### Route Enhancement System (`src/Route/`)
+1. **Graceful Degradation**: Falls back to `hrefProp` when router unavailable (SSR)
+2. **Scroll Position Preservation**: Captures scroll before navigation
+   ```typescript
+   if (saveScrollPosition) {
+     const scrollTop = globalThis.scrollY || globalThis.pageYOffset || 0;
+     router.goTo(to, { params, optimistic, scrollTop });
+   }
+   ```
+3. **Event Prevention**: Smart handling of modifier keys and special clicks
+4. **Type Constraints**: Generic constraints ensure type safety for activators and params
 
-#### `WithReactComponent`
+### Route Enhancement System
+
+#### `WithReactComponent` - **Component Integration Pattern**
+
 Higher-order function that adds React component support to routes:
 
 ```typescript
 type WithReactComponentOptions = {
   component: FunctionComponent<WithReactComponentProps>;
-  exclusive?: boolean;
+  exclusive?: boolean; // Controls rendering strategy
 };
-
-// Usage
-const route = WithReactComponent(Route)({
-  name: 'dashboard',
-  path: '/dashboard',
-  component: DashboardComponent,
-  exclusive: true
-});
 ```
 
-**Key Features:**
-- Composable with other route enhancers
-- Type-safe component props
-- Exclusive rendering support
-- Generic composition pattern
+**Implementation Insights:**
+- Composable with other route enhancers via generic typing
+- Type-safe component props with intersection types
+- Exclusive rendering support for layout boundaries
+- Maintains route interface compatibility
 
-#### `WithReactRoot` - **Advanced Route Enhancer**
-For full React application roots:
+#### `WithReactRoot` - **Application Root Management**
+
+Advanced route enhancer for full React application roots:
 
 ```typescript
 type WithReactRootOptions = {
   beforeMount?: () => Promise<void>;
   afterMount?: () => Promise<void>;
   afterUnmount?: () => Promise<void>;
-  id: string;
-  preloaderId?: string;
+  id: string;                 // DOM container ID
+  preloaderId?: string;        // Optional preloader to remove
   router: RouterInterface;
   component: FunctionComponent<WithReactRootComponentProps>;
 };
 ```
 
-**Advanced Features:**
-- Full React app lifecycle management
-- DOM container creation and cleanup
-- React 18 createRoot API usage
-- Preloader removal after mount
-- Strict mode wrapping
-- Async lifecycle hooks
+**Sophisticated Features:**
 
-### Rendering Strategies (`src/strategies/`)
+1. **DOM Container Management**: Creates and manages root container
+2. **React 18 Integration**: Uses `createRoot` API for concurrent features
+3. **Preloader Removal**: Automatic cleanup of loading indicators
+4. **Strict Mode Wrapping**: Development-only StrictMode for better debugging
+5. **Lifecycle Ordering**: Proper sequencing of async operations
 
-#### `renderTree()` - **Default Strategy**
-Renders all active routes with components:
+### Rendering Strategies In-Depth
+
+#### `renderTree()` - **Default Hierarchical Rendering**
+
+Renders all active routes with components in nested structure:
+
 ```typescript
-const result = renderTree(router, activeRoutes);
+function renderTree<Route extends {}, Router extends AbstractRouter<Route>>(
+  router: Router,
+  active: Route[],
+): ReactElement | null {
+  const componentRoutes = active.filter(isWithReactComponent);
+  return React.createElement(
+    Context.Provider,
+    { value: { router } },
+    renderRecurse(router, componentRoutes),
+  );
+}
 ```
 
-#### `renderLastActive()` - **Simple Last-Route Rendering**
+**Use Cases:**
+- Standard nested layouts (header → content → footer)
+- Progressive enhancement of UI
+- Maintains full route hierarchy
+
+#### `renderLastActive()` - **Minimal Rendering**
+
 Renders only the last active route:
+
 ```typescript
-const result = renderLastActive(router, activeRoutes);
+function renderLastActive<Route extends {}, Router extends AbstractRouter<Route>>(
+  router: Router,
+  active: Route[],
+): ReactElement | null
 ```
 
-#### `renderLastExclusiveAndTree()` - **Advanced Exclusive Rendering**
-Finds last exclusive route and renders from there:
+**Use Cases:**
+- Single-page components without nesting
+- Modal or overlay routes
+- Performance-critical scenarios
+
+#### `renderLastExclusiveAndTree()` - **Smart Boundary Rendering**
+
+Finds the last exclusive route and renders from there:
+
 ```typescript
-const result = renderLastExclusiveAndTree(router, activeRoutes);
+function renderLastExclusiveAndTree<Route extends {}, Router extends AbstractRouter<Route>>(
+  router: Router,
+  active: Route[],
+): ReactElement | null {
+  const lastExclusiveIndex = findLastIndex(componentRoutes, "exclusive", true);
+  if (lastExclusiveIndex > -1) {
+    componentRoutes = componentRoutes.slice(lastExclusiveIndex, componentRoutes.length);
+  }
+  return renderRecurse(router, componentRoutes);
+}
 ```
 
-#### `renderRecurse()` - **Core Recursive Utility**
-Handles nested component composition:
+**Deep Implementation Details:**
+1. **Boundary Detection**: Uses custom `findLastIndex` for reverse search
+2. **Slice Optimization**: Only renders from boundary forward
+3. **Layout Isolation**: Prevents parent layouts from affecting exclusive sections
+
+**Use Cases:**
+- Authentication boundaries (public vs private sections)
+- Different layout systems (admin vs user areas)
+- Micro-frontend boundaries
+
+#### `renderRecurse()` - **Core Rendering Engine**
+
+The heart of all rendering strategies:
+
 ```typescript
-const result = renderRecurse(router, routes, renderingFunction);
+function renderRecurse<Route extends WithReactComponentInterface>(
+  router: RouterInterface,
+  routes: Route[],
+  renderingFunction?: (route: Route) => ReactNode,
+): ReactElement | null
 ```
+
+**Sophisticated Features:**
+1. **Custom Rendering Functions**: Allows injection of custom rendering logic
+2. **Nested Composition**: Handles deep nesting with proper prop passing
+3. **Type Safety**: Maintains type integrity through recursion
+4. **Performance**: Minimal React element creation
 
 ## React Integration Patterns
 
-### Provider Pattern
+### Provider Pattern with TypeScript
+
 ```typescript
 function App() {
+  const { router, active } = useRouterRoot(router, {
+    logger: console,
+    verbose: process.env.NODE_ENV === 'development'
+  });
+  
   return (
     <RoutetouilleProvider router={router}>
-      <MainView />
+      {renderLastExclusiveAndTree(router, active)}
     </RoutetouilleProvider>
   );
 }
 ```
 
-### Hook-Based Navigation
+### Advanced Hook Composition
+
 ```typescript
-function Navigation() {
+function useAdvancedNavigation() {
+  const router = useRouter();
   const { active, params, pathname } = useRoute();
   const goTo = useGoTo();
   
+  const navigateWithAnalytics = useCallback((to: string) => {
+    analytics.track('navigation', { from: pathname, to });
+    return goTo(to);
+  }, [pathname, goTo]);
+  
+  return { active, params, pathname, navigateWithAnalytics };
+}
+```
+
+### Component-Based Routes with Exclusive Rendering
+
+```typescript
+const AuthBoundary = WithReactComponent(Route)({
+  name: 'auth-boundary',
+  path: '/app',
+  component: AuthLayout,
+  exclusive: true, // Creates rendering boundary
+});
+
+const PublicBoundary = WithReactComponent(Route)({
+  name: 'public-boundary',
+  path: '/',
+  component: PublicLayout,
+  exclusive: true,
+});
+```
+
+## Performance Optimization Techniques
+
+### 1. React 18 Optimizations
+
+**useSyncExternalStore Integration:**
+- Automatic batching of state updates
+- Concurrent features support
+- Tearing prevention in concurrent mode
+
+```typescript
+// In WithReduxState wrapper
+const state = useSyncExternalStore(
+  store.subscribe,
+  store.getState,
+  store.getState, // Server snapshot
+);
+```
+
+### 2. Rendering Strategy Selection
+
+Choose the right strategy for performance:
+
+| Strategy | Re-renders | Use Case |
+|----------|-----------|----------|
+| `renderTree` | All active routes | Standard nested layouts |
+| `renderLastActive` | Single component | Modals, overlays |
+| `renderLastExclusiveAndTree` | From boundary | Layout switches |
+
+### 3. Memo and Callback Optimization
+
+```typescript
+const Navigation = React.memo(function Navigation() {
+  const goTo = useGoTo();
+  
+  const handleClick = useCallback((to: string) => {
+    return goTo(to, { optimistic: true });
+  }, [goTo]);
+  
+  return <nav>...</nav>;
+});
+```
+
+### 4. Selective Re-rendering
+
+Use route exclusivity to prevent unnecessary re-renders:
+
+```typescript
+WithReactComponent(Route)({
+  name: 'heavy-component',
+  component: HeavyComponent,
+  exclusive: true, // Isolates re-renders
+});
+```
+
+## Testing Patterns and Best Practices
+
+### Hook Testing with React Testing Library
+
+```typescript
+import { renderHook } from '@testing-library/react';
+import { withContextValue } from './test-utils';
+
+describe('useRouter', () => {
+  it('returns router from context', () => {
+    const mockRouter = createMockRouter();
+    
+    const { result } = renderHook(() => useRouter(), {
+      wrapper: ({ children }) => 
+        withContextValue({ router: mockRouter }, children),
+    });
+    
+    expect(result.current).toBe(mockRouter);
+  });
+});
+```
+
+### Component Testing with Rendering Strategies
+
+```typescript
+describe('renderTree', () => {
+  it('renders nested components correctly', () => {
+    const route1 = WithReactComponent(Route)({
+      name: 'parent',
+      component: ({ children }) => <div id="parent">{children}</div>,
+    });
+    
+    const route2 = WithReactComponent(Route)({
+      name: 'child',
+      component: () => <div id="child">Child</div>,
+    });
+    
+    const result = renderTree(router, [route1, route2]);
+    const { getByText } = render(result);
+    
+    expect(getByText('Child')).toBeInTheDocument();
+  });
+});
+```
+
+### Mock Patterns for Testing
+
+```typescript
+const createMockRouter = (): RouterInterface => ({
+  urlTo: vi.fn(() => "/foo"),
+  goTo: vi.fn(),
+  history: { 
+    emitter: { 
+      on: vi.fn(),
+      off: vi.fn(),
+      emit: vi.fn(),
+    },
+    pathname: '/',
+    push: vi.fn(),
+    replace: vi.fn(),
+  },
+  getMap: vi.fn(() => new Map()),
+  activate: vi.fn(),
+  active: [],
+  on: vi.fn(),
+  off: vi.fn(),
+});
+```
+
+### Integration Testing Patterns
+
+```typescript
+describe('Full Router Integration', () => {
+  it('handles navigation with lifecycle hooks', async () => {
+    const beforeMount = vi.fn();
+    const afterMount = vi.fn();
+    
+    const route = WithReactComponent(Route)({
+      name: 'test',
+      path: '/test',
+      component: TestComponent,
+      beforeMount,
+      afterMount,
+    });
+    
+    const router = Router({
+      history: MemoryHistory(),
+      root: route,
+    });
+    
+    await router.init();
+    await router.goTo('test');
+    
+    expect(beforeMount).toHaveBeenCalled();
+    expect(afterMount).toHaveBeenCalled();
+  });
+});
+```
+
+## SSR/SSG Support Patterns
+
+### Server-Side Rendering Setup
+
+```typescript
+// Server
+const router = Router({
+  history: MemoryHistory({ pathname: req.url }),
+  root: appRoute,
+});
+
+await router.init();
+
+const html = ReactDOMServer.renderToString(
+  <RoutetouilleProvider router={router}>
+    <App />
+  </RoutetouilleProvider>
+);
+```
+
+### Client-Side Hydration
+
+```typescript
+// Client
+const router = Router({
+  history: BrowserHistory(),
+  root: appRoute,
+});
+
+await router.init();
+
+ReactDOM.hydrateRoot(
+  document.getElementById('root'),
+  <RoutetouilleProvider router={router}>
+    <App />
+  </RoutetouilleProvider>
+);
+```
+
+### Static Generation Support
+
+```typescript
+async function generateStaticPaths() {
+  const router = Router({ root: appRoute });
+  const map = router.getMap();
+  
+  return Array.from(map.values())
+    .filter(route => route.path)
+    .map(route => ({
+      params: extractParams(route.path),
+      path: router.urlTo(route.name),
+    }));
+}
+```
+
+## Advanced Development Patterns
+
+### 1. Custom Rendering Strategies
+
+Create your own rendering strategy:
+
+```typescript
+function renderWithTransition<Route extends WithReactComponentInterface>(
+  router: RouterInterface,
+  active: Route[],
+): ReactElement {
   return (
-    <nav>
-      <button onClick={() => goTo('home')}>Home</button>
-      <div>Current: {active.map(r => r.name).join(' > ')}</div>
-    </nav>
+    <TransitionGroup>
+      {active.map(route => (
+        <CSSTransition key={route.name} timeout={300}>
+          {route.component({})}
+        </CSSTransition>
+      ))}
+    </TransitionGroup>
   );
 }
 ```
 
-### Component-Based Routes
+### 2. Hook Composition for Complex Features
+
 ```typescript
-const route = WithReactComponent(Route)({
-  name: 'dashboard',
-  path: '/dashboard',
-  component: DashboardComponent,
-  exclusive: true
+function useAuthenticatedRoute() {
+  const { active } = useRoute();
+  const [user, setUser] = useState(null);
+  
+  useEffect(() => {
+    const requiresAuth = active.some(route => route.requiresAuth);
+    if (requiresAuth && !user) {
+      fetchUser().then(setUser);
+    }
+  }, [active, user]);
+  
+  return { user, isAuthenticated: !!user };
+}
+```
+
+### 3. Route Enhancement Composition
+
+```typescript
+const EnhancedRoute = compose(
+  WithReactComponent,
+  WithAnalytics,
+  WithErrorBoundary,
+  WithSuspense,
+)(Route);
+```
+
+### 4. Dynamic Route Loading
+
+```typescript
+const LazyRoute = WithReactComponent(Route)({
+  name: 'lazy',
+  path: '/lazy',
+  component: React.lazy(() => import('./LazyComponent')),
 });
 ```
-
-## Testing Patterns
-
-### Hook Testing with React Testing Library
-```typescript
-const { result } = renderHook(() => useRouter(), {
-  wrapper: ({ children }) => 
-    withContextValue({ router: mockRouter }, children),
-});
-```
-
-### Component Testing
-```typescript
-const result = renderTree(router, [route1, route2]);
-const { getAllByText } = render(result);
-expect(getAllByText("Component").length).toBeGreaterThan(0);
-```
-
-### Mock Patterns
-```typescript
-const mockRouter = {
-  urlTo: vi.fn(() => "/foo"),
-  goTo: vi.fn(),
-  history: { emitter: { on: vi.fn() } },
-  getMap: vi.fn(),
-  activate: vi.fn(),
-  active: []
-};
-```
-
-## Key Development Considerations
-
-### 1. Type Safety
-- Heavy use of generics for route and parameter types
-- Composition patterns with higher-order functions
-- Strict TypeScript configuration with ES2024 features
-
-### 2. Performance Optimizations
-- React.memo opportunities in components
-- useMemo and useCallback for expensive operations
-- Selective re-rendering based on route changes
-
-### 3. SSR/SSG Support
-- Server-side rendering compatible hooks
-- Hydration-safe router state management
-- No browser-specific code in core hooks
-
-### 4. Extension Points
-- Custom rendering strategies can be implemented
-- Hook composition for complex use cases
-- Route enhancer composition for custom behavior
-
-## Testing Strategy
-
-### Test Organization
-- Each hook/component has its own test file
-- Tests co-located with implementation
-- React Testing Library for component tests
-- Vitest with jsdom environment
-
-### Test Patterns
-- **Hook Testing**: Use `renderHook` with appropriate wrappers
-- **Component Testing**: Test rendering strategies and components
-- **Integration Testing**: Full router + React integration scenarios
-- **Mock Testing**: Comprehensive router mocking for isolation
 
 ## Configuration Files
 
 ### TypeScript Configuration
-**`tsconfig.json`**: Strict mode, ES2024 target, NodeNext modules, declaration files
+**`tsconfig.json`**: 
+- Strict mode enabled for type safety
+- ES2024 target with DOM library
+- NodeNext module resolution
+- Declaration files with source maps
+- JSX set to react-jsx
 
 ### Biome Configuration  
-**`biome.json`**: Strict linting, import extensions, unused imports cleanup
+**`biome.json`**: 
+- Strict linting with React rules
+- Import extensions enforced
+- Unused imports cleanup
+- 2-space indentation
 
 ### Vitest Configuration
-**`vitest.config.ts`**: jsdom environment, V8 coverage provider, React testing setup
+**`vitest.config.ts`**: 
+- jsdom environment for React testing
+- V8 coverage provider
+- React Testing Library setup
+- Global test utilities
 
-## Integration with Core Router
+## Package Dependencies
 
-### Router Interface Usage
-- Uses `RouterInterface` type from routetouille core
-- Event subscription for lifecycle hooks
-- History integration for navigation state
-- Type-safe activators and parameters
+### Peer Dependencies
+- **React 19+**: Latest React with concurrent features
+- **routetouille**: Core router functionality
+- **React-DOM 19+**: DOM rendering capabilities
 
-### Lifecycle Integration
-- `afterActivate` events for state synchronization
-- History change events for scroll restoration
-- Mount/unmount lifecycle for components
-
-### Navigation Patterns
-- Programmatic navigation via goTo
-- Declarative navigation via Link components
-- URL generation via urlTo
-- State preservation during navigation
+### Development Dependencies
+- **@testing-library/react**: Component testing
+- **@types/react**: TypeScript definitions
+- **vitest**: Test runner
+- **@biomejs/biome**: Linting and formatting
 
 ## Key Files to Understand
 
-**Context and Hooks**:
-- `src/Context/Context.ts` - React context setup
-- `src/hooks/useRouterRoot.ts` - Primary router integration hook
-- `src/hooks/useLink.ts` - Advanced link handling
+**Context and Provider**:
+- `src/Context/Context.ts` - React context setup and types
+- `src/Context/Provider.tsx` - Context provider component
+
+**Core Hooks**:
+- `src/hooks/useRouterRoot.ts` - Primary router integration with state sync
+- `src/hooks/useLink.ts` - Advanced link handling with scroll preservation
+- `src/hooks/useRoute.ts` - Route state access
+- `src/hooks/useGoTo.ts` - Programmatic navigation
 
 **Route Enhancement**:
 - `src/Route/WithReactComponent/WithReactComponent.ts` - Component route enhancement
 - `src/Route/WithReactRoot/WithReactRoot.ts` - Full React app integration
 
 **Rendering Strategies**:
-- `src/strategies/renderTree.ts` - Default rendering strategy
-- `src/strategies/renderLastExclusiveAndTree.ts` - Advanced exclusive rendering
-- `src/strategies/renderRecurse.ts` - Core recursive utility
+- `src/strategies/renderTree.ts` - Default hierarchical rendering
+- `src/strategies/renderLastExclusiveAndTree.ts` - Boundary-based rendering
+- `src/strategies/renderLastActive.ts` - Single component rendering
+- `src/strategies/renderRecurse.ts` - Core recursive rendering engine
 
-## Package-Specific Development Workflow
+## Integration Patterns with Core Router
 
-### Development Cycle
-```bash
-npm run format && npm run lint && npm run test
-```
+### Router Interface Usage
+- Uses `RouterInterface` type from routetouille core
+- Event subscription via `on` and `off` methods
+- History integration for navigation state
+- Type-safe activators and parameters
 
-### Build Process
-- TypeScript compilation to lib/ directory
-- Declaration files for type support
-- ES modules with .js extensions
-- Strict linting before build
+### Lifecycle Integration
+- `afterActivate` events trigger React state updates
+- History change events handle scroll restoration
+- Mount/unmount lifecycle maps to React component lifecycle
+- Error boundaries can catch lifecycle errors
 
-### Dependencies
-- **Peer Dependencies**: React 19+, routetouille core
-- **Dev Dependencies**: React Testing Library, Vitest, TypeScript, Biome
+### Navigation Patterns
+- Programmatic navigation via `goTo` with type safety
+- Declarative navigation via Link components
+- URL generation via `urlTo` for href attributes
+- State preservation during navigation transitions
+
+## Best Practices and Recommendations
+
+### 1. Choose the Right Rendering Strategy
+- Use `renderTree` for standard nested layouts
+- Use `renderLastExclusiveAndTree` for layout boundaries
+- Use `renderLastActive` for simple single-component routes
+
+### 2. Optimize Re-renders
+- Use React.memo for route components
+- Leverage exclusive routes to isolate re-renders
+- Use useCallback for navigation handlers
+
+### 3. Type Safety
+- Always specify generic types for hooks
+- Use proper typing for route components
+- Leverage TypeScript inference where possible
+
+### 4. Testing
+- Test hooks in isolation with renderHook
+- Test rendering strategies with different route configurations
+- Mock router for unit tests, use real router for integration tests
+
+### 5. Performance
+- Enable optimistic navigation for better UX
+- Use lazy loading for heavy components
+- Implement proper error boundaries

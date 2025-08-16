@@ -1,520 +1,391 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { configureStore, createSlice } from "@reduxjs/toolkit";
 import { createElement } from "react";
-import { configureStore } from "@reduxjs/toolkit";
 import { WithRedux } from "./WithRedux.js";
 
-// Mock createElement to actually call function components
-vi.mock("react", async () => {
-  const actual = await vi.importActual("react");
-  return {
-    ...actual,
-    createElement: vi.fn((component, props, ...children) => {
-      // If it's a function component, call it with props
-      if (typeof component === "function") {
-        return component(props, ...children);
-      }
-      // Otherwise, return a simple object representation
-      return { type: component, props, children };
-    }),
-    useSyncExternalStore: vi.fn((_subscribe, getSnapshot) => {
-      // Simulate immediate execution
-      return getSnapshot();
-    }),
-  };
-});
-
-// Mock Redux store
-const createMockStore = () => {
-  const store = configureStore({
-    reducer: {
-      counter: (state = { value: 42 }) => state,
-      auth: (
-        state = { user: { id: "1", name: "Test User" }, isAuthenticated: true },
-      ) => state,
-    },
-  });
-  return store;
-};
-
-// Mock Route creator
-const mockRoute = vi.fn((options) => ({
-  name: options.name || "test",
-  path: options.path || "/test",
-  component: options.component,
-  store: options.store,
-  mount: vi.fn(async () => {}),
-  unmount: vi.fn(async () => {}),
+// Mock React's useSyncExternalStore
+vi.mock("react", () => ({
+  useSyncExternalStore: vi.fn((_subscribe, getSnapshot) => getSnapshot()),
+  createElement: vi.fn((type, props, ...children) => ({
+    type,
+    props,
+    children,
+  })),
 }));
 
-describe("WithRedux Integration Tests", () => {
-  let store: ReturnType<typeof createMockStore>;
+describe("WithRedux", () => {
+  let mockStore: ReturnType<typeof configureStore>;
+  let mockRoute: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
-    store = createMockStore();
-    vi.clearAllMocks();
+    // Create a mock Redux store
+    const counterSlice = createSlice({
+      name: "counter",
+      initialState: { value: 0 },
+      reducers: {
+        increment: (state) => {
+          state.value += 1;
+        },
+        decrement: (state) => {
+          state.value -= 1;
+        },
+      },
+    });
+
+    mockStore = configureStore({
+      reducer: {
+        counter: counterSlice.reducer,
+        auth: (state = { isAuthenticated: false }) => state,
+      },
+    });
+
+    // Create a mock route creator
+    mockRoute = vi.fn((options) => ({
+      ...options,
+      mount: vi.fn(),
+      unmount: vi.fn(),
+    }));
   });
 
-  describe("Standalone usage (without createRoute)", () => {
-    it("should create a standalone route with store and lifecycle methods", () => {
-      const standalone = WithRedux()({
-        store,
-      });
-
-      expect(standalone).toHaveProperty("store", store);
-      expect(standalone).toHaveProperty("mount");
-      expect(standalone).toHaveProperty("unmount");
-      expect(typeof standalone.mount).toBe("function");
-      expect(typeof standalone.unmount).toBe("function");
+  describe("Basic functionality", () => {
+    it("should create a wrapper function", () => {
+      const wrapper = WithRedux(mockRoute);
+      expect(typeof wrapper).toBe("function");
     });
 
-    it("should execute lifecycle methods with both state and dispatch", async () => {
-      const beforeMount = vi.fn();
-      const afterMount = vi.fn();
-      const beforeUnmount = vi.fn();
-      const afterUnmount = vi.fn();
-
-      const standalone = WithRedux()({
-        store,
-        beforeMount,
-        afterMount,
-        beforeUnmount,
-        afterUnmount,
-      });
-
-      await standalone.mount();
-      await standalone.unmount();
-
-      // Verify beforeMount received both state and dispatch (proper parameter merging)
-      expect(beforeMount).toHaveBeenCalledWith({
-        state: store.getState(),
-        dispatch: store.dispatch,
-      });
-
-      // Verify afterMount received both state and dispatch
-      expect(afterMount).toHaveBeenCalledWith({
-        state: store.getState(),
-        dispatch: store.dispatch,
-      });
-
-      // Verify beforeUnmount received both state and dispatch
-      expect(beforeUnmount).toHaveBeenCalledWith({
-        state: store.getState(),
-        dispatch: store.dispatch,
-      });
-
-      // Verify afterUnmount received both state and dispatch
-      expect(afterUnmount).toHaveBeenCalledWith({
-        state: store.getState(),
-        dispatch: store.dispatch,
-      });
-    });
-
-    it("should handle undefined lifecycle methods gracefully", async () => {
-      const standalone = WithRedux()({
-        store,
-        beforeMount: undefined,
-        afterMount: undefined,
-        beforeUnmount: undefined,
-        afterUnmount: undefined,
-      });
-
-      // Should not throw
-      await expect(standalone.mount()).resolves.toBeUndefined();
-      await expect(standalone.unmount()).resolves.toBeUndefined();
-    });
-
-    it("should handle lifecycle method errors", async () => {
-      const errorMessage = "Lifecycle error";
-      const beforeMount = vi.fn(async () => {
-        throw new Error(errorMessage);
-      });
-
-      const standalone = WithRedux()({
-        store,
-        beforeMount,
-      });
-
-      await expect(standalone.mount()).rejects.toThrow(errorMessage);
-    });
-  });
-
-  describe("Composed usage (with createRoute)", () => {
-    it("should compose with a createRoute function", () => {
-      const _composed = WithRedux(mockRoute)({
+    it("should pass store to the route", () => {
+      const wrapper = WithRedux(mockRoute);
+      const route = wrapper({
         name: "test",
-        path: "/test",
-        store,
+        path: "test/",
+        store: mockStore,
       });
 
-      expect(mockRoute).toHaveBeenCalled();
-      expect(_composed).toHaveProperty("store", store);
-      expect(_composed).toHaveProperty("name", "test");
-      expect(_composed).toHaveProperty("path", "/test");
+      expect(route.store).toBe(mockStore);
     });
 
-    it("should pass store through to composed route", () => {
-      WithRedux(mockRoute)({
+    it("should call the composed route creator", () => {
+      const wrapper = WithRedux(mockRoute);
+      wrapper({
         name: "test",
-        path: "/test",
-        store,
-      });
-
-      const mockCallArgs = mockRoute.mock.calls[0][0];
-      expect(mockCallArgs).toHaveProperty("store", store);
-    });
-
-    it("should wrap component and provide both state and dispatch as props", () => {
-      const TestComponent = vi.fn(() => createElement("div", null, "test"));
-      const _composed = WithRedux(mockRoute)({
-        name: "test",
-        component: TestComponent,
-        store,
-      });
-
-      expect(mockRoute).toHaveBeenCalled();
-      const mockCallArgs = mockRoute.mock.calls[0][0];
-      expect(mockCallArgs).toHaveProperty("component");
-      expect(typeof mockCallArgs.component).toBe("function");
-
-      // Test the wrapped component by calling it
-      const WrappedComponent = mockCallArgs.component;
-      const testProps = { testProp: "value" };
-
-      // Call the wrapped component directly to trigger TestComponent
-      const result = WrappedComponent(testProps);
-      expect(result).toBeDefined();
-
-      // The wrapped component should have called TestComponent with original props + state + dispatch
-      expect(TestComponent).toHaveBeenCalledWith(
-        expect.objectContaining({
-          ...testProps,
-          state: store.getState(),
-          dispatch: store.dispatch,
-        }),
-      );
-    });
-
-    it("should set displayName on wrapped component", () => {
-      const TestComponent = vi.fn(() => createElement("div", null, "test"));
-      TestComponent.displayName = "TestComponent";
-
-      WithRedux(mockRoute)({
-        name: "test",
-        component: TestComponent,
-        store,
-      });
-
-      const mockCallArgs = mockRoute.mock.calls[0][0];
-      const WrappedComponent = mockCallArgs.component;
-
-      // The actual composition results in WithReduxState wrapping WithReduxDispatch's component
-      expect(WrappedComponent.displayName).toBe(
-        "WithReduxState(WithReduxDispatch(TestComponent))",
-      );
-    });
-
-    it("should call composed route lifecycle methods during mount/unmount", async () => {
-      const composedRoute = {
-        mount: vi.fn(async () => {}),
-        unmount: vi.fn(async () => {}),
-      };
-      const mockRouteCreator = vi.fn(() => composedRoute);
-
-      const composed = WithRedux(mockRouteCreator)({
-        name: "test",
-        store,
-      });
-
-      await composed.mount();
-      await composed.unmount();
-
-      expect(composedRoute.mount).toHaveBeenCalled();
-      expect(composedRoute.unmount).toHaveBeenCalled();
-    });
-
-    it("should execute lifecycle methods in correct order with both state and dispatch", async () => {
-      const callOrder: string[] = [];
-      const beforeMount = vi.fn(async ({ state, dispatch }) => {
-        callOrder.push("beforeMount");
-        expect(state).toEqual(store.getState());
-        expect(dispatch).toBe(store.dispatch);
-      });
-      const afterMount = vi.fn(async ({ state, dispatch }) => {
-        callOrder.push("afterMount");
-        expect(state).toEqual(store.getState());
-        expect(dispatch).toBe(store.dispatch);
-      });
-      const beforeUnmount = vi.fn(async ({ state, dispatch }) => {
-        callOrder.push("beforeUnmount");
-        expect(state).toEqual(store.getState());
-        expect(dispatch).toBe(store.dispatch);
-      });
-      const afterUnmount = vi.fn(async ({ state, dispatch }) => {
-        callOrder.push("afterUnmount");
-        expect(state).toEqual(store.getState());
-        expect(dispatch).toBe(store.dispatch);
-      });
-
-      const composedRoute = {
-        mount: vi.fn(async () => {
-          callOrder.push("composedMount");
-        }),
-        unmount: vi.fn(async () => {
-          callOrder.push("composedUnmount");
-        }),
-      };
-      const mockRouteCreator = vi.fn(() => composedRoute);
-
-      const composed = WithRedux(mockRouteCreator)({
-        name: "test",
-        store,
-        beforeMount,
-        afterMount,
-        beforeUnmount,
-        afterUnmount,
-      });
-
-      await composed.mount();
-      await composed.unmount();
-
-      expect(callOrder).toEqual([
-        "beforeMount",
-        "composedMount",
-        "afterMount",
-        "beforeUnmount",
-        "composedUnmount",
-        "afterUnmount",
-      ]);
-    });
-
-    it("should handle routes without components", () => {
-      const _composed = WithRedux(mockRoute)({
-        name: "test",
-        path: "/test",
-        store,
+        path: "test/",
+        store: mockStore,
       });
 
       expect(mockRoute).toHaveBeenCalledWith(
         expect.objectContaining({
           name: "test",
-          path: "/test",
-          store,
+          path: "test/",
+          store: mockStore,
         }),
       );
-      expect(_composed).toHaveProperty("store", store);
+    });
+  });
+
+  describe("Component wrapping", () => {
+    it("should wrap component to provide state and dispatch", () => {
+      const TestComponent = vi.fn(() => createElement("div", null, "test"));
+      const wrapper = WithRedux(mockRoute);
+
+      wrapper({
+        name: "test",
+        path: "test/",
+        store: mockStore,
+        component: TestComponent,
+      });
+
+      // Get the wrapped component from the mock call
+      const wrappedOptions = mockRoute.mock.calls[0][0];
+      const WrappedComponent = wrappedOptions.component;
+
+      // Test that it's a function (React component)
+      expect(typeof WrappedComponent).toBe("function");
+
+      // Call the wrapped component
+      const testProps = { id: "test" };
+      WrappedComponent(testProps);
+
+      // Verify createElement was called with original component
+      expect(createElement).toHaveBeenCalledWith(
+        TestComponent,
+        expect.objectContaining({
+          id: "test",
+          state: mockStore.getState(),
+          dispatch: mockStore.dispatch,
+        }),
+      );
     });
 
-    it("should handle composed routes without mount/unmount methods", async () => {
-      const composedRoute = {
-        name: "test",
-      };
-      const mockRouteCreator = vi.fn(() => composedRoute);
+    it("should set display name for wrapped component", () => {
+      const TestComponent = vi.fn(() => null);
+      TestComponent.displayName = "TestComponent";
 
-      const composed = WithRedux(mockRouteCreator)({
+      const wrapper = WithRedux(mockRoute);
+      wrapper({
         name: "test",
-        store,
+        path: "test/",
+        store: mockStore,
+        component: TestComponent,
+      });
+
+      const wrappedOptions = mockRoute.mock.calls[0][0];
+      expect(wrappedOptions.component.displayName).toBe(
+        "WithRedux(TestComponent)",
+      );
+    });
+  });
+
+  describe("Lifecycle hooks", () => {
+    it("should call beforeMount with state and dispatch", async () => {
+      const beforeMount = vi.fn();
+      const wrapper = WithRedux(mockRoute);
+
+      const route = wrapper({
+        name: "test",
+        path: "test/",
+        store: mockStore,
+        beforeMount,
+      });
+
+      await route.mount();
+
+      expect(beforeMount).toHaveBeenCalledWith({
+        state: mockStore.getState(),
+        dispatch: mockStore.dispatch,
+      });
+    });
+
+    it("should call afterMount with state and dispatch", async () => {
+      const afterMount = vi.fn();
+      const wrapper = WithRedux(mockRoute);
+
+      const route = wrapper({
+        name: "test",
+        path: "test/",
+        store: mockStore,
+        afterMount,
+      });
+
+      await route.mount();
+
+      expect(afterMount).toHaveBeenCalledWith({
+        state: mockStore.getState(),
+        dispatch: mockStore.dispatch,
+      });
+    });
+
+    it("should call beforeUnmount with state and dispatch", async () => {
+      const beforeUnmount = vi.fn();
+      const wrapper = WithRedux(mockRoute);
+
+      const route = wrapper({
+        name: "test",
+        path: "test/",
+        store: mockStore,
+        beforeUnmount,
+      });
+
+      await route.unmount();
+
+      expect(beforeUnmount).toHaveBeenCalledWith({
+        state: mockStore.getState(),
+        dispatch: mockStore.dispatch,
+      });
+    });
+
+    it("should call afterUnmount with state and dispatch", async () => {
+      const afterUnmount = vi.fn();
+      const wrapper = WithRedux(mockRoute);
+
+      const route = wrapper({
+        name: "test",
+        path: "test/",
+        store: mockStore,
+        afterUnmount,
+      });
+
+      await route.unmount();
+
+      expect(afterUnmount).toHaveBeenCalledWith({
+        state: mockStore.getState(),
+        dispatch: mockStore.dispatch,
+      });
+    });
+
+    it("should call lifecycle hooks in correct order", async () => {
+      const order: string[] = [];
+      const beforeMount = vi.fn(() => {
+        order.push("beforeMount");
+      });
+      const afterMount = vi.fn(() => {
+        order.push("afterMount");
+      });
+      const composedMount = vi.fn(() => {
+        order.push("composedMount");
+      });
+
+      mockRoute.mockReturnValue({
+        mount: composedMount,
+        unmount: vi.fn(),
+      });
+
+      const wrapper = WithRedux(mockRoute);
+      const route = wrapper({
+        name: "test",
+        path: "test/",
+        store: mockStore,
+        beforeMount,
+        afterMount,
+      });
+
+      await route.mount();
+
+      expect(order).toEqual(["beforeMount", "composedMount", "afterMount"]);
+    });
+  });
+
+  describe("Integration with composed routes", () => {
+    it("should call composed route mount", async () => {
+      const composedMount = vi.fn();
+      mockRoute.mockReturnValue({
+        mount: composedMount,
+        unmount: vi.fn(),
+      });
+
+      const wrapper = WithRedux(mockRoute);
+      const route = wrapper({
+        name: "test",
+        path: "test/",
+        store: mockStore,
+      });
+
+      await route.mount();
+      expect(composedMount).toHaveBeenCalled();
+    });
+
+    it("should call composed route unmount", async () => {
+      const composedUnmount = vi.fn();
+      mockRoute.mockReturnValue({
+        mount: vi.fn(),
+        unmount: composedUnmount,
+      });
+
+      const wrapper = WithRedux(mockRoute);
+      const route = wrapper({
+        name: "test",
+        path: "test/",
+        store: mockStore,
+      });
+
+      await route.unmount();
+      expect(composedUnmount).toHaveBeenCalled();
+    });
+
+    it("should preserve this context when calling composed methods", async () => {
+      let capturedThis: unknown;
+      const composedMount = vi.fn(function (this: unknown) {
+        capturedThis = this;
+      });
+
+      mockRoute.mockReturnValue({
+        mount: composedMount,
+        unmount: vi.fn(),
+        customProp: "test",
+      });
+
+      const wrapper = WithRedux(mockRoute);
+      const route = wrapper({
+        name: "test",
+        path: "test/",
+        store: mockStore,
+      });
+
+      await route.mount();
+      expect(capturedThis).toBe(route);
+    });
+  });
+
+  describe("State updates", () => {
+    it("should provide current state when lifecycle hooks are called", async () => {
+      const beforeMount = vi.fn();
+      const wrapper = WithRedux(mockRoute);
+
+      const route = wrapper({
+        name: "test",
+        path: "test/",
+        store: mockStore,
+        beforeMount,
+      });
+
+      // Update store state
+      mockStore.dispatch({ type: "counter/increment" });
+
+      await route.mount();
+
+      expect(beforeMount).toHaveBeenCalledWith({
+        state: expect.objectContaining({
+          counter: { value: 1 },
+        }),
+        dispatch: mockStore.dispatch,
+      });
+    });
+  });
+
+  describe("Edge cases", () => {
+    it("should work without a component", () => {
+      const wrapper = WithRedux(mockRoute);
+      const route = wrapper({
+        name: "test",
+        path: "test/",
+        store: mockStore,
+      });
+
+      expect(route).toBeDefined();
+      expect(route.store).toBe(mockStore);
+    });
+
+    it("should work without lifecycle hooks", async () => {
+      const wrapper = WithRedux(mockRoute);
+      const route = wrapper({
+        name: "test",
+        path: "test/",
+        store: mockStore,
       });
 
       // Should not throw
-      await expect(composed.mount()).resolves.toBeUndefined();
-      await expect(composed.unmount()).resolves.toBeUndefined();
-    });
-  });
-
-  describe("Component Integration", () => {
-    it("should provide component with both state and dispatch through composition", () => {
-      const TestComponent = vi.fn((props) => {
-        // Component should receive both state and dispatch
-        expect(props).toHaveProperty("state");
-        expect(props).toHaveProperty("dispatch");
-        expect(props.state).toBe(store.getState());
-        expect(props.dispatch).toBe(store.dispatch);
-        return createElement(
-          "div",
-          null,
-          `User: ${props.state.auth.user.name}`,
-        );
-      });
-
-      const _composed = WithRedux(mockRoute)({
-        name: "test",
-        component: TestComponent,
-        store,
-        customProp: "value",
-      });
-
-      const mockCallArgs = mockRoute.mock.calls[0][0];
-      const WrappedComponent = mockCallArgs.component;
-
-      // Call the wrapped component
-      WrappedComponent({ originalProp: "test" });
-
-      expect(TestComponent).toHaveBeenCalledWith(
-        expect.objectContaining({
-          originalProp: "test",
-          state: store.getState(),
-          dispatch: store.dispatch,
-        }),
-      );
+      await expect(route.mount()).resolves.toBeUndefined();
+      await expect(route.unmount()).resolves.toBeUndefined();
     });
 
-    it("should maintain component functionality with realistic Redux actions", () => {
-      const TestComponent = vi.fn(({ state, dispatch }) => {
-        // Simulate a component that uses both state and dispatch
-        const handleIncrement = () => {
-          dispatch({ type: "counter/increment" });
-        };
-
-        const handleLogout = () => {
-          dispatch({ type: "auth/logout" });
-        };
-
-        return createElement("div", null, [
-          createElement(
-            "p",
-            { key: "counter" },
-            `Count: ${state.counter.value}`,
-          ),
-          createElement("p", { key: "user" }, `User: ${state.auth.user.name}`),
-          createElement(
-            "button",
-            { key: "inc", type: "button", onClick: handleIncrement },
-            "Increment",
-          ),
-          createElement(
-            "button",
-            { key: "logout", type: "button", onClick: handleLogout },
-            "Logout",
-          ),
-        ]);
-      });
-
-      const _composed = WithRedux(mockRoute)({
-        name: "app",
-        component: TestComponent,
-        store,
-      });
-
-      const mockCallArgs = mockRoute.mock.calls[0][0];
-      const WrappedComponent = mockCallArgs.component;
-
-      // Call the wrapped component
-      WrappedComponent({});
-
-      expect(TestComponent).toHaveBeenCalledWith(
-        expect.objectContaining({
-          state: store.getState(),
-          dispatch: store.dispatch,
-        }),
-      );
-    });
-  });
-
-  describe("Store and property passing", () => {
-    it("should maintain store reference in composed result", () => {
-      const _composed = WithRedux(mockRoute)({
+    it("should work without a composed route creator", () => {
+      const wrapper = WithRedux();
+      const route = wrapper({
         name: "test",
-        store,
+        path: "test/",
+        store: mockStore,
       });
 
-      expect(_composed.store).toBe(store);
+      expect(route).toBeDefined();
+      expect(route.store).toBe(mockStore);
     });
 
-    it("should spread composed route properties", () => {
-      const mockRouteResult = {
-        name: "test",
-        path: "/test",
-        customProperty: "value",
-        mount: vi.fn(),
-        unmount: vi.fn(),
-      };
-      const mockRouteCreator = vi.fn(() => mockRouteResult);
-
-      const composed = WithRedux(mockRouteCreator)({
-        name: "test",
-        store,
+    it("should handle async lifecycle hooks", async () => {
+      const delay = (ms: number) =>
+        new Promise((resolve) => setTimeout(resolve, ms));
+      const beforeMount = vi.fn(async () => {
+        await delay(10);
       });
 
-      expect(composed).toMatchObject({
+      const wrapper = WithRedux(mockRoute);
+      const route = wrapper({
         name: "test",
-        path: "/test",
-        customProperty: "value",
-        store,
-      });
-    });
-
-    it("should pass custom props to composed route while filtering lifecycle props", () => {
-      WithRedux(mockRoute)({
-        name: "test",
-        path: "/test",
-        store,
-        customProp: "value",
-        beforeMount: vi.fn(),
-        afterMount: vi.fn(),
+        path: "test/",
+        store: mockStore,
+        beforeMount,
       });
 
-      const mockCallArgs = mockRoute.mock.calls[0][0];
-
-      // Should include custom props
-      expect(mockCallArgs).toHaveProperty("customProp", "value");
-      expect(mockCallArgs).toHaveProperty("store", store);
-      expect(mockCallArgs).toHaveProperty("name", "test");
-      expect(mockCallArgs).toHaveProperty("path", "/test");
-
-      // Should NOT include lifecycle props (they're handled by the wrapper)
-      expect(mockCallArgs).not.toHaveProperty("beforeMount");
-      expect(mockCallArgs).not.toHaveProperty("afterMount");
-    });
-  });
-
-  describe("Type Safety and Edge Cases", () => {
-    it("should work with minimal options", () => {
-      const _composed = WithRedux(mockRoute)({
-        store,
-      });
-
-      expect(mockRoute).toHaveBeenCalled();
-      expect(_composed).toHaveProperty("store", store);
-    });
-
-    it("should handle component name fallback for displayName", () => {
-      const TestComponent = vi.fn(() => createElement("div", null, "test"));
-      Object.defineProperty(TestComponent, "name", { value: "TestComponent" });
-
-      WithRedux(mockRoute)({
-        name: "test",
-        component: TestComponent,
-        store,
-      });
-
-      const mockCallArgs = mockRoute.mock.calls[0][0];
-      const WrappedComponent = mockCallArgs.component;
-      expect(WrappedComponent.displayName).toBe(
-        "WithReduxState(WithReduxDispatch(TestComponent))",
-      );
-    });
-  });
-
-  describe("Composition behavior", () => {
-    it("should be equivalent to WithReduxDispatch(WithReduxState(...))", () => {
-      // This test verifies that WithRedux is truly a composition of the two wrappers
-      const TestComponent = vi.fn(() => createElement("div", null, "test"));
-
-      const _composed = WithRedux(mockRoute)({
-        name: "test",
-        component: TestComponent,
-        store,
-        beforeMount: vi.fn(),
-      });
-
-      // Should have called mockRoute with the composed wrapper
-      expect(mockRoute).toHaveBeenCalled();
-
-      // The result should have the same structure as if we manually composed the wrappers
-      expect(_composed).toHaveProperty("store", store);
-      expect(_composed).toHaveProperty("name", "test");
-      expect(typeof _composed.mount).toBe("function");
-      expect(typeof _composed.unmount).toBe("function");
+      await route.mount();
+      expect(beforeMount).toHaveBeenCalled();
     });
   });
 });

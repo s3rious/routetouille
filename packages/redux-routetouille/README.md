@@ -1,12 +1,12 @@
 # Redux-Routetouille
 
-> **Redux bindings for Routetouille: composable Redux state and dispatch integration for any framework.**
+> **Redux binding for Routetouille: seamless Redux state and dispatch integration for any framework.**
 
 ---
 
 ## What is "Redux-Routetouille"?
 
-**Redux-Routetouille** provides seamless Redux integration for [Routetouille](../routetouille) routes through composable Higher-Order Components (HOCs). Just as Routetouille itself follows a composable pattern, Redux-Routetouille extends this philosophy to Redux state management, allowing you to easily integrate Redux state and dispatch functionality into your route lifecycle and components.
+**Redux-Routetouille** provides seamless Redux integration for [Routetouille](../routetouille) routes through a composable Higher-Order Component (HOC). Just as Routetouille itself follows a composable pattern, Redux-Routetouille extends this philosophy to Redux state management, allowing you to easily integrate Redux state and dispatch functionality into your route lifecycle and components.
 
 ---
 
@@ -17,25 +17,23 @@
 
 ## Introduction
 
-Redux-Routetouille brings Redux state management to Routetouille applications through composable wrappers:
+Redux-Routetouille brings Redux state management to Routetouille applications through a single, powerful wrapper:
 
-- **`WithRedux`**: Provides both Redux state and dispatch (recommended for most use cases)
-- **`WithReduxState`**: Provides Redux state to components and lifecycle hooks
-- **`WithReduxDispatch`**: Provides Redux dispatch function to components and lifecycle hooks
+- **`WithRedux`**: Provides both Redux state and dispatch to components and lifecycle hooks
 
-These wrappers are framework-agnostic and can be composed with React, Vue, or any other component system.
+This wrapper is framework-agnostic and can be composed with React, Vue, or any other component system.
 
 ---
 
 ## Why use Redux-Routetouille?
 
-- **🔗 Composable Integration**: Seamlessly compose with other Routetouille wrappers
+- **🔗 Simple Integration**: One wrapper for complete Redux functionality
 - **⚡ Optimal Performance**: Uses React 18's `useSyncExternalStore` for efficient subscriptions
 - **🎯 Framework Agnostic**: Works with React, Vue, or vanilla JavaScript components
 - **📦 Bundle Size Friendly**: No React-Redux dependency needed
-- **🔒 Type Safe**: Full TypeScript support with Redux store typing
+- **🔒 Type Safe**: Full TypeScript support with automatic Redux store typing
 - **🪝 Lifecycle Integration**: Access state and dispatch in route lifecycle hooks
-- **🧩 Composable**: Use together or separately based on your needs
+- **🧩 Composable**: Seamlessly compose with other Routetouille wrappers
 
 ---
 
@@ -62,7 +60,7 @@ yarn add redux-routetouille @reduxjs/toolkit routetouille
 ```typescript
 import { Router, Route, BrowserHistory } from 'routetouille';
 import { WithReactComponent } from 'react-routetouille';
-import { WithRedux, WithReduxState } from 'redux-routetouille';
+import { WithRedux } from 'redux-routetouille';
 import { configureStore } from '@reduxjs/toolkit';
 
 // Configure your Redux store
@@ -74,6 +72,7 @@ const store = configureStore({
 });
 
 type RootState = ReturnType<typeof store.getState>;
+type AppDispatch = typeof store.dispatch;
 
 // Create routes with Redux integration
 const router = Router({
@@ -82,24 +81,19 @@ const router = Router({
     name: 'app',
     path: '/',
     children: [
-      // Route with both state and dispatch (recommended)
+      // Route with Redux integration
       WithRedux(WithReactComponent(Route))({
         name: 'dashboard',
         path: 'dashboard/',
         store,
         component: DashboardComponent, // Receives { state, dispatch } props
-      }),
-      
-      // Route with only state (when dispatch not needed)
-      WithReduxState(WithReactComponent(Route))({
-        name: 'profile',
-        path: 'profile/',
-        store,
-        component: ProfileComponent, // Receives { state } props
-        beforeMount: async ({ state }) => {
+        beforeMount: async ({ state, dispatch }) => {
+          // Check authentication
           if (!state.auth.isAuthenticated) {
             await router.goTo('/login');
           }
+          // Initialize data
+          dispatch(loadDashboardData());
         },
       }),
     ],
@@ -110,13 +104,13 @@ const router = Router({
 ### Component Usage
 
 ```typescript
-// Dashboard component receives both state and dispatch
+// Component receives both state and dispatch
 function DashboardComponent({ 
   state, 
   dispatch 
 }: {
   state: RootState;
-  dispatch: typeof store.dispatch;
+  dispatch: AppDispatch;
 }) {
   const { counter, auth } = state;
   
@@ -128,6 +122,9 @@ function DashboardComponent({
       <button onClick={() => dispatch(incrementCounter())}>
         Increment
       </button>
+      <button onClick={() => dispatch(logout())}>
+        Logout
+      </button>
     </div>
   );
 }
@@ -137,50 +134,14 @@ function DashboardComponent({
 
 ## API Reference
 
-### `WithReduxState`
+### `WithRedux`
 
-Provides Redux state to components and lifecycle hooks.
+Provides both Redux state and dispatch to components and lifecycle hooks.
 
 #### Usage
 
 ```typescript
 // With React component
-WithReduxState(WithReactComponent(Route))({
-  name: 'home',
-  path: '/',
-  store,
-  component: HomeComponent, // Receives { state: RootState } props
-  beforeMount: async ({ state }) => {
-    // Access current state in lifecycle
-    console.log('Current user:', state.auth.user);
-  },
-});
-
-// Standalone usage
-WithReduxState()({
-  store,
-  beforeMount: async ({ state }) => {
-    // Pure logic with state access
-    analytics.track('route-visit', { userId: state.auth.user?.id });
-  },
-});
-```
-
-#### Features
-
-- **Automatic re-renders**: Components re-render when accessed state changes
-- **Lifecycle integration**: All lifecycle hooks receive `{ state }` parameter
-- **Type safety**: Full TypeScript inference from store type
-- **Performance optimized**: Uses `useSyncExternalStore` for efficient subscriptions
-
-### `WithRedux`
-
-Convenience wrapper that provides both Redux state and dispatch functionality. This is the recommended approach for most use cases as it combines `WithReduxState` and `WithReduxDispatch` in a single wrapper.
-
-#### Usage
-
-```typescript
-// Simplified Redux integration
 const route = WithRedux(WithReactComponent(Route))({
   name: 'dashboard',
   path: '/dashboard',
@@ -189,87 +150,54 @@ const route = WithRedux(WithReactComponent(Route))({
   beforeMount: async ({ state, dispatch }) => {
     // Access both state and dispatch in lifecycle hooks
     if (!state.auth.isAuthenticated) {
-      await dispatch(redirectToLogin());
+      await router.goTo('/login');
     }
+    dispatch(initializeDashboard());
+  },
+  afterMount: async ({ state, dispatch }) => {
+    // Set up subscriptions
+    dispatch(subscribeToUpdates());
+  },
+  beforeUnmount: async ({ state, dispatch }) => {
+    // Clean up
+    dispatch(unsubscribeFromUpdates());
   },
 });
 
-// Equivalent to manual composition but cleaner
-// WithRedux(Route) === WithReduxDispatch(WithReduxState(Route))
-const manualRoute = WithReduxDispatch(WithReduxState(WithReactComponent(Route)))({
-  // Same options as above
+// Standalone usage (without component)
+const logicRoute = WithRedux(Route)({
+  name: 'background-task',
+  path: 'task/',
+  store,
+  beforeMount: async ({ state, dispatch }) => {
+    // Pure logic with state and dispatch access
+    const userId = state.auth.user?.id;
+    if (userId) {
+      await dispatch(startBackgroundTask(userId)).unwrap();
+    }
+  },
 });
 ```
 
 #### Features
 
 - **Complete Redux integration**: Both state and dispatch in one wrapper
-- **Simplified syntax**: Single wrapper instead of manual composition
-- **Automatic parameter merging**: Lifecycle hooks receive `{ state, dispatch }`
-- **Type safety**: Full TypeScript inference for both state and dispatch
-- **Performance optimized**: Uses efficient subscription patterns from both wrappers
+- **Automatic re-renders**: Components re-render when accessed state changes
+- **Lifecycle integration**: All lifecycle hooks receive `{ state, dispatch }` parameter
+- **Type safety**: Full TypeScript inference from store type
+- **Performance optimized**: Uses `useSyncExternalStore` for efficient subscriptions
+- **Framework agnostic**: Works with any component system
 
-#### Component Example
+#### Lifecycle Hook Parameters
+
+All lifecycle hooks (`beforeMount`, `afterMount`, `beforeUnmount`, `afterUnmount`) receive an object with:
 
 ```typescript
-function DashboardComponent({ 
-  state, 
-  dispatch 
-}: {
-  state: RootState;
-  dispatch: typeof store.dispatch;
-}) {
-  const { user, counter } = state;
-  
-  return (
-    <div>
-      <h1>Welcome {user.name}</h1>
-      <p>Count: {counter.value}</p>
-      <button onClick={() => dispatch(incrementCounter())}>
-        Increment
-      </button>
-      <button onClick={() => dispatch(logout())}>
-        Logout
-      </button>
-    </div>
-  );
+{
+  state: RootState;      // Current Redux state
+  dispatch: AppDispatch; // Redux dispatch function
 }
 ```
-
-### `WithReduxDispatch`
-
-Provides Redux dispatch function to components and lifecycle hooks.
-
-#### Usage
-
-```typescript
-// With React component
-WithReduxDispatch(WithReactComponent(Route))({
-  name: 'counter',
-  path: '/counter',
-  store,
-  component: CounterComponent, // Receives { dispatch } props
-  beforeMount: async ({ dispatch }) => {
-    // Dispatch actions in lifecycle
-    dispatch(loadInitialData());
-  },
-});
-
-// Composed with WithReduxState for full Redux access
-WithReduxDispatch(WithReduxState(WithReactComponent(Route)))({
-  name: 'app',
-  path: '/app',
-  store,
-  component: AppComponent, // Receives { state, dispatch } props
-});
-```
-
-#### Features
-
-- **Direct dispatch**: Access to `store.dispatch` without hooks
-- **Lifecycle integration**: All lifecycle hooks receive `{ dispatch }` parameter
-- **Composable**: Automatically passes store through to inner wrappers
-- **Framework agnostic**: Works with any component system
 
 ---
 
@@ -278,7 +206,6 @@ WithReduxDispatch(WithReduxState(WithReactComponent(Route)))({
 ### Route Guards with Redux
 
 ```typescript
-// Using WithRedux for complete integration
 const ProtectedRoute = WithRedux(WithReactComponent(Route))({
   name: 'admin',
   path: '/admin',
@@ -288,7 +215,7 @@ const ProtectedRoute = WithRedux(WithReactComponent(Route))({
     const { isAuthenticated, isAdmin } = state.auth;
     
     if (!isAuthenticated) {
-      dispatch(setRedirectPath('/admin')); // Store redirect path
+      dispatch(setRedirectPath('/admin')); // Store intended destination
       await router.goTo('/login');
       return;
     }
@@ -298,27 +225,9 @@ const ProtectedRoute = WithRedux(WithReactComponent(Route))({
       await router.goTo('/unauthorized');
       return;
     }
-  },
-});
-
-// Using individual wrappers (equivalent but more verbose)
-const VerboseProtectedRoute = WithReduxState(WithReactComponent(Route))({
-  name: 'admin',
-  path: '/admin',
-  store,
-  component: AdminPanel,
-  beforeMount: async ({ state }) => {
-    const { isAuthenticated, isAdmin } = state.auth;
     
-    if (!isAuthenticated) {
-      await router.goTo('/login');
-      return;
-    }
-    
-    if (!isAdmin) {
-      await router.goTo('/unauthorized');
-      return;
-    }
+    // User is authenticated and authorized
+    dispatch(loadAdminData());
   },
 });
 ```
@@ -326,7 +235,6 @@ const VerboseProtectedRoute = WithReduxState(WithReactComponent(Route))({
 ### Data Loading Patterns
 
 ```typescript
-// Using WithRedux for streamlined data loading
 const DataRoute = WithRedux(WithReactComponent(Route))({
   name: 'users',
   path: '/users',
@@ -340,7 +248,7 @@ const DataRoute = WithRedux(WithReactComponent(Route))({
     }
   },
   afterMount: async ({ state, dispatch }) => {
-    // Set up real-time updates with user context
+    // Set up real-time updates
     dispatch(subscribeToUserUpdates({
       userId: state.auth.user?.id,
       preferences: state.user.preferences,
@@ -351,48 +259,30 @@ const DataRoute = WithRedux(WithReactComponent(Route))({
     dispatch(unsubscribeFromUserUpdates());
   },
 });
-
-// Equivalent verbose composition
-const VerboseDataRoute = WithReduxDispatch(WithReduxState(WithReactComponent(Route)))({
-  name: 'users',
-  path: '/users',
-  store,
-  component: UsersList,
-  beforeMount: async ({ state, dispatch }) => {
-    if (!state.users.loaded && !state.users.loading) {
-      await dispatch(loadUsers()).unwrap();
-    }
-  },
-  afterMount: async ({ dispatch }) => {
-    dispatch(subscribeToUserUpdates());
-  },
-  beforeUnmount: async ({ dispatch }) => {
-    dispatch(unsubscribeFromUserUpdates());
-  },
-});
 ```
 
 ### Framework Agnostic Usage
 
 ```typescript
 // Vue.js integration
-const VueRoute = WithReduxState(WithVueComponent(Route))({
+const VueRoute = WithRedux(WithVueComponent(Route))({
   store,
-  component: VueComponent, // Vue component receives state as prop
+  component: VueComponent, // Vue component receives state and dispatch as props
 });
 
 // Vanilla JS integration
-const VanillaRoute = WithReduxDispatch(Route)({
+const VanillaRoute = WithRedux(Route)({
   store,
-  beforeMount: async ({ dispatch }) => {
+  beforeMount: async ({ state, dispatch }) => {
     // Pure JavaScript logic
+    console.log('Current user:', state.auth.user);
     dispatch(initializeApp());
     updateDOM();
   },
 });
 
 // Svelte integration
-const SvelteRoute = WithReduxDispatch(WithReduxState(WithSvelteComponent(Route)))({
+const SvelteRoute = WithRedux(WithSvelteComponent(Route))({
   store,
   component: SvelteComponent, // Receives both state and dispatch
 });
@@ -402,13 +292,13 @@ const SvelteRoute = WithReduxDispatch(WithReduxState(WithSvelteComponent(Route))
 
 ```typescript
 // Different routes can use different stores
-const MainAppRoute = WithReduxState(WithReactComponent(Route))({
+const MainAppRoute = WithRedux(WithReactComponent(Route))({
   store: mainStore,
   component: MainApp,
 });
 
-const AdminRoute = WithReduxState(WithReactComponent(Route))({
-  store: adminStore,
+const AdminRoute = WithRedux(WithReactComponent(Route))({
+  store: adminStore, // Different store for admin section
   component: AdminPanel,
 });
 ```
@@ -420,29 +310,21 @@ const AdminRoute = WithReduxState(WithReactComponent(Route))({
 ### Recommended Composition Order
 
 ```typescript
-// Most recommended: Use WithRedux convenience wrapper
+// Standard Redux integration
 WithRedux(WithReactComponent(Route))
 
-// ✅ Benefits:
-// - Single wrapper for complete Redux integration
-// - Simplified syntax and imports
-// - Both state and dispatch automatically available
-// - Equivalent to manual composition
-
-// Alternative: Manual composition (more verbose but equivalent)
-WithReduxDispatch(WithReduxState(WithReactComponent(Route)))
-
-// ✅ Benefits of manual composition:
-// - Explicit about which wrappers are used
-// - Fine-grained control over composition order
-// - Single store reference needed
-// - Automatic store passthrough
+// With additional wrappers
+WithAnalytics(
+  WithRedux(
+    WithReactComponent(Route)
+  )
+)
 ```
 
 ### Custom Wrapper Integration
 
 ```typescript
-// Compose WithRedux with custom wrappers (recommended)
+// Compose WithRedux with custom wrappers
 const EnhancedRoute = WithAnalytics(
   WithRedux(
     WithReactComponent(Route)
@@ -453,24 +335,10 @@ const EnhancedRoute = WithAnalytics(
   component: DashboardComponent,
   beforeMount: async ({ state, dispatch, analytics }) => {
     // Access state, dispatch, and custom analytics
-    analytics.track('page-view', { userId: state.auth.user?.id });
-    await dispatch(loadDashboardData()).unwrap();
-  },
-});
-
-// Equivalent manual composition (more verbose)
-const ManualEnhancedRoute = WithAnalytics(
-  WithReduxDispatch(
-    WithReduxState(
-      WithReactComponent(Route)
-    )
-  )
-)({
-  store,
-  analyticsId: 'dashboard-page',
-  component: DashboardComponent,
-  beforeMount: async ({ state, dispatch, analytics }) => {
-    analytics.track('page-view', { userId: state.auth.user?.id });
+    analytics.track('page-view', { 
+      userId: state.auth.user?.id,
+      userRole: state.auth.role 
+    });
     await dispatch(loadDashboardData()).unwrap();
   },
 });
@@ -483,11 +351,14 @@ const ManualEnhancedRoute = WithAnalytics(
 function createRoute(needsRedux: boolean) {
   const BaseRoute = WithReactComponent(Route);
   const EnhancedRoute = needsRedux 
-    ? WithReduxState(BaseRoute)
+    ? WithRedux(BaseRoute)
     : BaseRoute;
     
   return EnhancedRoute({
-    // ... route options
+    ...(needsRedux ? { store } : {}),
+    name: 'dynamic-route',
+    path: 'dynamic/',
+    component: DynamicComponent,
   });
 }
 ```
@@ -508,11 +379,18 @@ const store = configureStore({
 });
 
 // TypeScript automatically knows the state shape
-WithReduxState(WithReactComponent(Route))({
-  store, // RootState type is inferred
-  component: ({ state }) => {
+WithRedux(WithReactComponent(Route))({
+  store, // RootState and AppDispatch types are inferred
+  component: ({ state, dispatch }) => {
     // state.user and state.posts are fully typed
+    // dispatch is typed with all available actions
     return <div>User: {state.user.name}</div>;
+  },
+  beforeMount: async ({ state, dispatch }) => {
+    // Full type safety in lifecycle hooks
+    if (state.user.id) {
+      await dispatch(loadUserPosts(state.user.id)).unwrap();
+    }
   },
 });
 ```
@@ -525,12 +403,20 @@ interface MyRouteProps {
   customProp: string;
 }
 
-interface MyComponent extends FunctionComponent<MyRouteProps & {
+interface MyComponentProps extends MyRouteProps {
   state: RootState;
   dispatch: AppDispatch;
-}> {}
+}
 
-const MyRoute = WithReduxDispatch(WithReduxState(WithReactComponent(Route)))({
+const MyComponent: FunctionComponent<MyComponentProps> = ({ 
+  customProp, 
+  state, 
+  dispatch 
+}) => {
+  // Component implementation
+};
+
+const MyRoute = WithRedux(WithReactComponent(Route))({
   store,
   customProp: 'value',
   component: MyComponent,
@@ -544,18 +430,23 @@ const MyRoute = WithReduxDispatch(WithReduxState(WithReactComponent(Route)))({
 ### Efficient State Subscriptions
 
 ```typescript
-// Each WithReduxState wrapper creates its own subscription
 // Components only re-render when accessed state changes
-
-// ✅ Good: Multiple specific subscriptions
-const UserRoute = WithReduxState(WithReactComponent(Route))({
+const UserRoute = WithRedux(WithReactComponent(Route))({
   store,
-  component: ({ state }) => <div>{state.user.name}</div>, // Only re-renders on user changes
+  component: ({ state }) => {
+    // Only re-renders when user data changes
+    const { user } = state.auth;
+    return <div>{user?.name}</div>;
+  },
 });
 
-const PostsRoute = WithReduxState(WithReactComponent(Route))({
+const CounterRoute = WithRedux(WithReactComponent(Route))({
   store,
-  component: ({ state }) => <div>{state.posts.length}</div>, // Only re-renders on posts changes
+  component: ({ state }) => {
+    // Only re-renders when counter changes
+    const { value } = state.counter;
+    return <div>Count: {value}</div>;
+  },
 });
 ```
 
@@ -563,15 +454,16 @@ const PostsRoute = WithReduxState(WithReactComponent(Route))({
 
 ```typescript
 // Access only the state you need
-WithReduxState(WithReactComponent(Route))({
+WithRedux(WithReactComponent(Route))({
   store,
-  component: ({ state }) => {
+  component: ({ state, dispatch }) => {
     // ✅ Good: Destructure only needed properties
     const { user, isLoading } = state.auth;
     
     return (
       <div>
         {isLoading ? 'Loading...' : `Welcome ${user?.name}`}
+        <button onClick={() => dispatch(logout())}>Logout</button>
       </div>
     );
   },
@@ -587,10 +479,10 @@ WithReduxState(WithReactComponent(Route))({
 ```typescript
 import { describe, it, expect, vi } from 'vitest';
 import { configureStore } from '@reduxjs/toolkit';
-import { WithReduxState } from 'redux-routetouille';
+import { WithRedux } from 'redux-routetouille';
 
 describe('Redux integrated routes', () => {
-  it('should provide state to components', () => {
+  it('should provide state and dispatch to components', () => {
     const mockStore = configureStore({
       reducer: {
         counter: (state = { value: 42 }) => state,
@@ -599,7 +491,7 @@ describe('Redux integrated routes', () => {
 
     const TestComponent = vi.fn(() => createElement('div', null, 'test'));
     
-    const route = WithReduxState(mockRoute)({
+    const route = WithRedux(mockRoute)({
       store: mockStore,
       component: TestComponent,
     });
@@ -611,17 +503,20 @@ describe('Redux integrated routes', () => {
     expect(TestComponent).toHaveBeenCalledWith(
       expect.objectContaining({
         state: { counter: { value: 42 } },
+        dispatch: mockStore.dispatch,
       })
     );
   });
 
-  it('should provide dispatch to lifecycle hooks', async () => {
+  it('should provide state and dispatch to lifecycle hooks', async () => {
     const beforeMount = vi.fn();
     const mockStore = configureStore({
-      reducer: { test: (state = {}) => state },
+      reducer: { 
+        auth: (state = { isAuthenticated: true }) => state 
+      },
     });
 
-    const route = WithReduxDispatch(mockRoute)({
+    const route = WithRedux(mockRoute)({
       store: mockStore,
       beforeMount,
     });
@@ -629,6 +524,7 @@ describe('Redux integrated routes', () => {
     await route.mount();
 
     expect(beforeMount).toHaveBeenCalledWith({
+      state: { auth: { isAuthenticated: true } },
       dispatch: mockStore.dispatch,
     });
   });
@@ -640,13 +536,13 @@ describe('Redux integrated routes', () => {
 ```typescript
 it('should handle async lifecycle operations', async () => {
   const mockAction = vi.fn().mockResolvedValue({ type: 'TEST' });
-  const mockStore = {
-    dispatch: vi.fn().mockResolvedValue(mockAction()),
-    getState: vi.fn().mockReturnValue({ user: { id: 1 } }),
-    subscribe: vi.fn(),
-  };
+  const mockStore = configureStore({
+    reducer: {
+      user: (state = { id: 1 }) => state,
+    },
+  });
 
-  const route = WithReduxDispatch(WithReduxState(mockRoute))({
+  const route = WithRedux(mockRoute)({
     store: mockStore,
     beforeMount: async ({ state, dispatch }) => {
       await dispatch(loadUserData(state.user.id));
@@ -674,19 +570,13 @@ function MyComponent() {
   return <div onClick={() => dispatch(action())}>...</div>;
 }
 
-// After: Using Redux-Routetouille props (recommended)
+// After: Using Redux-Routetouille props
 function MyComponent({ state, dispatch }) {
   return <div onClick={() => dispatch(action())}>...</div>;
 }
 
-// Route configuration with WithRedux (simplest)
+// Route configuration
 WithRedux(WithReactComponent(Route))({
-  store,
-  component: MyComponent,
-});
-
-// Alternative: Manual composition (equivalent but more verbose)
-WithReduxDispatch(WithReduxState(WithReactComponent(Route)))({
   store,
   component: MyComponent,
 });
@@ -708,7 +598,7 @@ function App() {
 
 // After: Direct integration with routes
 const router = Router({
-  root: WithReduxState(WithReactRoot(ModuleRoute))({
+  root: WithRedux(WithReactRoot(ModuleRoute))({
     store,
     component: App,
     children: [
@@ -726,22 +616,22 @@ const router = Router({
 
 **Store not available in lifecycle hooks**
 ```typescript
-// ❌ Wrong: Store not passed to outer wrapper
-WithReduxDispatch(WithReduxState(WithReactComponent(Route)))({
+// ❌ Wrong: Store not passed
+WithRedux(WithReactComponent(Route))({
   // Missing store parameter
   component: MyComponent,
 });
 
-// ✅ Correct: Store passed to outer wrapper
-WithReduxDispatch(WithReduxState(WithReactComponent(Route)))({
-  store, // Store is passed through automatically
+// ✅ Correct: Store passed
+WithRedux(WithReactComponent(Route))({
+  store, // Required
   component: MyComponent,
 });
 ```
 
 **Component not re-rendering on state changes**
 ```typescript
-// ❌ Wrong: Not using WithReduxState
+// ❌ Wrong: Not using WithRedux
 WithReactComponent(Route)({
   component: ({ router }) => {
     // Can't access Redux state
@@ -749,10 +639,10 @@ WithReactComponent(Route)({
   },
 });
 
-// ✅ Correct: Using WithReduxState
-WithReduxState(WithReactComponent(Route))({
+// ✅ Correct: Using WithRedux
+WithRedux(WithReactComponent(Route))({
   store,
-  component: ({ state }) => {
+  component: ({ state, dispatch }) => {
     // Automatically re-renders on state changes
     return <div>{state.user.name}</div>;
   },
