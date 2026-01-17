@@ -10,8 +10,50 @@
 
 ---
 
-<!-- START doctoc -->
-<!-- END doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table of contents
+
+- [Introduction](#introduction)
+- [Why use Redux-Routetouille?](#why-use-redux-routetouille)
+- [Installation](#installation)
+  - [Peer Dependencies](#peer-dependencies)
+- [Quick Start](#quick-start)
+  - [Basic Setup with React](#basic-setup-with-react)
+  - [Component Usage](#component-usage)
+- [API Reference](#api-reference)
+  - [`WithRedux`](#withredux)
+    - [Usage](#usage)
+    - [Features](#features)
+    - [Lifecycle Hook Parameters](#lifecycle-hook-parameters)
+- [Advanced Usage](#advanced-usage)
+  - [Route Guards with Redux](#route-guards-with-redux)
+  - [Data Loading Patterns](#data-loading-patterns)
+  - [Framework Agnostic Usage](#framework-agnostic-usage)
+  - [Multiple Store Support](#multiple-store-support)
+- [Composition Patterns](#composition-patterns)
+  - [Recommended Composition Order](#recommended-composition-order)
+  - [Custom Wrapper Integration](#custom-wrapper-integration)
+  - [Conditional Composition](#conditional-composition)
+- [TypeScript Integration](#typescript-integration)
+  - [Automatic Type Inference](#automatic-type-inference)
+  - [Custom Type Definitions](#custom-type-definitions)
+- [Performance Optimization](#performance-optimization)
+  - [Efficient State Subscriptions](#efficient-state-subscriptions)
+  - [Selective State Access](#selective-state-access)
+- [Testing](#testing)
+  - [Testing Components with Redux Integration](#testing-components-with-redux-integration)
+  - [Testing Lifecycle Integration](#testing-lifecycle-integration)
+- [Migration Guide](#migration-guide)
+  - [From React-Redux](#from-react-redux)
+  - [From Context-Based Redux](#from-context-based-redux)
+- [Troubleshooting](#troubleshooting)
+  - [Common Issues](#common-issues)
+- [Related Resources](#related-resources)
+- [Contributing](#contributing)
+- [License](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ---
 

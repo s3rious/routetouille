@@ -10,8 +10,32 @@
 
 ---
 
-<!-- START doctoc -->
-<!-- END doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table of contents
+
+- [Philosophy](#philosophy)
+- [Why Routetouille?](#why-routetouille)
+- [Quickstart](#quickstart)
+  - [Installation](#installation)
+  - [Minimal Example](#minimal-example)
+- [Core Concepts](#core-concepts)
+  - [Router](#router)
+  - [Route Types](#route-types)
+  - [Lifecycle Hooks](#lifecycle-hooks)
+  - [History Providers](#history-providers)
+- [API Reference](#api-reference)
+  - [Router Methods](#router-methods)
+  - [Route Options](#route-options)
+- [Advanced Usage](#advanced-usage)
+  - [Parametrized Routes](#parametrized-routes)
+  - [Custom History Provider](#custom-history-provider)
+  - [Extending Routes](#extending-routes)
+- [Related Packages & Ecosystem](#related-packages--ecosystem)
+- [Contributing](#contributing)
+- [License](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ---
 

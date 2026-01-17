@@ -4,8 +4,27 @@ This is a complex, production-grade example application demonstrating advanced u
 
 ---
 
-<!-- START doctoc -->
-<!-- END doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table of contents
+
+- [What to Look At](#what-to-look-at)
+- [Architecture Overview](#architecture-overview)
+- [Example Features](#example-features)
+- [How to Launch](#how-to-launch)
+  - [1. Install Dependencies](#1-install-dependencies)
+  - [2. Start the Mock API](#2-start-the-mock-api)
+  - [3. Start the App](#3-start-the-app)
+  - [4. Run Tests](#4-run-tests)
+  - [5. Lint & Format](#5-lint--format)
+- [Tech Stack](#tech-stack)
+- [Browser Support](#browser-support)
+- [Editor & Code Style](#editor--code-style)
+- [File Structure](#file-structure)
+- [Tips](#tips)
+- [License](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ---
 

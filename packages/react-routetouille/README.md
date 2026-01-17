@@ -10,8 +10,26 @@
 
 ---
 
-<!-- START doctoc -->
-<!-- END doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table of contents
+
+- [Introduction](#introduction)
+- [Why use React-Routetouille?](#why-use-react-routetouille)
+- [Quickstart](#quickstart)
+  - [Installation](#installation)
+  - [Minimal Example](#minimal-example)
+- [API Reference](#api-reference)
+  - [`<RoutetouilleProvider>`](#routetouilleprovider)
+  - [Hooks](#hooks)
+  - [Components](#components)
+- [Idiomatic Usage](#idiomatic-usage)
+- [Advanced Integration](#advanced-integration)
+- [Related Resources](#related-resources)
+- [Contributing](#contributing)
+- [License](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ---
 
