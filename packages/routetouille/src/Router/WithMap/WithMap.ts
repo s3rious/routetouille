@@ -69,9 +69,9 @@ function extractMapFromRoot(root?: AbstractRoute): RouteMap {
     map.set(key, value);
 
     if (route?.children != null) {
-      (route.children as AbstractRoute[]).forEach((route) =>
-        recurse(route as AbstractRoute, key, fallback),
-      );
+      for (const child of route.children as AbstractRoute[]) {
+        recurse(child as AbstractRoute, key, fallback);
+      }
     }
   };
 

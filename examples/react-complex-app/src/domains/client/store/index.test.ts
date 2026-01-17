@@ -35,16 +35,16 @@ describe("client/store/index (scope-based)", () => {
         },
       );
     // Use the handler that sets resolvePromise
-    // @ts-ignore Effector typing issue
+    // @ts-expect-error Effector typing issue
     const scope = createScopeWithHandlers([[fetchClient, handler]]);
     // Start the effect, then resolve the promise
-    // @ts-ignore Effector typing issue
+    // @ts-expect-error Effector typing issue
     const promise = allSettled(fetchClient, {
       scope,
       params: { accessToken: "foo" },
     });
     expect(scope.getState($isClientLoading)).toEqual(true);
-    // @ts-ignore Effector typing issue
+    // @ts-expect-error Effector typing issue
     resolvePromise({ email, firstName: null, lastName: null });
     await promise;
     expect(scope.getState($client)).toEqual({
@@ -69,7 +69,7 @@ describe("client/store/index (scope-based)", () => {
   });
 
   it("$client does not update on signUp error", async () => {
-    // @ts-ignore Effector typing issue
+    // @ts-expect-error Effector typing issue
     const scope = createScopeWithHandlers([[signUp, async () => new Error()]]);
     await allSettled(signUp, { scope, params: { email, password } });
     expect(scope.getState($client)).toEqual(new ClientModel({}));
@@ -97,7 +97,7 @@ describe("client/store/index (scope-based)", () => {
   });
 
   it("$accessToken updates on logIn.doneData", async () => {
-    // @ts-ignore Effector typing issue
+    // @ts-expect-error Effector typing issue
     const scope = createScopeWithHandlers([[logIn, async () => accessToken]]);
     await allSettled(logIn, { scope, params: { email, password } });
     expect(scope.getState($accessToken)).toEqual(accessToken);
@@ -112,7 +112,7 @@ describe("client/store/index (scope-based)", () => {
   });
 
   it("$accessToken does not update on signUp error", async () => {
-    // @ts-ignore Effector typing issue
+    // @ts-expect-error Effector typing issue
     const scope = createScopeWithHandlers([[signUp, async () => new Error()]]);
     await allSettled(signUp, { scope, params: { email, password } });
     expect(scope.getState($accessToken)).toEqual(null);
@@ -146,12 +146,12 @@ describe("client/store/index (scope-based)", () => {
           resolvePromise = resolve;
         },
       );
-    // @ts-ignore Effector typing issue
+    // @ts-expect-error Effector typing issue
     const scope = createScopeWithHandlers([[fetchClient, handler]]);
-    // @ts-ignore Effector typing issue
+    // @ts-expect-error Effector typing issue
     const promise = allSettled(fetchClient, { scope, params: { accessToken } });
     expect(scope.getState($isClientLoading)).toEqual(true);
-    // @ts-ignore Effector typing issue
+    // @ts-expect-error Effector typing issue
     resolvePromise({ email, firstName: null, lastName: null });
     await promise;
     expect(scope.getState($isClientLoading)).toEqual(false);
@@ -163,12 +163,12 @@ describe("client/store/index (scope-based)", () => {
       await new Promise<string>((resolve) => {
         resolvePromise = resolve;
       });
-    // @ts-ignore Effector typing issue
+    // @ts-expect-error Effector typing issue
     const scope = createScopeWithHandlers([[logIn, handler]]);
-    // @ts-ignore Effector typing issue
+    // @ts-expect-error Effector typing issue
     const promise = allSettled(logIn, { scope, params: { email, password } });
     expect(scope.getState($isClientLoading)).toEqual(true);
-    // @ts-ignore Effector typing issue
+    // @ts-expect-error Effector typing issue
     resolvePromise(accessToken);
     await promise;
     expect(scope.getState($isClientLoading)).toEqual(false);
@@ -190,12 +190,12 @@ describe("client/store/index (scope-based)", () => {
       }>((resolve) => {
         resolvePromise = resolve;
       });
-    // @ts-ignore Effector typing issue
+    // @ts-expect-error Effector typing issue
     const scope = createScopeWithHandlers([[signUp, handler]]);
-    // @ts-ignore Effector typing issue
+    // @ts-expect-error Effector typing issue
     const promise = allSettled(signUp, { scope, params: { email, password } });
     expect(scope.getState($isClientLoading)).toEqual(true);
-    // @ts-ignore Effector typing issue
+    // @ts-expect-error Effector typing issue
     resolvePromise({ accessToken, email, firstName, lastName });
     await promise;
     expect(scope.getState($isClientLoading)).toEqual(false);
@@ -207,12 +207,12 @@ describe("client/store/index (scope-based)", () => {
       await new Promise<null>((resolve) => {
         resolvePromise = resolve;
       });
-    // @ts-ignore Effector typing issue
+    // @ts-expect-error Effector typing issue
     const scope = createScopeWithHandlers([[logOut, handler]]);
-    // @ts-ignore Effector typing issue
+    // @ts-expect-error Effector typing issue
     const promise = allSettled(logOut, { scope });
     expect(scope.getState($isClientLoading)).toEqual(true);
-    // @ts-ignore Effector typing issue
+    // @ts-expect-error Effector typing issue
     resolvePromise(null);
     await promise;
     expect(scope.getState($isClientLoading)).toEqual(false);

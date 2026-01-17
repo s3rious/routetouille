@@ -4,7 +4,7 @@ import type { RouterInterface } from "services/router";
 
 import { useRoot } from "domains/root/hooks/useRoot";
 
-import "./Root.css";
+import "./Root.js";
 import "components/atoms/Palette/Palette.css";
 
 type RootProps = {

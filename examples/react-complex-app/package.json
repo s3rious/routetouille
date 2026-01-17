@@ -19,28 +19,28 @@
     "upgrade": "npx npm-upgrade"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.1.1",
-    "@types/react": "^19.1.8",
-    "@types/react-dom": "^19.1.6",
-    "@vitejs/plugin-react": "^4.6.0",
+    "@biomejs/biome": "^2.3.11",
+    "@types/react": "^19.2.8",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.2",
     "cors": "^2.8.5",
     "effector-logger": "^0.15.0",
-    "express": "^5.1.0",
+    "express": "^5.2.1",
     "palettier": "^2.0.0",
     "tinycolor2": "^1.6.0",
-    "typescript": "^5.8.3",
-    "vite": "^7.0.4",
-    "vitest": "^3.2.4"
+    "typescript": "^5.9.3",
+    "vite": "^7.3.1",
+    "vitest": "^4.0.17"
   },
   "dependencies": {
     "await-to-js": "^3.0.0",
     "classnames": "^2.5.1",
-    "core-js": "^3.44.0",
-    "effector": "^23.4.1",
+    "core-js": "^3.47.0",
+    "effector": "^23.4.4",
     "effector-react": "^23.3.0",
     "effector-storage": "^7.1.0",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
     "react-routetouille": "file:../../packages/react-routetouille",
     "routetouille": "file:../../packages/routetouille"
   }

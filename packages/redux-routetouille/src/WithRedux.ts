@@ -7,7 +7,7 @@ import type { EnhancedStore } from "@reduxjs/toolkit";
  */
 type WithReduxOptions<
   ReduxStore extends EnhancedStore,
-  ComposedOptions = {},
+  ComposedOptions = Record<string, unknown>,
 > = {
   /** The Redux store instance */
   store: ReduxStore;
@@ -114,9 +114,10 @@ function hasUnmount(obj: unknown): obj is { unmount: () => Promise<void> } {
  * });
  * ```
  */
-function WithRedux<ComposedOptions extends {}, ComposedInterface extends {}>(
-  createRoute?: (options: ComposedOptions) => ComposedInterface,
-) {
+function WithRedux<
+  ComposedOptions extends Record<string, unknown>,
+  ComposedInterface extends Record<string, unknown>,
+>(createRoute?: (options: ComposedOptions) => ComposedInterface) {
   return <TStore extends EnhancedStore = EnhancedStore>(
     options: WithReduxOptions<TStore, ComposedOptions>,
   ): WithReduxInterface<TStore> & ComposedInterface => {

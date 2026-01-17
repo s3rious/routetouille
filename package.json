@@ -1,8 +1,10 @@
 {
-  "name": "routetouille-root",
   "private": true,
+  "name": "routetouille-root",
+  "packageManager": "npm@10.9.2",
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "examples/*"
   ],
   "scripts": {
     "format": "turbo run format",
@@ -14,6 +16,6 @@
     "upgrade": "turbo run upgrade"
   },
   "devDependencies": {
-    "turbo": "^1.13.0"
+    "turbo": "^2.7.4"
   }
 }

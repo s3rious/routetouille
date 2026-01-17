@@ -3,6 +3,7 @@
     "allow": [
       "mcp__wallaby__wallaby_allTests",
       "mcp__wallaby__wallaby_failingTests",
+      "Bash(npm view:*)",
       "Bash(npm run build:*)",
       "Bash(npm run dev:*)",
       "Bash(npm run lint)",
@@ -14,14 +15,15 @@
       "Bash(npx biome format:*)",
       "Bash(npx tsc:*)",
       "Bash(npm test)",
-      "Bash(mkdir:*)",
-      "Skill(rackup)",
-      "Skill(learn)",
+      "Bash(git config:*)",
       "Bash(git status)",
       "Bash(git diff:*)",
       "Bash(git log:*)",
+      "Skill(rackup)",
+      "Skill(learn)",
+      "Bash(mkdir:*)",
       "Bash(ls:*)",
-      "Bash(git config:*)"
+      "Bash(grep:*)"
     ],
     "deny": [
       "Bash(rm -rf:*)",
