@@ -1,40 +1,46 @@
-# Git Commit
+# Commit Changes
 
-Commit the currently staged files to git: $ARGUMENTS
+Commit staged files: $ARGUMENTS
 
-Commit process:
-1. Run git status to see all staged changes
-2. Run git diff --cached to see the staged changes that will be committed
-3. Run git log --oneline -10 to see recent commit messages for style consistency
-4. Analyze the staged changes and draft a commit message
-5. Create the commit with the drafted message
+## Steps
 
-Commit message structure:
-```
-<What's done>
+1. **Check staged changes**:
+   ```bash
+   git status
+   git diff --cached
+   ```
 
-<Why it was done>
+2. **Get current user's commit style**:
+   ```bash
+   git config user.name
+   git log --author="$(git config user.name)" -3 --format="%B---"
+   ```
 
-- <List>
-- <Of detailed>
-- <Changes>
-```
+3. **Analyze user's full commit messages** (not just first line):
+   - Title format and length
+   - How they explain the "why"
+   - Level of detail in bullet points
+   - Vocabulary and tone
 
-Commit message guidelines:
-- First line: Clear, concise description of what was done
-- Second section: Explain the motivation or reason for the change
-- Third section: Bullet points detailing specific changes
-- Use present tense (e.g., "Add feature" not "Added feature")
-- Keep the first line under 50 characters when possible
-- Follow the existing commit message style in the repository
+4. **Draft commit message** matching user's style:
+   ```
+   Short title (imperative, under 50 chars)
 
-IMPORTANT RULES:
-- Don't add "Generated with Claude Code", "Co-Authored-By: Claude", or "Test plan" to commits or PRs
-- Never add Claude-specific signatures or attributions
-- Keep commit messages clean and professional
-- Focus on the technical changes and their purpose
+   Context explaining why this change was made and what problem
+   it solves. 1-2 sentences.
 
-Error handling:
-- If no files are staged, inform the user and suggest staging files first
-- If commit fails, show the error and suggest solutions
-- Never force commit or bypass hooks
+   - Specific change with detail
+   - Another specific change
+   - More changes as needed
+   ```
+
+5. **Create the commit**
+
+## Rules
+
+- Match the user's personal commit message style exactly
+- Title: imperative mood ("Add" not "Added"), under 50 chars
+- Body: explain the motivation/context
+- Bullets: specific, detailed changes
+- NEVER add "Generated with Claude Code" or Co-Authored-By
+- If no files staged, inform user to stage first

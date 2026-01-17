@@ -1,17 +1,49 @@
 # Fix Issue
 
-Please analyze and fix the issue: $ARGUMENTS.
+Fix the issue: $ARGUMENTS
 
-Follow these steps:
-1. Understand the problem and requirements
-2. Search the codebase for relevant files and code
-3. Implement the fix following our coding standards
-4. Run tests to verify the fix works
-5. Run linting to ensure code quality
-6. Create a clear commit message describing the fix
+## Process
 
-Important:
-- Follow the project's coding standards in CLAUDE.md
-- Run completion sequence: linting, tests, and format code
-- Don't add "Generated with Claude Code" to commit messages
-- Test the fix thoroughly before committing
+### Phase 1: Research
+1. **Understand the problem** - Read error messages, relevant code
+2. **Reproduce** - Confirm the issue exists and when it occurs
+3. **Find root cause** - Trace through mixin chain, check `git log` for recent changes
+
+### Phase 2: Clarify
+Ask user about unclear aspects:
+- Is my understanding of the bug correct?
+- Expected vs actual behavior?
+- Which mixin/component is affected?
+- Any constraints on the fix approach?
+
+### Phase 3: Design
+Present fix plan:
+```
+## Issue: [description]
+
+**Root cause:**
+[What's actually wrong - mixin order? lifecycle timing? type issue?]
+
+**Files to modify:**
+- [file:line] - [what change]
+
+**Fix approach:**
+[How we'll fix it without breaking mixin composition]
+
+**Risk assessment:**
+- [What could break]
+- [How we'll verify]
+
+**Testing:**
+- [Test cases to add/update]
+```
+
+### Phase 4: Confirm
+**STOP and wait for user approval before making changes.**
+
+### Phase 5: Fix
+Only after user says OK:
+1. Implement the minimal fix
+2. Add/update tests for the fix
+3. Run `npm run lint` and `npm run test`
+4. Ask user before committing

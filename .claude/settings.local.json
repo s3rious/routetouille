@@ -3,16 +3,64 @@
     "allow": [
       "mcp__wallaby__wallaby_allTests",
       "mcp__wallaby__wallaby_failingTests",
-      "Bash(npm install:*)",
       "Bash(npm run build:*)",
       "Bash(npm run dev:*)",
       "Bash(npm run lint)",
+      "Bash(npm run format)",
       "Bash(npm run test:*)",
+      "Bash(npm run typecheck)",
       "Bash(npx vitest run:*)",
       "Bash(npx biome lint:*)",
+      "Bash(npx biome format:*)",
       "Bash(npx tsc:*)",
-      "Bash(npm test)"
+      "Bash(npm test)",
+      "Bash(mkdir:*)",
+      "Skill(rackup)",
+      "Skill(learn)",
+      "Bash(git status)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(ls:*)",
+      "Bash(git config:*)"
     ],
-    "deny": []
+    "deny": [
+      "Bash(rm -rf:*)",
+      "Bash(git push --force:*)",
+      "Bash(git rebase -i:*)",
+      "Bash(git add:*)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/format-ts.sh"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/lint-before-commit.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/protect-config-files.sh"
+          }
+        ]
+      }
+    ]
   }
 }
