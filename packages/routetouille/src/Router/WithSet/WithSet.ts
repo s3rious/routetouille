@@ -1,25 +1,46 @@
-import { WithParamsInterface, WithParamsOptions } from '../WithParams'
-import { WithPathnameInterface, WithPathnameOptions } from '../WithPathname'
-import { WithActiveInterface, WithActiveOptions } from '../WithActive'
-import { WithMapInterface, WithMapOptions, RouteMapRoute, RouteMapKey, AbstractRoute } from '../WithMap'
+import type {
+  WithParamsOptions,
+  WithParamsInterface,
+} from "../WithParams/index.js";
+import type {
+  WithPathnameOptions,
+  WithPathnameInterface,
+} from "../WithPathname/index.js";
+import type {
+  WithActiveOptions,
+  WithActiveInterface,
+} from "../WithActive/index.js";
+import type {
+  WithMapOptions,
+  WithMapInterface,
+  AbstractRoute,
+  RouteMapKey,
+  RouteMapRoute,
+} from "../WithMap/index.js";
 
-type RouterComposedOptions = WithParamsOptions & WithPathnameOptions & WithActiveOptions & WithMapOptions
-type RouterComposedInterface = WithParamsInterface & WithPathnameInterface & WithActiveInterface & WithMapInterface
+type RouterComposedOptions = WithParamsOptions &
+  WithPathnameOptions &
+  WithActiveOptions &
+  WithMapOptions;
+type RouterComposedInterface = WithParamsInterface &
+  WithPathnameInterface &
+  WithActiveInterface &
+  WithMapInterface;
 
-type SetActivator = `/${string}`
+type SetActivator = `/${string}`;
 
 function isActivator(unknown: unknown): unknown is SetActivator {
-  if (typeof unknown === 'string') {
-    return unknown.startsWith('/')
+  if (typeof unknown === "string") {
+    return unknown.startsWith("/");
   }
 
-  return false
+  return false;
 }
 
-type WithSetOptions = {}
+type WithSetOptions = Record<string, unknown>;
 type WithSetInterface = WithSetOptions & {
-  set: (path: SetActivator, optimistic?: boolean) => Promise<void>
-}
+  set: (path: SetActivator, optimistic?: boolean) => Promise<void>;
+};
 
 function getPathParts(path: string, gotSlashRoute: boolean): string[] {
   return path
@@ -27,144 +48,174 @@ function getPathParts(path: string, gotSlashRoute: boolean): string[] {
     .filter((part) => part.length > 0)
     .reduce((array: string[], part, index, originalArray) => {
       if (index === 0) {
-        return [...array, part]
+        array.push(part);
+        return array;
       }
 
       if (index % 2 !== 0) {
-        return [...array, `${part}${originalArray[index + 1]}`]
+        array.push(`${part}${originalArray[index + 1]}`);
+        return array;
       }
 
-      return array
+      return array;
     }, [])
-    .filter((part, index, array) => {
+    .filter((part, _index, array) => {
       if (gotSlashRoute) {
-        return true
+        return true;
       }
 
       if (array.length > 1) {
-        return part !== '/'
+        return part !== "/";
       }
 
-      return true
-    })
+      return true;
+    });
 }
 
-function WithSet<ComposedOptions extends RouterComposedOptions, ComposedInterface extends RouterComposedInterface>(
-  createRouter?: (options: ComposedOptions) => ComposedInterface,
-) {
-  return function (options: WithSetOptions & ComposedOptions): WithSetInterface & ComposedInterface {
-    const composed: ComposedInterface = createRouter?.(options) ?? ({} as ComposedInterface)
+function WithSet<
+  ComposedOptions extends RouterComposedOptions,
+  ComposedInterface extends RouterComposedInterface,
+>(createRouter?: (options: ComposedOptions) => ComposedInterface) {
+  return (
+    options: WithSetOptions & ComposedOptions,
+  ): WithSetInterface & ComposedInterface => {
+    const composed: ComposedInterface =
+      createRouter?.(options) ?? ({} as ComposedInterface);
 
-    async function set(this: WithSetInterface & ComposedInterface, path: string, optimistic?: boolean): Promise<void> {
-      const map = this.getMap()
-      const gotSlashRoute = [...map.values()].findIndex((route) => route.route.path === '/') > -1
-      const pathParts = getPathParts(path, gotSlashRoute)
-      const rootKey: RouteMapKey = map.entries().next().value[0]
-      const rootRoute: RouteMapRoute | undefined = map.get(rootKey)
-      const routesToActive: AbstractRoute[] = []
-      const paramsToActive: Array<{ [key: string]: string }> = []
-      let pathPartIndex = 0
+    async function set(
+      this: WithSetInterface & ComposedInterface,
+      path: string,
+      optimistic?: boolean,
+    ): Promise<void> {
+      const map = this.getMap();
+      const gotSlashRoute =
+        [...map.values()].findIndex((route) => route.route.path === "/") > -1;
+      const pathParts = getPathParts(path, gotSlashRoute);
+      const nextValue = map.entries().next().value;
+      if (!nextValue) throw new Error("Map is empty");
+      const rootKey: RouteMapKey = nextValue[0];
+      const rootRoute: RouteMapRoute | undefined = map.get(rootKey);
+      const routesToActive: AbstractRoute[] = [];
+      const paramsToActive: Array<{ [key: string]: string }> = [];
+      let pathPartIndex = 0;
 
       if (rootRoute?.route != null) {
         const processParent = (parentKey: RouteMapKey): void => {
           parentKey
-            .split('.')
-            .map((_, index, array) => array.slice(0, index + 1).join('.'))
+            .split(".")
+            .map((_, index, array) => array.slice(0, index + 1).join("."))
             .map((routeKey) => map.get(routeKey))
             .filter((mapRoute) => Boolean(mapRoute))
             .forEach((mapRoute) => {
-              if (mapRoute != null && !routesToActive.includes(mapRoute.route)) {
-                routesToActive.push(mapRoute.route)
+              if (
+                mapRoute != null &&
+                !routesToActive.includes(mapRoute.route)
+              ) {
+                routesToActive.push(mapRoute.route);
               }
-            })
-        }
+            });
+        };
 
         const processChild = (childKey: RouteMapKey): void => {
-          const childMapRoute = map.get(childKey)
+          const childMapRoute = map.get(childKey);
 
           if (childMapRoute != null) {
-            return recurse(childMapRoute)
+            recurse(childMapRoute);
           }
-        }
+        };
 
         const recurse = (mapRoute: RouteMapRoute): void => {
-          const route = mapRoute.route
+          const route = mapRoute.route;
 
           if (pathPartIndex > pathParts.length - 1) {
-            return
+            return;
           }
 
-          if (Boolean(route?.match)) {
-            const part = pathParts[pathPartIndex]
-            const matched = route.match(part)
+          if (route?.match) {
+            const part = pathParts[pathPartIndex];
+            const matched = route.match(part);
 
-            if (Boolean(matched)) {
-              pathPartIndex = pathPartIndex + 1
+            if (matched) {
+              pathPartIndex = pathPartIndex + 1;
 
-              if (typeof matched !== 'boolean') {
-                paramsToActive.push(matched)
+              if (typeof matched !== "boolean") {
+                paramsToActive.push(matched);
               }
 
               if (mapRoute.parent != null) {
-                processParent(mapRoute.parent)
+                processParent(mapRoute.parent);
               }
 
-              routesToActive.push(route)
+              routesToActive.push(route);
 
               if (mapRoute.children != null) {
-                return mapRoute.children.forEach(processChild)
+                mapRoute.children.forEach(processChild);
+                return;
               }
             }
 
-            return
+            return;
           }
 
           if (mapRoute.children != null) {
-            return mapRoute.children.forEach(processChild)
+            mapRoute.children.forEach(processChild);
+            return;
           }
-        }
+        };
 
-        recurse(rootRoute)
+        recurse(rootRoute);
       }
 
       const routesToActiveRegex = new RegExp(
         `^` +
           routesToActive
             .reduce((string, route) => {
-              if (Boolean(route.path)) {
-                if (route.path.includes(':')) {
+              if (route.path) {
+                if (route.path.includes(":")) {
                   return (
                     string +
                     route.path.replace(/(:)(\w*)(.*)/, (match, p1, p2) => {
-                      return match.replace(p1, '').replace(p2, '\\w*')
+                      return match.replace(p1, "").replace(p2, "\\w*");
                     })
-                  )
+                  );
                 }
 
-                return string + route.path
+                return string + route.path;
               }
 
-              return string
-            }, '')
-            .replace(/\?/, '\\?') +
-          '$',
-      )
-      const routesToActiveNames: Array<string | null> = routesToActive.map((route) => route.name)
-      const isBreak = !routesToActiveRegex.test(pathParts.join(''))
+              return string;
+            }, "")
+            .replace(/\?/, "\\?") +
+          "$",
+      );
+      const routesToActiveNames: Array<string | null> = routesToActive.map(
+        (route) => route.name,
+      );
+      const isBreak = !routesToActiveRegex.test(pathParts.join(""));
 
       if (isBreak) {
-        routesToActiveNames.push(null)
+        routesToActiveNames.push(null);
       }
 
-      await this.activate.bind(this)(routesToActiveNames, paramsToActive, optimistic)
+      await this.activate.bind(this)(
+        routesToActiveNames,
+        paramsToActive,
+        optimistic,
+      );
 
       if (isBreak) {
-        this.pathname = path
+        this.pathname = path;
       }
     }
 
-    return { ...composed, set }
-  }
+    return { ...composed, set };
+  };
 }
 
-export { WithSet, WithSetOptions, WithSetInterface, SetActivator, isActivator }
+export {
+  WithSet,
+  type WithSetOptions,
+  type WithSetInterface,
+  type SetActivator,
+  isActivator,
+};

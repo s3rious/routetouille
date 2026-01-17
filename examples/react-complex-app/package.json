@@ -1,0 +1,47 @@
+{
+  "name": "routetouille-example-react",
+  "version": "1.0.0",
+  "author": "s3rious a.k.a Leonid Semenov <canismajor@kaschenka.ru>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "format": "biome format . --write",
+    "lint": "biome lint . --write",
+    "test": "vitest run",
+    "test:ui": "vitest --ui",
+    "palettier": "palettier --src src/components/atoms/Palette/tokens/index.js --dist src/components/atoms/Palette/ --transform cssVariables:Palette.css",
+    "predev": "npm run palettier",
+    "dev": "vite",
+    "mock-api": "node mock-api.js",
+    "dev:all": "concurrently \"npm run mock-api\" \"npm run dev\"",
+    "prebuild": "npm run palettier",
+    "build": "vite build",
+    "upgrade": "npx npm-upgrade"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.3.11",
+    "@types/react": "^19.2.8",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.2",
+    "cors": "^2.8.5",
+    "effector-logger": "^0.15.0",
+    "express": "^5.2.1",
+    "palettier": "^2.0.0",
+    "tinycolor2": "^1.6.0",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.1",
+    "vitest": "^4.0.17"
+  },
+  "dependencies": {
+    "await-to-js": "^3.0.0",
+    "classnames": "^2.5.1",
+    "core-js": "^3.47.0",
+    "effector": "^23.4.4",
+    "effector-react": "^23.3.0",
+    "effector-storage": "^7.1.0",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "react-routetouille": "file:../../packages/react-routetouille",
+    "routetouille": "file:../../packages/routetouille"
+  }
+}

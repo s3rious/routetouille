@@ -1,37 +1,36 @@
-import { WithChildren } from './WithChildren'
+import { describe, it, expect } from "vitest";
+import { WithChildren } from "./WithChildren.js";
 
-describe('`WithChildren` route', () => {
-  describe('extends', () => {
-    const extend = { foo: 'bar' }
+describe("`WithChildren` route", () => {
+  describe("extends", () => {
+    const extend = { foo: "bar" };
 
     function Extendable() {
-      return function () {
-        return extend
-      }
+      return () => extend;
     }
 
-    it('extends parent', () => {
-      const Route = WithChildren(Extendable())
-      const children = [Route({})]
-      const expected = { children, ...extend }
-      const route = Route({ children })
+    it("extends parent", () => {
+      const Route = WithChildren(Extendable());
+      const children = [Route({})];
+      const expected = { children, ...extend };
+      const route = Route({ children });
 
-      expect(route).not.toBe(extend)
-      expect(route).not.toEqual(extend)
-      expect(route).toEqual(expected)
-    })
-  })
+      expect(route).not.toBe(extend);
+      expect(route).not.toEqual(extend);
+      expect(route).toEqual(expected);
+    });
+  });
 
-  describe('options', () => {
-    it('created with passed options', () => {
-      const Route = WithChildren()
-      const children = [Route({})]
-      const options = { children }
-      const expected = { children }
+  describe("options", () => {
+    it("created with passed options", () => {
+      const Route = WithChildren();
+      const children = [Route({})];
+      const options = { children };
+      const expected = { children };
 
-      const route = WithChildren()(options)
+      const route = WithChildren()(options);
 
-      expect(route).toEqual(expected)
-    })
-  })
-})
+      expect(route).toEqual(expected);
+    });
+  });
+});

@@ -1,1 +1,1 @@
-export * from './Redirectable'
+export * from "./Redirectable.js";

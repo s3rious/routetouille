@@ -1,0 +1,63 @@
+{
+  "name": "redux-routetouille",
+  "version": "1.0.0-rc.2",
+  "description": "Official Redux bindings for Routetouille",
+  "keywords": [
+    "router",
+    "route",
+    "routing",
+    "redux",
+    "state-management",
+    "routetouille"
+  ],
+  "author": "s3rious a.k.a Leonid Semenov <canismajor@kaschenka.ru>",
+  "repository": "s3rious/routetouille",
+  "bugs": {
+    "url": "https://github.com/s3rious/routetouille/issues"
+  },
+  "license": "MIT",
+  "scripts": {
+    "lint": "biome lint --write .",
+    "format": "biome format --write .",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
+    "prebuild": "rm -rf ./lib && npm run format && npm run lint && npm run test",
+    "build": "tsc",
+    "prepublish": "npm run build",
+    "publish": "npm publish --access public",
+    "upgrade": "npx npm-upgrade"
+  },
+  "engines": {
+    "node": ">=23.0.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.3.11",
+    "@reduxjs/toolkit": "^2.11.2",
+    "@types/node": "^25.0.9",
+    "@types/react": "^19.2.8",
+    "@vitest/coverage-v8": "^4.0.17",
+    "@vitest/ui": "^4.0.17",
+    "react": "^19.2.3",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.17"
+  },
+  "peerDependencies": {
+    "@reduxjs/toolkit": "^2.11.2",
+    "react": "^19.2.3",
+    "routetouille": "file:../routetouille"
+  },
+  "main": "lib/index.js",
+  "files": [
+    "lib",
+    "README.md",
+    "LICENSE"
+  ],
+  "directories": {
+    "lib": "lib"
+  },
+  "type": "module",
+  "dependencies": {
+    "routetouille": "file:../routetouille"
+  }
+}

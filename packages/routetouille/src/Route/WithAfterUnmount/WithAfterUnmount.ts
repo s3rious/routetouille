@@ -1,35 +1,48 @@
-import { MountableOptions, MountableInterface } from '../Mountable'
+import type {
+  MountableOptions,
+  MountableInterface,
+} from "../Mountable/index.js";
 
 type WithAfterUnmountOptions = {
-  afterUnmount?: () => Promise<void>
-}
+  afterUnmount?: () => Promise<void>;
+};
 
-type WithAfterUnmountInterface = {}
+type WithAfterUnmountInterface = Record<string, unknown>;
 
-function WithAfterUnmount<ComposedOptions extends MountableOptions, ComposedInterface extends MountableInterface>(
-  createRoute?: (options: ComposedOptions) => ComposedInterface,
-) {
-  return function (options: WithAfterUnmountOptions & ComposedOptions): WithAfterUnmountInterface & ComposedInterface {
-    const composed: ComposedInterface = createRoute?.(options) ?? ({} as ComposedInterface)
-    const afterUnmount = options.afterUnmount
+function WithAfterUnmount<
+  ComposedOptions extends MountableOptions,
+  ComposedInterface extends MountableInterface,
+>(createRoute?: (options: ComposedOptions) => ComposedInterface) {
+  return (
+    options: WithAfterUnmountOptions & ComposedOptions,
+  ): WithAfterUnmountInterface & ComposedInterface => {
+    const composed: ComposedInterface =
+      createRoute?.(options) ?? ({} as ComposedInterface);
+    const afterUnmount = options.afterUnmount;
 
-    async function unmount(this: WithAfterUnmountInterface & ComposedInterface): Promise<void> {
-      const unmount = composed.unmount.bind(this)()
+    async function unmount(
+      this: WithAfterUnmountInterface & ComposedInterface,
+    ): Promise<void> {
+      const unmount = composed.unmount.bind(this)();
 
       void unmount.then(() => {
         if (afterUnmount != null) {
           // move to next tick
           setTimeout(() => {
-            void afterUnmount()
-          }, 0)
+            void afterUnmount();
+          }, 0);
         }
-      })
+      });
 
-      return await unmount
+      return await unmount;
     }
 
-    return { ...composed, unmount }
-  }
+    return { ...composed, unmount };
+  };
 }
 
-export { WithAfterUnmount, WithAfterUnmountOptions, WithAfterUnmountInterface }
+export {
+  WithAfterUnmount,
+  type WithAfterUnmountOptions,
+  type WithAfterUnmountInterface,
+};

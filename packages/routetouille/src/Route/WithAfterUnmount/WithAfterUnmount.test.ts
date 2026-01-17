@@ -1,92 +1,99 @@
-import { WithAfterUnmount } from './WithAfterUnmount'
-import { Mountable, MountableInterface, MountableOptions } from '../Mountable'
+import { describe, it, expect, vi } from "vitest";
+import { WithAfterUnmount } from "./WithAfterUnmount.js";
+import {
+  Mountable,
+  type MountableInterface,
+  type MountableOptions,
+} from "../Mountable/index.js";
 
-describe('`WithAfterUnmount` route', () => {
-  const Route = WithAfterUnmount<MountableOptions, MountableInterface>(Mountable())
+describe("`WithAfterUnmount` route", () => {
+  const Route = WithAfterUnmount<MountableOptions, MountableInterface>(
+    Mountable(),
+  );
 
-  describe('extends `Mountable`', () => {
-    it('extends', () => {
-      const mounted = false
-      const expected = { mounted }
+  describe("extends `Mountable`", () => {
+    it("extends", () => {
+      const mounted = false;
+      const expected = { mounted };
 
-      const route = Route({})
+      const route = Route({});
 
-      expect(JSON.stringify(route)).toEqual(JSON.stringify(expected))
-    })
-  })
+      expect(JSON.stringify(route)).toEqual(JSON.stringify(expected));
+    });
+  });
 
-  describe('methods', () => {
-    describe('`unmount` (without `afterUnmount`)', () => {
-      const route = Route({})
+  describe("methods", () => {
+    describe("`unmount` (without `afterUnmount`)", () => {
+      const route = Route({});
 
-      it('mounts', async () => {
-        await route.unmount()
-        expect(route.mounted).toBe(false)
-      })
-    })
+      it("mounts", async () => {
+        await route.unmount();
+        expect(route.mounted).toBe(false);
+      });
+    });
 
-    describe('`unmount` (with `afterUnmount`)', () => {
-      it('calls `afterUnmount` after `unmount`', async () => {
-        jest.useFakeTimers()
+    describe("`unmount` (with `afterUnmount`)", () => {
+      it("calls `afterUnmount` after `unmount`", async () => {
+        vi.useFakeTimers();
 
-        const afterUnmountCallback = jest.fn()
-        const afterUnmount = jest.fn().mockImplementation(
+        const afterUnmountCallback = vi.fn();
+        const afterUnmount = vi.fn().mockImplementation(
           async () =>
             await new Promise((resolve) => {
               setTimeout(() => {
-                afterUnmountCallback()
-                resolve(null)
-              }, 1000)
+                afterUnmountCallback();
+                resolve(null);
+              }, 1000);
             }),
-        )
+        );
 
-        const route = Route({ afterUnmount })
+        const route = Route({ afterUnmount });
 
-        expect(afterUnmount).toBeCalledTimes(0)
-        await route.unmount()
-        expect(route.mounted).toBe(false)
-        expect(afterUnmount).toBeCalledTimes(0)
-        expect(afterUnmountCallback).toBeCalledTimes(0)
+        expect(afterUnmount).toBeCalledTimes(0);
+        await route.unmount();
+        expect(route.mounted).toBe(false);
+        expect(afterUnmount).toBeCalledTimes(0);
+        expect(afterUnmountCallback).toBeCalledTimes(0);
 
-        jest.runAllTimers()
+        vi.runAllTimers();
 
-        expect(afterUnmount).toBeCalledTimes(1)
-        expect(afterUnmountCallback).toBeCalledTimes(1)
-      })
+        expect(afterUnmount).toBeCalledTimes(1);
+        expect(afterUnmountCallback).toBeCalledTimes(1);
+      });
 
-      it('error in `afterUnmount` does not interfere with mount', async () => {
-        jest.useFakeTimers()
+      it("error in `afterUnmount` does not interfere with mount", async () => {
+        vi.useFakeTimers();
 
-        const afterUnmountErrorHandle = jest.fn()
-        const afterUnmount = jest.fn().mockImplementation(
+        const afterUnmountErrorHandle = vi.fn();
+        const afterUnmount = vi.fn().mockImplementation(
           async () =>
-            await new Promise((resolve, reject) => {
+            await new Promise((_resolve, reject) => {
               setTimeout(() => {
-                reject(new Error('error'))
-              }, 1000)
+                reject(new Error("error"));
+              }, 1000);
             }).then(
               () => {},
               async () => {
-                afterUnmountErrorHandle()
+                afterUnmountErrorHandle();
               },
             ),
-        )
+        );
 
-        const route = Route({ afterUnmount })
+        const route = Route({ afterUnmount });
 
-        await route.mount()
-        expect(route.mounted).toBe(true)
-        expect(afterUnmount).toBeCalledTimes(0)
-        await route.unmount()
-        expect(route.mounted).toBe(false)
-        expect(afterUnmount).toBeCalledTimes(0)
-        expect(afterUnmountErrorHandle).toBeCalledTimes(0)
+        await route.mount();
+        expect(route.mounted).toBe(true);
+        expect(afterUnmount).toBeCalledTimes(0);
+        await route.unmount();
+        expect(route.mounted).toBe(false);
+        expect(afterUnmount).toBeCalledTimes(0);
+        expect(afterUnmountErrorHandle).toBeCalledTimes(0);
 
-        await jest.runAllTimers()
+        await vi.runAllTimers();
 
-        expect(afterUnmount).toBeCalledTimes(1)
-        expect(afterUnmountErrorHandle).toBeCalledTimes(1)
-      })
-    })
-  })
-})
+        expect(afterUnmount).toBeCalledTimes(1);
+        expect(afterUnmountErrorHandle).toBeCalledTimes(1);
+      });
+    });
+  });
+});

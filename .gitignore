@@ -1,0 +1,5 @@
+.idea/
+.run/
+.vscode/
+.turbo/
+node_modules/

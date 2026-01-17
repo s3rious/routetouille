@@ -1,58 +1,84 @@
-import { fillPathnameWithParams, Params, WithParamsInterface, WithParamsOptions } from '../WithParams'
-import { WithPathnameInterface, WithPathnameOptions, getPathnameFromRoutesTrack } from '../WithPathname'
-import { Activator, WithActiveInterface, WithActiveOptions, getRoutesTrackByActivator } from '../WithActive'
-import { AbstractRoute, WithMapInterface, WithMapOptions } from '../WithMap'
-import { WithRootInterface, WithRootOptions } from '../WithRoot'
+import {
+  fillPathnameWithParams,
+  type Params,
+  type WithParamsInterface,
+  type WithParamsOptions,
+} from "../WithParams/index.js";
+import {
+  type WithPathnameInterface,
+  type WithPathnameOptions,
+  getPathnameFromRoutesTrack,
+} from "../WithPathname/index.js";
+import {
+  Activator,
+  type WithActiveInterface,
+  type WithActiveOptions,
+  getRoutesTrackByActivator,
+} from "../WithActive/index.js";
+import type {
+  AbstractRoute,
+  WithMapInterface,
+  WithMapOptions,
+} from "../WithMap/index.js";
+import type { WithRootInterface, WithRootOptions } from "../WithRoot/index.js";
 
 type RouterComposedOptions = WithParamsOptions &
   WithPathnameOptions &
   WithActiveOptions &
   WithMapOptions &
-  WithRootOptions
+  WithRootOptions;
 type RouterComposedInterface = WithParamsInterface &
   WithPathnameInterface &
   WithActiveInterface &
   WithMapInterface &
-  WithRootInterface
+  WithRootInterface;
 
-type WithUrlToOptions = {}
+type WithUrlToOptions = Record<string, unknown>;
 
 type WithUrlToInterface = {
-  urlTo: (activator: Activator, params?: Params) => string | undefined
-}
+  urlTo: (activator: Activator, params?: Params) => string | undefined;
+};
 
-function WithUrlTo<ComposedOptions extends RouterComposedOptions, ComposedInterface extends RouterComposedInterface>(
-  createRouter?: (options: ComposedOptions) => ComposedInterface,
-) {
-  return function (options: WithUrlToOptions & ComposedOptions): WithUrlToInterface & ComposedInterface {
-    const composed: ComposedInterface = createRouter?.(options) ?? ({} as ComposedInterface)
+function WithUrlTo<
+  ComposedOptions extends RouterComposedOptions,
+  ComposedInterface extends RouterComposedInterface,
+>(createRouter?: (options: ComposedOptions) => ComposedInterface) {
+  return (
+    options: WithUrlToOptions & ComposedOptions,
+  ): WithUrlToInterface & ComposedInterface => {
+    const composed: ComposedInterface =
+      createRouter?.(options) ?? ({} as ComposedInterface);
 
     function urlTo(
       this: WithUrlToInterface & ComposedInterface,
       activator: Activator,
       params: Params = [],
     ): string | undefined {
-      const urlToTrack: AbstractRoute[] | undefined = getRoutesTrackByActivator(this.getMap(), activator)
+      const urlToTrack: AbstractRoute[] | undefined = getRoutesTrackByActivator(
+        this.getMap(),
+        activator,
+      );
 
       if (urlToTrack != null && urlToTrack.length > 0) {
         if (urlToTrack.some((route) => route.fallback)) {
-          return undefined
+          return undefined;
         }
 
-        const urlToPlainPathname: string = getPathnameFromRoutesTrack(urlToTrack)
+        const urlToPlainPathname: string =
+          getPathnameFromRoutesTrack(urlToTrack);
 
         if (params?.length > 0) {
-          return fillPathnameWithParams(urlToPlainPathname, params)
+          return fillPathnameWithParams(urlToPlainPathname, params);
         }
 
-        return urlToPlainPathname
+        return urlToPlainPathname;
       }
 
-      return undefined
+      return undefined;
     }
 
-    return { ...composed, urlTo }
-  }
+    return { ...composed, urlTo };
+  };
 }
 
-export { WithUrlTo, WithUrlToOptions, WithUrlToInterface, Activator }
+export { WithUrlTo, type WithUrlToOptions, type WithUrlToInterface, Activator };

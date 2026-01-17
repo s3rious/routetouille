@@ -1,37 +1,50 @@
-import { MountableOptions, MountableInterface } from '../Mountable'
+import type {
+  MountableOptions,
+  MountableInterface,
+} from "../Mountable/index.js";
 
 type WithAfterMountOptions = {
-  afterMount?: () => Promise<void>
-}
+  afterMount?: () => Promise<void>;
+};
 
-type WithAfterMountInterface = {}
+type WithAfterMountInterface = Record<string, unknown>;
 
-function WithAfterMount<ComposedOptions extends MountableOptions, ComposedInterface extends MountableInterface>(
-  createRoute?: (options: ComposedOptions) => ComposedInterface,
-) {
-  return function (options: WithAfterMountOptions & ComposedOptions): WithAfterMountInterface & ComposedInterface {
-    const composed: ComposedInterface = createRoute?.(options) ?? ({} as ComposedInterface)
-    const afterMount = options.afterMount
+function WithAfterMount<
+  ComposedOptions extends MountableOptions,
+  ComposedInterface extends MountableInterface,
+>(createRoute?: (options: ComposedOptions) => ComposedInterface) {
+  return (
+    options: WithAfterMountOptions & ComposedOptions,
+  ): WithAfterMountInterface & ComposedInterface => {
+    const composed: ComposedInterface =
+      createRoute?.(options) ?? ({} as ComposedInterface);
+    const afterMount = options.afterMount;
 
-    async function mount(this: WithAfterMountInterface & ComposedInterface): Promise<void> {
-      const mount = composed.mount.bind(this)()
+    async function mount(
+      this: WithAfterMountInterface & ComposedInterface,
+    ): Promise<void> {
+      const mount = composed.mount.bind(this)();
 
       void mount.then(() => {
         if (afterMount != null) {
           // move to next tick
           setTimeout(() => {
             if (this.mounted) {
-              void afterMount()
+              void afterMount();
             }
-          }, 0)
+          }, 0);
         }
-      })
+      });
 
-      return await mount
+      return await mount;
     }
 
-    return { ...composed, mount }
-  }
+    return { ...composed, mount };
+  };
 }
 
-export { WithAfterMount, WithAfterMountOptions, WithAfterMountInterface }
+export {
+  WithAfterMount,
+  type WithAfterMountOptions,
+  type WithAfterMountInterface,
+};

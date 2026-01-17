@@ -1,28 +1,35 @@
-type MountableOptions = {}
+type MountableOptions = Record<string, unknown>;
 
 type MountableInterface = MountableOptions & {
-  mounted: boolean
-  mount: () => Promise<void>
-  unmount: () => Promise<void>
-}
+  mounted: boolean;
+  mount: () => Promise<void>;
+  unmount: () => Promise<void>;
+};
 
 function Mountable<ComposedOptions extends {}, ComposedInterface extends {}>(
   createRoute?: (options: ComposedOptions) => ComposedInterface,
 ) {
-  return function (options: MountableOptions & ComposedOptions): MountableInterface & ComposedInterface {
-    const composed: ComposedInterface = createRoute?.(options) ?? ({} as ComposedInterface)
-    const mounted = false
+  return (
+    options: MountableOptions & ComposedOptions,
+  ): MountableInterface & ComposedInterface => {
+    const composed: ComposedInterface =
+      createRoute?.(options) ?? ({} as ComposedInterface);
+    const mounted = false;
 
-    async function mount(this: MountableInterface & ComposedInterface): Promise<void> {
-      this.mounted = true
+    async function mount(
+      this: MountableInterface & ComposedInterface,
+    ): Promise<void> {
+      this.mounted = true;
     }
 
-    async function unmount(this: MountableInterface & ComposedInterface): Promise<void> {
-      this.mounted = false
+    async function unmount(
+      this: MountableInterface & ComposedInterface,
+    ): Promise<void> {
+      this.mounted = false;
     }
 
-    return { ...composed, mounted, mount, unmount }
-  }
+    return { ...composed, mounted, mount, unmount };
+  };
 }
 
-export { Mountable, MountableOptions, MountableInterface }
+export { Mountable, type MountableOptions, type MountableInterface };

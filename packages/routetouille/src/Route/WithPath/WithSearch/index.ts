@@ -1,1 +1,1 @@
-export * from './WithSearch'
+export * from "./WithSearch.js";

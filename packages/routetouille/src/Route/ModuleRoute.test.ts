@@ -1,34 +1,35 @@
-import { ModuleRoute } from './ModuleRoute'
+import { describe, it, expect } from "vitest";
+import { ModuleRoute } from "./ModuleRoute.js";
 
-describe('ModuleRoute', () => {
-  it('can be created', async () => {
+describe("ModuleRoute", () => {
+  it("can be created", async () => {
     const route = ModuleRoute({
-      name: 'root',
+      name: "root",
       beforeMount: async () => {},
       afterMount: async () => {},
       redirects: [[async () => false, async () => undefined]],
       children: [
         ModuleRoute({
-          name: 'child',
+          name: "child",
           beforeMount: async () => {},
           afterMount: async () => {},
           redirects: [[async () => false, async () => undefined]],
         }),
       ],
-    })
+    });
     const expected = {
-      name: 'root',
+      name: "root",
       mounted: false,
       children: [
         {
-          name: 'child',
+          name: "child",
           mounted: false,
         },
       ],
-    }
+    };
 
-    expect(JSON.stringify(route)).toEqual(JSON.stringify(expected))
-    expect(route.mount).toBeTruthy()
-    expect(route.unmount).toBeTruthy()
-  })
-})
+    expect(JSON.stringify(route)).toEqual(JSON.stringify(expected));
+    expect(route.mount).toBeTruthy();
+    expect(route.unmount).toBeTruthy();
+  });
+});

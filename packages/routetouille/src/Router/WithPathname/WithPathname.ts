@@ -1,41 +1,54 @@
-import { Activator, WithActiveInterface, WithActiveOptions } from '../WithActive'
-import { AbstractRoute } from '../WithMap'
+import type {
+  Activator,
+  WithActiveInterface,
+  WithActiveOptions,
+} from "../WithActive/index.js";
+import type { AbstractRoute } from "../WithMap/index.js";
 
-type WithPathnameOptions = {}
+type WithPathnameOptions = Record<string, unknown>;
 
 type WithPathnameInterface = WithPathnameOptions & {
-  pathname: string | null
-  activate: (activator: Activator, optimistic?: boolean) => Promise<void>
-}
+  pathname: string | null;
+  activate: (activator: Activator, optimistic?: boolean) => Promise<void>;
+};
 
 function getPathnameFromRoutesTrack(track: AbstractRoute[]): string {
   return [...track]
     .map((route) => route.path)
     .filter(Boolean)
-    .join('')
-    .replace(/^([\w/])/, '/$1')
-    .replace(/\/\//g, '/')
+    .join("")
+    .replace(/^([\w/])/, "/$1")
+    .replace(/\/\//g, "/");
 }
 
-function WithPathname<ComposedOptions extends WithActiveOptions, ComposedInterface extends WithActiveInterface>(
-  createRouter?: (options: ComposedOptions) => ComposedInterface,
-) {
-  return function (options: WithPathnameOptions & ComposedOptions): WithPathnameInterface & ComposedInterface {
-    const composed: ComposedInterface = createRouter?.(options) ?? ({} as ComposedInterface)
-    const pathname: string | null = null
+function WithPathname<
+  ComposedOptions extends WithActiveOptions,
+  ComposedInterface extends WithActiveInterface,
+>(createRouter?: (options: ComposedOptions) => ComposedInterface) {
+  return (
+    options: WithPathnameOptions & ComposedOptions,
+  ): WithPathnameInterface & ComposedInterface => {
+    const composed: ComposedInterface =
+      createRouter?.(options) ?? ({} as ComposedInterface);
+    const pathname: string | null = null;
 
     async function activate(
       this: WithPathnameInterface & ComposedInterface,
       activator: Activator,
       optimistic?: boolean,
     ): Promise<void> {
-      await composed.activate.bind(this)(activator, optimistic)
+      await composed.activate.bind(this)(activator, optimistic);
 
-      this.pathname = getPathnameFromRoutesTrack(this.active)
+      this.pathname = getPathnameFromRoutesTrack(this.active);
     }
 
-    return { ...composed, pathname, activate }
-  }
+    return { ...composed, pathname, activate };
+  };
 }
 
-export { WithPathname, WithPathnameOptions, WithPathnameInterface, getPathnameFromRoutesTrack }
+export {
+  WithPathname,
+  type WithPathnameOptions,
+  type WithPathnameInterface,
+  getPathnameFromRoutesTrack,
+};

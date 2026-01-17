@@ -1,12 +1,17 @@
-import { useContext } from 'react'
-import { RouterInterface } from 'routetouille'
+import { useContext } from "react";
+import type { RouterInterface } from "routetouille";
 
-import { Context, ContextValue } from '../Context'
+import { Context, type ContextValue } from "../Context/index.js";
 
 function useRouter(): RouterInterface | undefined {
-  const { router } = useContext<ContextValue>(Context)
+  const context = useContext<ContextValue>(Context);
 
-  return router
+  if (!context) {
+    return undefined;
+  }
+
+  const { router } = context;
+  return router;
 }
 
-export { useRouter }
+export { useRouter };

@@ -1,14 +1,50 @@
-import { WithName, WithNameOptions, WithNameInterface } from './WithName'
-import { WithPath, WithPathOptions, WithPathInterface } from './WithPath'
+import {
+  WithName,
+  type WithNameOptions,
+  type WithNameInterface,
+} from "./WithName/index.js";
+import {
+  WithPath,
+  type WithPathOptions,
+  type WithPathInterface,
+} from "./WithPath/index.js";
 
-import { Mountable, MountableOptions, MountableInterface } from './Mountable'
-import { WithBeforeMount, WithBeforeMountOptions, WithBeforeMountInterface } from './WithBeforeMount'
-import { WithBeforeUnmount, WithBeforeUnmountOptions, WithBeforeUnmountInterface } from './WithBeforeUnmount'
-import { WithAfterMount, WithAfterMountOptions, WithAfterMountInterface } from './WithAfterMount'
-import { WithAfterUnmount, WithAfterUnmountOptions, WithAfterUnmountInterface } from './WithAfterUnmount'
-import { Redirectable, RedirectableOptions, RedirectableInterface } from './Redirectable'
+import {
+  Mountable,
+  type MountableOptions,
+  type MountableInterface,
+} from "./Mountable/index.js";
+import {
+  WithBeforeMount,
+  type WithBeforeMountOptions,
+  type WithBeforeMountInterface,
+} from "./WithBeforeMount/index.js";
+import {
+  WithBeforeUnmount,
+  type WithBeforeUnmountOptions,
+  type WithBeforeUnmountInterface,
+} from "./WithBeforeUnmount/index.js";
+import {
+  WithAfterMount,
+  type WithAfterMountOptions,
+  type WithAfterMountInterface,
+} from "./WithAfterMount/index.js";
+import {
+  WithAfterUnmount,
+  type WithAfterUnmountOptions,
+  type WithAfterUnmountInterface,
+} from "./WithAfterUnmount/index.js";
+import {
+  Redirectable,
+  type RedirectableOptions,
+  type RedirectableInterface,
+} from "./Redirectable/index.js";
 
-import { WithChildren, WithChildrenOptions, WithChildrenInterface } from './WithChildren'
+import {
+  WithChildren,
+  type WithChildrenOptions,
+  type WithChildrenInterface,
+} from "./WithChildren/index.js";
 
 type RouteOptions = WithNameOptions &
   WithPathOptions &
@@ -18,7 +54,7 @@ type RouteOptions = WithNameOptions &
   WithAfterMountOptions &
   WithAfterUnmountOptions &
   RedirectableOptions &
-  WithChildrenOptions
+  WithChildrenOptions;
 type RouteInterface = WithNameInterface &
   WithPathInterface &
   MountableInterface &
@@ -27,12 +63,18 @@ type RouteInterface = WithNameInterface &
   WithAfterMountInterface &
   WithAfterUnmountInterface &
   RedirectableInterface &
-  WithChildrenInterface
+  WithChildrenInterface;
 
-type CreateRoute = (options: RouteOptions) => RouteInterface
+type CreateRoute = (options: RouteOptions) => RouteInterface;
 
 const Route: CreateRoute = WithChildren(
-  WithAfterUnmount(WithAfterMount(WithBeforeUnmount(WithBeforeMount(Redirectable(Mountable(WithPath(WithName()))))))),
-)
+  WithAfterUnmount(
+    WithAfterMount(
+      WithBeforeUnmount(
+        WithBeforeMount(Redirectable(Mountable(WithPath(WithName())))),
+      ),
+    ),
+  ),
+);
 
-export { Route, RouteOptions, RouteInterface }
+export { Route, type RouteOptions, type RouteInterface };

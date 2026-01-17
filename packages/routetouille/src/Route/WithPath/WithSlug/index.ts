@@ -1,1 +1,1 @@
-export * from './WithSlug'
+export * from "./WithSlug.js";

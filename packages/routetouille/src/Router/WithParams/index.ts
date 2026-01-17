@@ -1,1 +1,1 @@
-export * from './WithParams'
+export * from "./WithParams.js";

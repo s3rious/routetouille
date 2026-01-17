@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "lib": ["ESNext", "DOM"],
+    "jsx": "react-jsx",
+
+    "baseUrl": "./src",
+
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
+
+    "outDir": "./dist",
+    "target": "ES2022",
+
+    "types": []
+  },
+  "include": ["src"],
+  "exclude": ["src/**/*.test.ts", "src/**/*.test.tsx"]
+}
